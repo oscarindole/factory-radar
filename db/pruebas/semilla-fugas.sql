@@ -13,6 +13,19 @@ insert into site (id, tenant_id, nombre, precio_kwh) values
   ('bbbbbbbb-1111-0000-0000-000000000002', 'bbbbbbbb-0000-0000-0000-000000000002', 'Reinosa',     0.13800)
 on conflict do nothing;
 
+-- Usuarios de prueba. Existen porque invitation.invitado_por y
+-- alert.feedback_por son claves ajenas contra app_user: sin ellos la API
+-- devuelve un 500 que parece un fallo del codigo y es un fallo de la semilla.
+insert into app_user (id, email, nombre) values
+  ('00000000-0000-0000-0000-0000000000aa', 'jefe@alfa.test',   'Jefe de planta ALFA'),
+  ('00000000-0000-0000-0000-0000000000bb', 'viewer@alfa.test', 'Observador ALFA')
+on conflict (id) do nothing;
+
+insert into membership (tenant_id, user_id, rol) values
+  ('aaaaaaaa-0000-0000-0000-000000000001', '00000000-0000-0000-0000-0000000000aa', 'plant_manager'),
+  ('aaaaaaaa-0000-0000-0000-000000000001', '00000000-0000-0000-0000-0000000000bb', 'viewer')
+on conflict (tenant_id, user_id) do nothing;
+
 -- Arbol: linea 3 con la estacion P4 colgando. Sirve tambien para comprobar que
 -- el trigger de `ruta` deja el camino de ancestros bien montado.
 insert into asset_node (id, tenant_id, site_id, parent_id, tipo, codigo, nombre, coste_parada_hora) values

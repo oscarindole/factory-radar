@@ -109,6 +109,39 @@ Lo que no encaja en ninguna plantilla se responde con *«no sé contestar a eso
 todavía»* y se registra en `ai_analysis` con `respuesta = null`. **Esa tabla es
 el backlog del Copilot, escrito por los propios usuarios.**
 
+### Invitaciones
+
+```
+POST /v1/invitaciones                → { email, rol, sites? }   exige usuario.invitar
+GET  /v1/invitaciones                → estado y horas restantes de cada una
+POST /v1/invitaciones/:id/revocar
+GET  /v1/invitaciones/canjear/:token → sin sesión: qué empresa y qué rol te ofrecen
+POST /v1/invitaciones/canjear        → sin sesión: { token, nombre }
+```
+
+**El rol se decide al invitar, no al aceptar.** Quien acepta no elige con qué
+permisos entra, y `rol` o `email` en el cuerpo del canje se ignoran: salen de la
+fila de invitación. Es la razón de ser de toda la pieza.
+
+**Tres días de vigencia**, y la caducidad la calcula e impone la base
+(`expira_en <= creada_en + interval '3 days'` como restricción de tabla). Un
+enlace de invitación se reenvía por WhatsApp igual que cualquier otro; la
+vigencia corta es lo único que limita el daño de un reenvío.
+
+| Regla | Por qué |
+|---|---|
+| **Nadie invita por encima de su rango, ni de igual a igual** | Un rol operativo invitando a un administrador, aceptando él con otro correo, es la escalada de privilegios clásica. De igual a igual se construye una cadena por la que un rol se multiplica solo |
+| **Nadie concede plantas que no alcanza** | `sites` vacío significa «todas»: solo lo regala quien las tiene todas |
+| **La invitación va atada a un correo** | Sin eso, quien reciba el enlace reenviado entra con el rol que sea: deja de ser una invitación y pasa a ser una llave suelta |
+| **Solo se guarda el hash del token** | 256 bits de entropía en el enlace; si se filtra la base, ninguna invitación pendiente se puede canjear con lo que hay dentro |
+| **Una sola invitación viva por correo** | Con dos enlaces circulando valdría el último canjeado, que no es lo que nadie espera |
+| **Un solo uso, con bloqueo de fila** | Dos personas abriendo a la vez el mismo enlace reenviado creaban dos membresías |
+| **Token inexistente y token caducado responden igual** | A quien prueba tokens no se le dice si acertó con uno que existió |
+
+El canje entra por **dos funciones `SECURITY DEFINER`** y por ninguna otra vía:
+la tabla sigue bajo RLS y `fr_app` no la ve sin inquilino fijado. Es el mismo
+criterio que `fr_measurements()` con el dato crudo — ver decisión 41.
+
 ### Pendientes de FASE D
 
 ```

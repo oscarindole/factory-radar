@@ -13,6 +13,7 @@ import alertas    from './rutas/alertas.ts';
 import activos    from './rutas/activos.ts';
 import ingesta    from './rutas/ingesta.ts';
 import copilot    from './rutas/copilot.ts';
+import invitaciones from './rutas/invitaciones.ts';
 
 declare module 'fastify' {
   interface FastifyRequest { sesion: Sesion }
@@ -35,6 +36,11 @@ export function crearServidor() {
     // La ingesta se autentica con el token del conector, no con sesion de
     // usuario: es una maquina en una nave, no una persona.
     if (req.url.startsWith('/v1/ingesta')) return;
+
+    // El canje de una invitacion tampoco lleva sesion: quien acepta todavia no
+    // tiene cuenta. La credencial es el token de la invitacion, que por eso
+    // lleva 256 bits de entropia y caduca a los tres dias.
+    if (req.url.startsWith('/v1/invitaciones/canjear')) return;
 
     const cab = req.headers.authorization;
     const sesion = cab?.startsWith('Bearer ') ? leerToken(cab.slice(7)) : null;
@@ -61,6 +67,7 @@ export function crearServidor() {
   app.register(activos, { prefix: '/v1' });
   app.register(ingesta, { prefix: '/v1' });
   app.register(copilot, { prefix: '/v1' });
+  app.register(invitaciones, { prefix: '/v1' });
 
   return app;
 }

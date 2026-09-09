@@ -113,3 +113,16 @@ verificación es peor que no verificar, porque produce confianza injustificada.
 cierra antes de tiempo.** El error que da Node —`Expected ',', got 'ident'`— no
 señala la línea. Se localizó troceando el fichero por funciones y parseando cada
 trozo por separado.
+
+
+---
+
+## Decisiones de las invitaciones
+
+| # | Decisión | Alternativa descartada | Por qué |
+|---|---|---|---|
+| 39 | **El rol se fija al invitar, no al aceptar** | Que quien acepta elija o negocie su rol | Es la diferencia entre «te doy acceso a esto» y «entra y ya veremos». `rol` en el cuerpo del canje se ignora |
+| 40 | **Tres días de vigencia, impuestos por la base** | Calcular la caducidad en la aplicación | Calculada en el código, los milisegundos hasta el `insert` la dejaban por encima de `creada_en + 3 días` y saltaba el CHECK. Ahora la calcula `now() + interval '3 days'` en la propia sentencia |
+| 41 | **El canje entra por dos funciones `SECURITY DEFINER`** | Dar a la API permiso para saltarse la RLS en esa ruta | Huevo y gallina: la RLS esconde la invitación hasta fijar el inquilino, y el inquilino no se sabe hasta leerla. La salida no es debilitar el aislamiento, es acotar la entrada — se entra por el hash de un token de 256 bits y no se puede pedir nada más |
+| 42 | **Nadie invita de igual a igual** | Permitir invitar al mismo rango | De igual a igual se construye una cadena por la que un rol se multiplica sin que nadie lo haya autorizado. Solo `company_admin` puede invitar a otro `company_admin`, porque alguien tiene que poder dar continuidad a la cuenta |
+| 43 | **Las columnas de salida de un `RETURNS TABLE` no se llaman como una columna real** | `returns table (ok, rol, tenant_id, motivo)` | En PL/pgSQL cada columna de salida es también una variable: `tenant_id` hacía ambiguo el `on conflict (tenant_id, user_id)` y la función fallaba en ejecución. El error no dice que la causa sea el nombre de la salida |

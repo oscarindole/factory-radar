@@ -102,6 +102,11 @@ revoke all on measurement from fr_app;
 revoke execute on function fr_rollup(text, timestamptz, timestamptz) from fr_app;
 grant  execute on function fr_measurements(uuid, timestamptz, timestamptz) to fr_app;
 
+-- El canje de invitaciones entra por estas dos y por ninguna otra via: la
+-- tabla sigue bajo RLS y fr_app no la ve sin inquilino fijado.
+grant  execute on function fr_invitacion_por_token(text) to fr_app;
+grant  execute on function fr_canjear_invitacion(text, text) to fr_app;
+
 alter default privileges in schema public
   grant select, insert, update, delete on tables to fr_app;
 alter default privileges in schema public

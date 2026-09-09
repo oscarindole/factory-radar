@@ -34,6 +34,7 @@ const PERMISOS: Record<Rol, string[]> = {
     'planta.ver', 'produccion.ver', 'mantenimiento.ver', 'energia.ver',
     'calidad.ver', 'proveedores.ver', 'alerta.ver', 'alerta.cerrar',
     'coste.ver', 'orden.crear', 'copilot.usar', 'informe.ver',
+    'usuario.invitar',
   ],
   production: ['planta.ver', 'produccion.ver', 'alerta.ver', 'alerta.cerrar',
                'orden.crear', 'copilot.usar'],

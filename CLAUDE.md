@@ -6,7 +6,7 @@ Plataforma de inteligencia industrial. El repositorio contiene la **FASE A**
 
 ## Antes de escribir nada
 
-Lee [`doc/10-decisiones.md`](doc/10-decisiones.md). Son 38 decisiones ya tomadas
+Lee [`doc/10-decisiones.md`](doc/10-decisiones.md). Son 43 decisiones ya tomadas
 con su alternativa descartada — 22 de la fase A y 16 que salieron de construir.
 Si vas a contradecir una, di cuál y por qué; no la deshagas de pasada.
 
