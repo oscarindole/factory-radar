@@ -1,6 +1,8 @@
-<!-- Redibujo aproximado del simbolo de RADACTORY, pendiente del vectorial original. -->
+<!-- Simbolo de RADACTORY, monocromo. Version positiva: cuadro en tinta y
+     monograma calado en blanco. Para fondo oscuro se invierten los dos.
+     Redibujo aproximado, pendiente del vectorial original. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
-  <rect width="100" height="100" fill="#F59B00"/>
-  <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
-  <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
+  <rect width="100" height="100" fill="#151815"/>
+  <path fill="#FFFFFF" d="M8 20 H86 V42 H30 V84 H8 Z"/>
+  <path fill="#FFFFFF" d="M46 42 H68 L88 84 H64 Z"/>
 </svg>

@@ -138,7 +138,8 @@ body {
 /* Rosa de marca. Solo aqui: en el resto del documento el ambar es el acento y
    el rojo es severidad, y mezclar los tres los vuelve indistinguibles. */
 .rail-mark svg { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 2px; }
-.rail-mark span { color: #E0115F; }
+.rail-mark { --mark-cut: var(--paper); }
+.rail-mark span { color: var(--ink); }
 .rail-meta {
   font-family: var(--f-mono);
   font-size: .66rem;
@@ -578,9 +579,9 @@ td code, .cell code { font-size: .82em; }
 <aside class="rail">
   <div class="rail-mark">
     <svg viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
-      <rect width="100" height="100" fill="#F59B00"/>
-      <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
-      <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
+      <rect width="100" height="100" fill="currentColor"/>
+      <path fill="var(--mark-cut,#FFFFFF)" d="M8 20 H86 V42 H30 V84 H8 Z"/>
+      <path fill="var(--mark-cut,#FFFFFF)" d="M46 42 H68 L88 84 H64 Z"/>
     </svg>
     <span>RADACTORY</span>
   </div>

@@ -82,6 +82,11 @@
   --mono:  "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
   --ease: cubic-bezier(.22,1,.36,1);
+
+  /* El simbolo es monocromo: el cuadro toma el color del texto que lo rodea y
+     el monograma se cala con el color del fondo. Asi el mismo SVG funciona
+     sobre crema y sobre oscuro sin necesidad de dos versiones. */
+  --mark-cut: var(--bg-primary);
 }
 
 *, *::before, *::after { box-sizing:border-box; }
@@ -123,7 +128,7 @@ h3 { font-family:var(--sans); font-weight:600;
 section { padding-block:clamp(var(--s-9), 9vw, var(--s-12)); }
 section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .bg-soft  { background:var(--bg-secondary); }
-.bg-white { background:var(--bg-white); }
+.bg-white { background:var(--bg-white); --mark-cut:var(--bg-white); }
 .bg-dark  { background:var(--bg-dark); color:var(--text-inverse); }
 .bg-dark .lead, .bg-dark p { color:var(--text-inverse-2); }
 .bg-dark .label { color:var(--text-inverse-2); }
@@ -333,7 +338,7 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .bg-dark .nota strong { color:var(--text-inverse); }
 
 /* --- pie ---------------------------------------------------------------- */
-.footer { background:var(--bg-dark); color:var(--text-inverse);
+.footer { --mark-cut:var(--bg-dark); background:var(--bg-dark); color:var(--text-inverse);
           padding-block:clamp(var(--s-9),7vw,var(--s-11)) var(--s-7); }
 .footer-top { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
               gap:clamp(32px,5vw,80px); align-items:start; }
@@ -383,9 +388,9 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
   <div class="wrap">
     <a class="logo" href="#">
       <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
-        <rect width="100" height="100" fill="#F59B00"/>
-        <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
-        <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
+        <rect width="100" height="100" fill="currentColor"/>
+        <path fill="var(--mark-cut,#FFFFFF)" d="M8 20 H86 V42 H30 V84 H8 Z"/>
+        <path fill="var(--mark-cut,#FFFFFF)" d="M46 42 H68 L88 84 H64 Z"/>
       </svg>
       <b>RADACTORY</b>
     </a>
@@ -1017,9 +1022,9 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
       <div>
         <a class="logo" href="#">
           <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
-            <rect width="100" height="100" fill="#F59B00"/>
-            <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
-            <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
+            <rect width="100" height="100" fill="currentColor"/>
+            <path fill="var(--mark-cut,#FFFFFF)" d="M8 20 H86 V42 H30 V84 H8 Z"/>
+            <path fill="var(--mark-cut,#FFFFFF)" d="M46 42 H68 L88 84 H64 Z"/>
           </svg><b>RADACTORY</b></a>
         <p class="frase" style="font-size:clamp(1.7rem,3.4vw,2.6rem);max-width:16ch">Una capa de
           inteligencia sobre lo que tu fábrica ya tiene.</p>
