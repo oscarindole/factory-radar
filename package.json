@@ -12,6 +12,8 @@
     "demo-motor": "node scripts/demo-motor.mjs",
     "demo-exportar": "node scripts/exportar-demo.mjs",
     "demo-panel": "node scripts/construir-demo.mjs",
+    "sitio": "node scripts/construir-sitio.mjs",
+    "publicar": "bash scripts/publicar-sitio.sh",
     "pruebas-fugas": "node scripts/pruebas-fugas.mjs",
     "api": "node src/api/servidor.ts",
     "test": "node --test tests/dominio.test.ts",
