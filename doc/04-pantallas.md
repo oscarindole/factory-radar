@@ -163,6 +163,43 @@ cuenta abierta, qué hacer, de dónde sale, y un botón que ejecuta.
 Los tres botones de feedback del pie parecen un detalle y no lo son: son el único
 mecanismo que tiene el sistema para dejar de equivocarse.
 
+### Compartir la alerta
+
+Debajo de las acciones va una fila de compartir, y **WhatsApp va el primero**.
+
+No es una concesión a la moda: en una planta española el jefe de turno avisa al
+de mantenimiento por WhatsApp, no por correo. Enterrar esa opción detrás de un
+menú de tres puntos es no haber pisado una nave. El correo queda el segundo,
+para lo que hay que dejar por escrito, y «copiar» el tercero, para pegarlo en el
+parte o en el grupo que sea.
+
+**Lo que se comparte es la alerta entera, no un enlace.** El mensaje lleva qué
+ha cambiado, por qué, cuánto cuesta y qué hacer, y **luego** el enlace al
+detalle. Compartir solo el titular obliga al que lo recibe a abrir el panel para
+enterarse de algo, y en un turno de noche eso significa que no lo abre.
+
+```
+RADACTORY · Planta de Torrelavega
+■ CRÍTICA — Estación P4 · el rendimiento cayó del 87% al 75%
+
+Qué ha cambiado: media de 75,0% en 4 turnos de los últimos 7 días…
+Por qué: 642 microparadas en 7 días (92/día frente a 9 habituales)…
+Impacto: 129.218 € al año
+Qué hacer: Revisar el ajuste de L3.P4 para el formato REF-2210.
+
+Detalle: …/alerta/4471
+```
+
+Se usa el enlace universal `wa.me`, que funciona en móvil y en escritorio sin
+SDK, sin cookie y sin script de terceros. Para copiar se usa el portapapeles del
+navegador con recurso al método antiguo si no hay permiso o no hay HTTPS.
+
+> **Pendiente de una decisión de privacidad.** El mensaje incluye cifras de coste
+> de la planta. Antes de que esto salga a un cliente hay que decidir si el rol
+> sin permiso de `coste.ver` comparte el texto sin el euro, y si el enlace al
+> detalle debe caducar. La ficha ya oculta el coste a ese rol; el compartir
+> todavía no.
+
 ---
 
 ## 5. Ficha de activo

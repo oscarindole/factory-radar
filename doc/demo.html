@@ -142,6 +142,22 @@ h2:first-child { margin-top:0; }
 .btns button.pri { border-color:var(--alta); color:var(--alta); }
 .btns button:hover { background:var(--fondo-3); }
 
+/* Compartir. WhatsApp va el primero a proposito: en una planta española el
+   jefe de turno avisa por WhatsApp, no por correo. Ponerlo detras de un menu
+   es no haber pisado una nave. */
+.compartir { display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+             margin-top:12px; padding-top:12px; border-top:1px solid var(--linea); }
+.compartir .et { font-family:var(--m); font-size:.6rem; letter-spacing:.13em;
+                 text-transform:uppercase; color:var(--texto-3); margin-right:2px; }
+.compartir a, .compartir button { display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--m); font-size:.68rem; padding:7px 12px; border-radius:var(--r);
+  border:1px solid var(--linea); background:none; color:var(--texto-2);
+  text-decoration:none; cursor:pointer; }
+.compartir a:hover, .compartir button:hover { color:var(--texto); border-color:var(--texto-3); }
+.compartir svg { width:13px; height:13px; flex:0 0 auto; }
+.compartir .wa:hover { color:#25D366; border-color:#25D366; }
+.compartir .hecho { color:var(--bien); border-color:var(--bien); }
+
 /* --- tablas --------------------------------------------------------------- */
 .tw { overflow-x:auto; border:1px solid var(--linea); margin:14px 0; }
 table { border-collapse:collapse; width:100%; font-size:.82rem; }
@@ -512,12 +528,74 @@ td .barra.aviso { background:var(--alta); }
         <div class="btns"><button class="pri" type="button">Crear orden de mantenimiento</button>
           <button type="button">Avisar a producción</button>
           <button type="button">Descartar</button></div>
+        ${compartir(a)}
         <div class="fuentes">FUENTES · ${(a.evidencia || []).map((e) =>
           `<em>${esc(Object.entries(e).map(([k, v]) => k === 'tipo' ? v : `${k}=${v}`).join(' '))}</em>`
           ).join(' · ')}<br>
           ¿HA SIDO ÚTIL? &nbsp; Sí · No era nada · Ya lo sabía</div>
       </div>` : ''}`;
   };
+
+  // -------------------------------------------------------------------------
+  // COMPARTIR UNA ALERTA
+  //
+  // El mensaje se arma con lo que hace util a la alerta: que cambio, por que,
+  // cuanto cuesta y que hacer. Sin eso, compartir una alerta es reenviar un
+  // titular y obligar al que lo recibe a abrir el panel para enterarse.
+  //
+  // wa.me es el enlace universal de WhatsApp: funciona en movil y en escritorio
+  // y no necesita SDK, ni cookie, ni script de terceros.
+  // -------------------------------------------------------------------------
+  function textoAlerta(a) {
+    const imp = a.impacto_eur_anual != null
+      ? `${eur(a.impacto_eur_anual)} al año`
+      : (a.impacto_base?.coste_incurrido_eur != null
+          ? `${eur(a.impacto_base.coste_incurrido_eur)} ya incurridos` : 'sin cifrar');
+    return [
+      `RADACTORY · ${D.planta.nombre}`,
+      `${ICONO[a.severidad]} ${SEVS[a.severidad].toUpperCase()} — ${a.titulo}`,
+      '',
+      `Qué ha cambiado: ${a.que_cambio}`,
+      a.por_que ? `Por qué: ${a.por_que}` : null,
+      `Impacto: ${imp}`,
+      a.accion_recomendada ? `Qué hacer: ${a.accion_recomendada}` : null,
+      '',
+      `Detalle: ${location.href}`,
+    ].filter(Boolean).join('\n');
+  }
+
+  window.__copiar = async (id) => {
+    const a = D.alertas.find((x) => x.id === id);
+    const boton = document.getElementById('btn-copiar');
+    try {
+      await navigator.clipboard.writeText(textoAlerta(a));
+    } catch (e) {
+      // Sin permiso de portapapeles —o sin HTTPS— se cae al metodo de siempre.
+      const ta = document.createElement('textarea');
+      ta.value = textoAlerta(a); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      ta.remove();
+    }
+    if (!boton) return;
+    const antes = boton.innerHTML;
+    boton.innerHTML = '✓ Copiado';
+    boton.classList.add('hecho');
+    setTimeout(() => { boton.innerHTML = antes; boton.classList.remove('hecho'); }, 2200);
+  };
+
+  function compartir(a) {
+    const t = encodeURIComponent(textoAlerta(a));
+    const asunto = encodeURIComponent(`${SEVS[a.severidad]} · ${a.titulo}`);
+    return `<div class="compartir">
+      <span class="et">Compartir</span>
+      <a class="wa" href="https://wa.me/?text=${t}" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"/><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+        WhatsApp</a>
+      <a href="mailto:?subject=${asunto}&body=${t}">Correo</a>
+      <button id="btn-copiar" type="button" onclick="window.__copiar('${a.id}')">Copiar</button>
+    </div>`;
+  }
 
   P.produccion = () => `
     <div class="cab"><div><h1>Producción</h1>
