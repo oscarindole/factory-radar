@@ -50,16 +50,11 @@
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --r:4px;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --blanco:#101215; --gris:#171A1E; --tinta:#EDEFF2; --tinta-2:#A6ACB3;
-    --tinta-3:#7C838A; --raya:#262A2F; --rosa:#FF3D80; --rosa-osc:#FF6699;
-  }
-}
-:root[data-theme="dark"] {
-  --blanco:#101215; --gris:#171A1E; --tinta:#EDEFF2; --tinta-2:#A6ACB3;
-  --tinta-3:#7C838A; --raya:#262A2F; --rosa:#FF3D80; --rosa-osc:#FF6699;
-}
+/* SIN TEMA OSCURO, A PROPOSITO.
+   Una web comercial que cambia de color segun el sistema del visitante no es
+   la misma web para todos, y esta tiene que ser blanca siempre. Lo unico
+   oscuro de la pagina es la captura del producto, porque el producto se ve
+   asi de verdad. */
 
 * { box-sizing:border-box; }
 body { background:var(--blanco); color:var(--tinta); font-family:var(--disp);
@@ -74,9 +69,6 @@ strong { font-weight:600; }
 .estrecho { max-width:760px; margin:0 auto; }
 section { padding:clamp(80px,9vw,124px) 0; }
 section.gris { background:var(--gris); }
-section.oscuro { background:var(--in-fondo); color:var(--in-tinta); }
-section.oscuro p { color:var(--in-tinta-2); }
-section.oscuro strong { color:var(--in-tinta); }
 
 /* jerarquia por tamaño y peso, sin adornos */
 h1 { font-size:clamp(2.35rem,4.6vw,3.1rem); font-weight:700; line-height:1.08; }
@@ -85,9 +77,9 @@ h2 { font-size:clamp(1.72rem,3.1vw,2.15rem); font-weight:600; line-height:1.14;
 h3 { font-size:1.18rem; font-weight:600; line-height:1.35; margin-bottom:8px; }
 .sobre { font-size:1.3rem; font-weight:500; color:var(--rosa); margin-bottom:16px;
          line-height:1.35; }
-section.oscuro .sobre { color:var(--naranja); }
+
 .entradilla { font-size:1.12rem; color:var(--tinta-2); line-height:1.6; }
-section.oscuro .entradilla { color:var(--in-tinta-2); }
+
 .centrado { text-align:center; }
 .centrado p, .centrado .entradilla { margin-left:auto; margin-right:auto; }
 
@@ -169,9 +161,9 @@ section.oscuro .entradilla { color:var(--in-tinta-2); }
 .rej.c3 { grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
 .bloque .q { font-family:var(--mono); font-size:.68rem; letter-spacing:.15em;
              text-transform:uppercase; color:var(--rosa); margin-bottom:12px; }
-section.oscuro .bloque .q { color:var(--naranja); }
+
 .bloque p { font-size:1rem; color:var(--tinta-2); margin:0; line-height:1.65; }
-section.oscuro .bloque p { color:var(--in-tinta-2); }
+
 .bloque p + p { margin-top:14px; }
 
 /* --- cifras --------------------------------------------------------------- */
@@ -184,12 +176,14 @@ section.oscuro .bloque p { color:var(--in-tinta-2); }
 /* --- cadena --------------------------------------------------------------- */
 .cadena { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
           gap:clamp(28px,3.5vw,44px); margin-top:clamp(46px,6vw,70px); }
+.paso { border-top:2px solid var(--raya); padding-top:16px; }
+.paso.hot { border-top-color:var(--rosa); }
 .paso .n { font-family:var(--mono); font-size:.68rem; letter-spacing:.2em;
-           color:var(--in-tinta-2); }
-.paso h3 { margin:12px 0 9px; color:var(--in-tinta); }
-.paso.hot h3 { color:var(--naranja); }
+           color:var(--tinta-3); }
+.paso h3 { margin:10px 0 9px; }
+.paso.hot h3 { color:var(--rosa); }
 .paso p { font-family:var(--mono); font-size:.75rem; line-height:1.7;
-          color:var(--in-tinta-2); margin:0; }
+          color:var(--tinta-2); margin:0; }
 
 /* --- conectores ----------------------------------------------------------- */
 .conect { display:flex; flex-wrap:wrap; gap:10px 12px; margin-top:32px; }
@@ -231,20 +225,18 @@ td.n { text-align:right; font-family:var(--mono); white-space:nowrap; color:var(
   margin-top:clamp(34px,4vw,48px); font-size:1.02rem; color:var(--tinta-2);
   max-width:70ch; }
 .centrado .nota { margin-left:auto; margin-right:auto; text-align:left; }
-section.oscuro .nota { border-color:var(--naranja); color:var(--in-tinta-2); }
+
 .nota strong { color:var(--tinta); }
-section.oscuro .nota strong { color:var(--in-tinta); }
 
 /* --- pie ------------------------------------------------------------------ */
-footer { background:var(--in-fondo); color:var(--in-tinta); padding:clamp(56px,7vw,84px) 0 44px; }
+footer { background:var(--gris); border-top:1px solid var(--raya);
+         padding:clamp(56px,7vw,84px) 0 44px; }
 footer .cifras { margin-top:0; }
-footer .cifra .n { color:var(--naranja); font-size:clamp(1.9rem,3.4vw,2.5rem); }
-footer .cifra .t { color:var(--in-tinta-2); }
+footer .cifra .n { font-size:clamp(1.9rem,3.4vw,2.5rem); }
 footer .abajo { display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap;
   align-items:flex-start; margin-top:clamp(46px,5vw,64px); padding-top:30px;
-  border-top:1px solid var(--in-raya); }
-footer .marca span { color:#fff; }
-footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
+  border-top:1px solid var(--raya); }
+footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 
 @media (max-width:860px) {
   body { font-size:17px; }
@@ -392,7 +384,7 @@ footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
 </section>
 
 <!-- DE DATOS A DECISIONES -------------------------------------------------- -->
-<section class="oscuro" id="como">
+<section class="gris" id="como">
   <div class="centro">
     <div class="estrecho" style="text-align:center">
       <h2 style="margin-bottom:14px">De datos a decisiones</h2>
@@ -456,7 +448,7 @@ footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
 </section>
 
 <!-- COPILOT ---------------------------------------------------------------- -->
-<section class="oscuro">
+<section>
   <div class="centro">
     <div class="estrecho" style="text-align:center">
       <h2 style="margin-bottom:14px">Pregunta a tu fábrica</h2>
@@ -465,14 +457,14 @@ footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
     </div>
     <div class="rej c2" style="margin-top:clamp(44px,5vw,64px)">
       <div class="bloque revela"><div class="q">Tú preguntas</div>
-        <h3 style="color:var(--in-tinta)">¿Qué máquina debería revisar mantenimiento?</h3>
+        <h3 >¿Qué máquina debería revisar mantenimiento?</h3>
         <p>En castellano, sin filtros ni menús desplegables.</p></div>
       <div class="bloque revela"><div class="q">RADACTORY responde</div>
-        <h3 style="color:var(--in-tinta)">Compresor 02. Ha bajado de 82 a 74 puntos de salud
+        <h3 >Compresor 02. Ha bajado de 82 a 74 puntos de salud
           en treinta días.</h3>
         <p>Su consumo específico sube un 14,6% y acumula tres alarmas de presión este mes. No ha
         dado ninguna avería todavía, y por eso no aparecería en tu GMAO.</p>
-        <p class="mono" style="font-size:.72rem;color:var(--in-media)">FUENTES · salud del
+        <p class="mono" style="font-size:.72rem;color:var(--tinta-3)">FUENTES · salud del
           activo 9 sep y 10 ago · consumo diario · alarmas del PLC</p></div>
     </div>
     <div class="nota estrecho">No escribe consultas contra tu base: elige una plantilla del
@@ -515,7 +507,7 @@ footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
 </section>
 
 <!-- SEGURIDAD --------------------------------------------------------------- -->
-<section class="oscuro" id="seguridad">
+<section class="gris" id="seguridad">
   <div class="centro">
     <div class="estrecho" style="text-align:center">
       <p class="sobre">Para reenviar a tu responsable de IT</p>
@@ -523,19 +515,19 @@ footer .mono { font-size:.76rem; color:var(--in-tinta-2); line-height:2; }
       <p class="entradilla">Sabemos que esto no lo decides tú solo.</p>
     </div>
     <div class="rej c2">
-      <div class="bloque revela"><h3 style="color:var(--in-tinta)">Ningún puerto abierto</h3>
+      <div class="bloque revela"><h3 >Ningún puerto abierto</h3>
         <p>El conector abre él la conexión, TLS mutuo por el 443 de salida. No escucha en ningún
         puerto: tu cortafuegos no necesita ninguna regla de entrada. Sin VPN entrante, sin túnel
         inverso, sin escritorio remoto.</p></div>
-      <div class="bloque revela"><h3 style="color:var(--in-tinta)">Solo lectura, y no es una opción</h3>
+      <div class="bloque revela"><h3 >Solo lectura, y no es una opción</h3>
         <p>No hay código capaz de escribir en un PLC. No está desactivado: no está implementado,
         y te enseñamos el repositorio. Nunca escribiremos en un sistema OT — eso es otro
         producto, con otra certificación y otro seguro.</p></div>
-      <div class="bloque revela"><h3 style="color:var(--in-tinta)">Aguanta sin línea</h3>
+      <div class="bloque revela"><h3 >Aguanta sin línea</h3>
         <p>Siete días de memoria local. Si cae internet sigue recogiendo, y al volver reenvía en
         orden, sin duplicar y sin perder. Tampoco insiste contra un PLC antiguo: saturarlo puede
         afectar a su ciclo de scan.</p></div>
-      <div class="bloque revela"><h3 style="color:var(--in-tinta)">Tu dato es solo tuyo</h3>
+      <div class="bloque revela"><h3 >Tu dato es solo tuyo</h3>
         <p>Aislamiento en el propio motor de base de datos, no solo en el código. Servidores en
         la Unión Europea. Arquitectura conforme a IEC 62443 e ISO 27001, y contrato de encargado
         del tratamiento desde el primer día.</p></div>
