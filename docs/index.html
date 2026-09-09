@@ -22,23 +22,28 @@
 <style>
 /* ---------------------------------------------------------------------------
    RADACTORY · web comercial
-   Lenguaje visual: blanco dominante, plano, jerarquia por tamaño y peso.
-   Sin tarjetas ni bordes: las columnas se separan con aire. Radios minimos.
-   Un solo acento, el rosa de marca, para CTA y cifras.
 
-   REGLA QUE MANDA: el color de marca no se usa para estado. En el panel del
-   producto (el bloque oscuro) el rojo, el ambar y el azul son informacion.
+   Direccion: fondo crema, mucho aire, titulares grandes, imagenes enmascaradas
+   en rectangulos redondeados y personas en escena. Un solo acento.
+
+   Las ilustraciones son PROPIAS, dibujadas en vectorial. No hay fotografia de
+   banco: en industria una nave que no es una nave de verdad se reconoce al
+   instante, y resta credibilidad en vez de darla. El chaleco naranja no es un
+   capricho de color — es el naranja del logotipo y a la vez el de la ropa de
+   alta visibilidad de cualquier planta.
 --------------------------------------------------------------------------- */
 :root {
+  --crema:   #F9F8F6;
   --blanco:  #FFFFFF;
-  --gris:    #F5F5F4;
-  --tinta:   #1A1A1A;
-  --tinta-2: #5A6068;
-  --tinta-3: #8C9298;
-  --raya:    #E6E4E1;
+  --tinte:   #EDF0EF;
+  --tinta:   #24262B;
+  --tinta-2: #5F6672;
+  --tinta-3: #8E959E;
+  --raya:    #E4E1DB;
 
   --rosa:    #E0115F;
   --rosa-osc:#B00C4A;
+  --rosa-luz:#FDEAF1;
   --naranja: #F59B00;
 
   --in-fondo:#0E1116; --in-fondo-2:#161D22; --in-raya:#27333A;
@@ -48,106 +53,118 @@
   --disp:"Archivo","Helvetica Neue",Arial,sans-serif;
   --logo:"Michroma","Archivo",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --r:10px;
 }
-/* SIN TEMA OSCURO, A PROPOSITO.
-   Una web comercial que cambia de color segun el sistema del visitante no es
-   la misma web para todos, y esta tiene que ser blanca siempre. Lo unico
-   oscuro de la pagina es la captura del producto, porque el producto se ve
-   asi de verdad. */
+/* Sin tema oscuro: una web comercial tiene que ser la misma para todos. */
 
 * { box-sizing:border-box; }
-body { background:var(--blanco); color:var(--tinta); font-family:var(--disp);
-       font-size:18px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+body { background:var(--crema); color:var(--tinta); font-family:var(--disp);
+       font-size:18px; line-height:1.66; -webkit-font-smoothing:antialiased; }
 :focus-visible { outline:2px solid var(--rosa); outline-offset:3px; }
-h1,h2,h3 { margin:0; letter-spacing:-.022em; text-wrap:balance; }
+h1,h2,h3 { margin:0; letter-spacing:-.03em; text-wrap:balance; }
 p { margin:0 0 20px; }
 strong { font-weight:600; }
 .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+img, svg { max-width:100%; }
 
-.centro { max-width:1120px; margin:0 auto; padding:0 clamp(20px,5vw,44px); }
-.estrecho { max-width:760px; margin:0 auto; }
-section { padding:clamp(80px,9vw,124px) 0; }
-section.gris { background:var(--gris); position:relative; overflow:hidden;
-  padding-top:clamp(112px,12vw,168px); padding-bottom:clamp(112px,12vw,168px); }
-section.gris > .ola { z-index:1; }
-section.gris > .centro { position:relative; z-index:2; }
+.centro { max-width:1180px; margin:0 auto; padding:0 clamp(20px,5vw,48px); }
+.estrecho { max-width:740px; margin-left:auto; margin-right:auto; }
+section { padding:clamp(84px,10vw,140px) 0; }
+section.blanca { background:var(--blanco); }
+section.tinte  { background:var(--tinte); }
 
-/* jerarquia por tamaño y peso, sin adornos */
-h1 { font-size:clamp(2.35rem,4.6vw,3.1rem); font-weight:700; line-height:1.08; }
-h2 { font-size:clamp(1.72rem,3.1vw,2.15rem); font-weight:600; line-height:1.14;
-     margin-bottom:18px; }
-h3 { font-size:1.18rem; font-weight:600; line-height:1.35; margin-bottom:8px; }
-.sobre { font-size:1.3rem; font-weight:500; color:var(--rosa); margin-bottom:16px;
-         line-height:1.35; }
-
-.entradilla { font-size:1.12rem; color:var(--tinta-2); line-height:1.6; }
-
+/* El titular ES el separador: no hacen falta reglas ni filetes. */
+h1 { font-size:clamp(2.7rem,6vw,4.3rem); font-weight:700; line-height:1.02; }
+h2 { font-size:clamp(2rem,4.2vw,3rem); font-weight:700; line-height:1.06;
+     margin-bottom:20px; }
+h3 { font-size:1.22rem; font-weight:600; line-height:1.35; margin-bottom:10px; }
+.sobre { font-family:var(--mono); font-size:.72rem; font-weight:600; letter-spacing:.2em;
+         text-transform:uppercase; color:var(--rosa); margin-bottom:20px; }
+.entradilla { font-size:1.14rem; color:var(--tinta-2); line-height:1.62; }
 .centrado { text-align:center; }
-.centrado p, .centrado .entradilla { margin-left:auto; margin-right:auto; }
+.centrado .entradilla, .centrado p { margin-left:auto; margin-right:auto; }
 
 /* --- navegacion ----------------------------------------------------------- */
-.nav { position:sticky; top:0; z-index:30; height:68px; background:var(--blanco);
-       border-bottom:1px solid var(--raya); }
+.nav { position:sticky; top:0; z-index:40; background:rgba(249,248,246,.92);
+       backdrop-filter:blur(10px); border-bottom:1px solid var(--raya); }
 .nav .centro { display:flex; align-items:center; justify-content:space-between;
-               gap:20px; height:100%; }
+               gap:20px; height:72px; }
 .marca { display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
-.marca svg { width:30px; height:30px; display:block; }
-.marca span { font-family:var(--logo); font-size:.88rem; letter-spacing:.03em;
-              color:var(--rosa); }
-.nav-links { display:flex; align-items:center; gap:28px; }
-.nav-links a { font-size:.95rem; font-weight:500; color:var(--tinta-2);
-               text-decoration:none; }
-.nav-links a:hover { color:var(--tinta); }
+.marca .simbolo { width:28px; height:28px; border-radius:5px; flex:0 0 auto; }
+.marca span { font-family:var(--logo); font-size:.85rem; letter-spacing:.02em;
+              color:var(--tinta); }
+.nav-links { display:flex; align-items:center; gap:30px; }
+.nav-links a { font-size:.96rem; font-weight:500; color:var(--tinta-2); text-decoration:none; }
+.nav-links a:hover { color:var(--tinta); text-decoration:underline; text-underline-offset:4px; }
 .btn { display:inline-block; font-size:1rem; font-weight:600; line-height:1;
-  padding:16px 30px; border-radius:10px; background:var(--rosa); color:#fff;
+  padding:17px 30px; border-radius:10px; background:var(--rosa); color:#fff;
   text-decoration:none; border:1px solid var(--rosa); }
 .btn:hover { background:var(--rosa-osc); border-color:var(--rosa-osc); }
-.btn.sec { background:none; color:var(--tinta); border-color:var(--raya); }
-.btn.sec:hover { background:none; border-color:var(--tinta); }
-.btn.peq { padding:11px 18px; font-size:.9rem; }
-.ctas { display:flex; gap:12px; flex-wrap:wrap; margin-top:32px; }
+.btn.sec { background:var(--blanco); color:var(--tinta); border-color:var(--raya); }
+.btn.sec:hover { border-color:var(--tinta); }
+.btn.peq { padding:12px 20px; font-size:.92rem; }
+.ctas { display:flex; gap:12px; flex-wrap:wrap; margin-top:34px; }
 .centrado .ctas { justify-content:center; }
 
-/* --- heroe a sangre, con el texto encima ---------------------------------- */
-.hero { position:relative; background:#0B0E12; color:#fff; overflow:hidden;
-        padding:clamp(96px,13vw,168px) 0 clamp(120px,14vw,190px); text-align:center; }
-/* El fondo es un dibujo vectorial propio: silueta de nave, maquinas y una
-   traza de dato. No hay fotografia porque no tenemos fotografia de planta, y
-   una imagen de banco se nota — en industria, mas que en ningun otro sitio. */
-.hero-fondo { position:absolute; inset:0; width:100%; height:100%; display:block; }
-.hero .centro { position:relative; z-index:2; }
-.hero .sobre { color:var(--naranja); }
-.hero h1 { max-width:19ch; margin:0 auto 22px; color:#fff;
-           font-size:clamp(2.5rem,5.4vw,3.6rem); }
+/* --- imagenes: siempre enmascaradas en rectangulo redondeado -------------- */
+.foto { border-radius:20px; overflow:hidden; display:block; background:var(--tinte);
+        line-height:0; }
+.foto svg { display:block; width:100%; height:auto; }
+.foto.chica { border-radius:16px; }
+
+/* --- hero ----------------------------------------------------------------- */
+.hero { padding:clamp(64px,8vw,110px) 0 clamp(70px,8vw,110px); text-align:center; }
+.hero h1 { max-width:17ch; margin:0 auto 24px; }
 .hero h1 em { font-style:normal; color:var(--rosa); }
-.hero .entradilla { max-width:54ch; margin:0 auto; font-size:1.2rem; color:#C6CCD3; }
-.hero-nota { font-family:var(--mono); font-size:.76rem; color:#7F878F; margin-top:26px; }
-.hero .btn.sec { color:#fff; border-color:#3A424A; }
-.hero .btn.sec:hover { border-color:#fff; }
+.hero .entradilla { max-width:56ch; font-size:1.2rem; }
+.hero-nota { font-family:var(--mono); font-size:.76rem; color:var(--tinta-3); margin-top:26px; }
+.hero .foto { margin-top:clamp(48px,6vw,80px); box-shadow:0 40px 90px -60px rgba(36,38,43,.5); }
 
-/* --- ondas: la transicion entre bandas no es una linea recta -------------- */
-.ola { position:absolute; left:0; width:100%; height:clamp(48px,6vw,92px);
-       display:block; z-index:3; }
-.ola.abajo { bottom:-1px; }
-.ola.arriba { top:-1px; }
-.con-ola { position:relative; }
+/* --- pareja de texto e imagen --------------------------------------------- */
+.duo { display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,5vw,80px);
+       align-items:center; }
+.duo.invertido .txt { order:2; }
+@media (max-width:840px) { .duo { grid-template-columns:1fr; } .duo.invertido .txt { order:0; } }
 
-/* --- el producto, en su marco --------------------------------------------- */
-.escaparate { margin-top:clamp(52px,7vw,84px); padding-bottom:clamp(80px,9vw,124px); }
-.pantalla { border-radius:12px; overflow:hidden; background:var(--in-fondo);
-  box-shadow:0 50px 100px -60px rgba(26,26,26,.55), 0 0 0 1px var(--raya); }
-.chrome { display:flex; align-items:center; gap:8px; padding:11px 16px;
-  background:#1B2228; border-bottom:1px solid var(--in-raya); }
+/* --- rejilla de bloques planos -------------------------------------------- */
+.rej { display:grid; gap:clamp(34px,4.4vw,58px); margin-top:clamp(48px,6vw,76px); }
+.rej.c2 { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
+.rej.c3 { grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); }
+.bloque .q { font-family:var(--mono); font-size:.68rem; letter-spacing:.16em;
+             text-transform:uppercase; color:var(--rosa); margin-bottom:12px; }
+.bloque p { font-size:1rem; color:var(--tinta-2); margin:0; line-height:1.66; }
+.bloque p + p { margin-top:14px; }
+.bloque .foto { margin-bottom:22px; }
+
+/* --- cifras --------------------------------------------------------------- */
+.cifras { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+          gap:clamp(30px,4vw,56px); margin-top:clamp(48px,6vw,72px); text-align:left; }
+.cifra .n { font-size:clamp(2.5rem,4.8vw,3.4rem); font-weight:700; letter-spacing:-.045em;
+            color:var(--rosa); line-height:1; font-variant-numeric:tabular-nums; }
+.cifra .t { font-size:.98rem; color:var(--tinta-2); margin-top:14px; line-height:1.55; }
+
+/* --- proceso numerado ----------------------------------------------------- */
+.pasos { display:grid; grid-template-columns:repeat(auto-fit,minmax(172px,1fr));
+         gap:clamp(28px,3.6vw,46px); margin-top:clamp(48px,6vw,72px); }
+.paso .n { width:38px; height:38px; border-radius:50%; background:var(--rosa-luz);
+  color:var(--rosa); font-family:var(--mono); font-size:.82rem; font-weight:600;
+  display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+.paso.hot .n { background:var(--rosa); color:#fff; }
+.paso p { font-size:.95rem; color:var(--tinta-2); margin:0; line-height:1.6; }
+
+/* --- el producto ---------------------------------------------------------- */
+.pantalla { border-radius:20px; overflow:hidden; background:var(--in-fondo);
+  box-shadow:0 44px 90px -58px rgba(36,38,43,.55); text-align:left; }
+.chrome { display:flex; align-items:center; gap:8px; padding:12px 18px; background:#1B2228;
+          border-bottom:1px solid var(--in-raya); }
 .chrome i { width:10px; height:10px; border-radius:50%; background:#39434B; display:block; }
 .chrome .url { flex:1; text-align:center; font-family:var(--mono); font-size:.68rem;
-               color:var(--in-tinta-2); letter-spacing:.04em; }
+               color:var(--in-tinta-2); }
 .marco-bar { display:flex; justify-content:space-between; gap:12px; padding:14px 20px;
   border-bottom:1px solid var(--in-raya); background:var(--in-fondo-2);
   font-family:var(--mono); font-size:.68rem; letter-spacing:.13em; text-transform:uppercase;
   color:var(--in-tinta-2); }
 .marco-bar b { color:var(--in-tinta); font-weight:600; }
-.marco-cuerpo { padding:22px 20px; text-align:left; }
+.marco-cuerpo { padding:22px 20px; }
 .al { display:grid; grid-template-columns:3px minmax(0,1fr) auto; gap:0 18px;
       align-items:start; padding:16px 0; border-top:1px solid var(--in-raya); }
 .al:first-child { border-top:0; padding-top:4px; }
@@ -165,108 +182,63 @@ h3 { font-size:1.18rem; font-weight:600; line-height:1.35; margin-bottom:8px; }
           white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
 .al .eu em { display:block; font-style:normal; font-size:.62rem; color:var(--in-tinta-2);
              font-weight:400; margin-top:3px; }
-.marco-pie { border-top:1px solid var(--in-raya); background:var(--in-fondo-2);
-  padding:15px 20px; display:flex; justify-content:space-between; align-items:baseline;
-  font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--in-tinta-2); }
+.marco-pie { border-top:1px solid var(--in-raya); background:var(--in-fondo-2); padding:15px 20px;
+  display:flex; justify-content:space-between; align-items:baseline; font-family:var(--mono);
+  font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--in-tinta-2); }
 .marco-pie b { font-size:1.2rem; color:var(--in-alta); letter-spacing:-.02em;
                font-variant-numeric:tabular-nums; }
 .pie-foto { font-family:var(--mono); font-size:.74rem; color:var(--tinta-3);
             margin-top:18px; text-align:center; }
 
-/* --- rejillas planas: sin tarjetas, sin bordes, sin iconos ---------------- */
-.rej { display:grid; gap:clamp(34px,4.5vw,60px); margin-top:clamp(48px,6vw,76px); }
-.rej.c2 { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
-.rej.c3 { grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
-.bloque .q { font-family:var(--mono); font-size:.68rem; letter-spacing:.15em;
-             text-transform:uppercase; color:var(--rosa); margin-bottom:12px; }
-
-.bloque p { font-size:1rem; color:var(--tinta-2); margin:0; line-height:1.65; }
-
-.bloque p + p { margin-top:14px; }
-
-/* --- cifras --------------------------------------------------------------- */
-.cifras { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-          gap:clamp(30px,4vw,56px); margin-top:clamp(46px,6vw,70px); }
-.cifra .n { font-size:clamp(2.4rem,4.6vw,3.3rem); font-weight:700; letter-spacing:-.04em;
-            color:var(--rosa); line-height:1; font-variant-numeric:tabular-nums; }
-.cifra .t { font-size:.98rem; color:var(--tinta-2); margin-top:14px; line-height:1.55; }
-
-/* --- cadena --------------------------------------------------------------- */
-.cadena { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-          gap:clamp(28px,3.5vw,44px); margin-top:clamp(46px,6vw,70px); }
-.paso { border-top:2px solid var(--raya); padding-top:16px; }
-.paso.hot { border-top-color:var(--rosa); }
-.paso .n { font-family:var(--mono); font-size:.68rem; letter-spacing:.2em;
-           color:var(--tinta-3); }
-.paso h3 { margin:10px 0 9px; }
-.paso.hot h3 { color:var(--rosa); }
-.paso p { font-family:var(--mono); font-size:.75rem; line-height:1.7;
-          color:var(--tinta-2); margin:0; }
-
-/* --- conectores ----------------------------------------------------------- */
-.conect { display:flex; flex-wrap:wrap; gap:10px 12px; margin-top:32px; }
-.conect span { font-size:.98rem; font-weight:500; color:var(--tinta-3);
-               padding:7px 0; }
-.conect span::after { content:"·"; margin-left:12px; color:var(--raya); }
-.conect span:last-child::after { content:""; }
-.conect span.si { color:var(--rosa); font-weight:600; }
-
-/* --- tablas planas -------------------------------------------------------- */
-.tw { overflow-x:auto; margin-top:clamp(38px,4.5vw,56px); }
+/* --- tablas y precio ------------------------------------------------------ */
+.tw { overflow-x:auto; margin-top:clamp(38px,4.5vw,56px); background:var(--blanco);
+      border-radius:16px; padding:8px clamp(18px,3vw,32px); }
+section.blanca .tw { background:var(--crema); }
 table { border-collapse:collapse; width:100%; font-size:1rem; }
-th,td { text-align:left; padding:18px 0; border-bottom:1px solid var(--raya);
-        vertical-align:top; padding-right:28px; }
+th,td { text-align:left; padding:17px 0; border-bottom:1px solid var(--raya);
+        vertical-align:top; padding-right:26px; }
 th:last-child, td:last-child { padding-right:0; }
 thead th { font-family:var(--mono); font-size:.66rem; letter-spacing:.14em;
-  text-transform:uppercase; color:var(--tinta-3); font-weight:600; padding-top:0; }
+  text-transform:uppercase; color:var(--tinta-3); font-weight:600; }
 tbody tr:last-child td { border-bottom:0; }
-td { color:var(--tinta-2); }
-td strong { color:var(--tinta); font-weight:600; }
+td { color:var(--tinta-2); } td strong { color:var(--tinta); font-weight:600; }
 td.n { text-align:right; font-family:var(--mono); white-space:nowrap; color:var(--tinta); }
 
-/* --- precios -------------------------------------------------------------- */
-.planes { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-          gap:clamp(34px,4vw,56px); margin-top:clamp(46px,5vw,66px); }
+.planes { display:grid; grid-template-columns:repeat(auto-fit,minmax(252px,1fr));
+          gap:clamp(20px,2.6vw,30px); margin-top:clamp(48px,5vw,68px); }
+.plan { background:var(--blanco); border-radius:18px; padding:32px 30px 34px; }
+section.blanca .plan { background:var(--crema); }
+.plan.destaca { background:var(--tinta); color:var(--crema); }
 .plan .q { font-family:var(--mono); font-size:.7rem; letter-spacing:.17em;
            text-transform:uppercase; color:var(--tinta-3); }
-.plan.destaca .q { color:var(--rosa); }
-.precio { font-size:2.5rem; font-weight:700; letter-spacing:-.04em; margin:14px 0 5px;
+.plan.destaca .q { color:var(--naranja); }
+.precio { font-size:2.5rem; font-weight:700; letter-spacing:-.045em; margin:14px 0 5px;
           line-height:1; }
 .precio small { font-size:.86rem; font-weight:500; color:var(--tinta-3); letter-spacing:0; }
+.plan.destaca .precio small { color:#9AA1AA; }
 .imp { font-family:var(--mono); font-size:.76rem; color:var(--tinta-2); }
-.plan ul { list-style:none; padding:0; margin:22px 0 0; font-size:.98rem;
-           color:var(--tinta-2); }
+.plan.destaca .imp { color:#9AA1AA; }
+.plan ul { list-style:none; padding:0; margin:22px 0 0; font-size:.97rem; color:var(--tinta-2); }
+.plan.destaca ul { color:#C6CBD2; }
 .plan ul li { padding:10px 0; border-top:1px solid var(--raya); }
+.plan.destaca ul li { border-color:#3A3D44; }
 
-/* --- nota ----------------------------------------------------------------- */
-.nota { border-left:2px solid var(--rosa); padding:6px 0 6px 22px;
-  margin-top:clamp(34px,4vw,48px); font-size:1.02rem; color:var(--tinta-2);
-  max-width:70ch; }
-.centrado .nota { margin-left:auto; margin-right:auto; text-align:left; }
-
+.nota { border-left:2px solid var(--rosa); padding:4px 0 4px 22px;
+        margin-top:clamp(32px,4vw,46px); font-size:1.02rem; color:var(--tinta-2);
+        max-width:70ch; text-align:left; }
+.centrado .nota { margin-left:auto; margin-right:auto; }
 .nota strong { color:var(--tinta); }
 
-/* --- pie ------------------------------------------------------------------ */
-footer { background:var(--gris); position:relative; overflow:hidden;
-         padding:clamp(104px,11vw,140px) 0 48px; }
-footer > .ola { z-index:1; }
-footer > .centro { position:relative; z-index:2; }
-footer .cifras { margin-top:0; }
-footer .cifra .n { font-size:clamp(1.9rem,3.4vw,2.5rem); }
-footer .abajo { display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap;
-  align-items:flex-start; margin-top:clamp(46px,5vw,64px); padding-top:30px;
-  border-top:1px solid var(--raya); }
+footer { background:var(--blanco); border-top:1px solid var(--raya); padding:52px 0 40px; }
+footer .centro { display:flex; justify-content:space-between; gap:26px; flex-wrap:wrap;
+                 align-items:flex-start; }
 footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 
-@media (max-width:860px) {
-  body { font-size:17px; }
-  .nav-links a { display:none; }
+@media (max-width:860px) { body { font-size:17px; } .nav-links a { display:none; }
   .al { grid-template-columns:3px 1fr; }
-  .al .eu { grid-column:2; text-align:left; padding-top:10px; }
-}
+  .al .eu { grid-column:2; text-align:left; padding-top:10px; } }
 @media (prefers-reduced-motion:no-preference) {
-  .revela { opacity:0; transform:translateY(16px);
+  .revela { opacity:0; transform:translateY(18px);
             transition:opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
   .revela.on { opacity:1; transform:none; }
 }
@@ -275,7 +247,7 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 <nav class="nav">
   <div class="centro">
     <a class="marca" href="#">
-      <svg viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
+      <svg class="simbolo" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
         <rect width="100" height="100" fill="#F59B00"/>
         <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
         <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
@@ -293,50 +265,9 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 </nav>
 
 <!-- HERO ------------------------------------------------------------------ -->
-<header class="hero">
-  <svg class="hero-fondo" viewBox="0 0 1440 620" preserveAspectRatio="xMidYMid slice"
-       aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#12171D"/><stop offset="1" stop-color="#0B0E12"/>
-      </linearGradient>
-      <linearGradient id="velo" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#0B0E12" stop-opacity=".2"/>
-        <stop offset=".55" stop-color="#0B0E12" stop-opacity=".82"/>
-        <stop offset="1" stop-color="#0B0E12" stop-opacity=".96"/>
-      </linearGradient>
-    </defs>
-    <rect width="1440" height="620" fill="url(#cielo)"/>
-    <!-- cerchas de la nave -->
-    <g stroke="#1C242C" stroke-width="2" fill="none">
-      <path d="M0 150 H1440 M0 200 H1440"/>
-      <path d="M120 150 V620 M360 150 V620 M600 150 V620 M840 150 V620 M1080 150 V620 M1320 150 V620"/>
-      <path d="M120 150 L240 108 L360 150 M600 150 L720 108 L840 150 M1080 150 L1200 108 L1320 150"/>
-    </g>
-    <!-- siluetas de maquina -->
-    <g fill="#141A20">
-      <rect x="80" y="392" width="230" height="228" rx="6"/>
-      <rect x="342" y="440" width="150" height="180" rx="6"/>
-      <rect x="524" y="360" width="286" height="260" rx="6"/>
-      <rect x="842" y="428" width="196" height="192" rx="6"/>
-      <rect x="1070" y="386" width="264" height="234" rx="6"/>
-    </g>
-    <g fill="#1A2129">
-      <rect x="110" y="356" width="76" height="40" rx="4"/>
-      <rect x="560" y="318" width="120" height="46" rx="4"/>
-      <rect x="1104" y="348" width="92" height="42" rx="4"/>
-    </g>
-    <!-- traza de dato sobre la planta -->
-    <path d="M0 300 L180 288 L300 316 L440 262 L600 292 L740 236 L900 274 L1060 226 L1220 266 L1440 214"
-          fill="none" stroke="#E0115F" stroke-width="3" stroke-linejoin="round" opacity=".85"/>
-    <g fill="#F59B00">
-      <circle cx="440" cy="262" r="6"/><circle cx="900" cy="274" r="6"/><circle cx="1220" cy="266" r="6"/>
-    </g>
-    <rect width="1440" height="620" fill="url(#velo)"/>
-  </svg>
-
+<section class="hero">
   <div class="centro">
-    <p class="sobre">Más que un panel: un director de operaciones digital</p>
+    <p class="sobre">Inteligencia industrial</p>
     <h1>Tu fábrica ya genera los datos. Nosotros te decimos <em>qué significan</em>.</h1>
     <p class="entradilla">RADACTORY conecta producción, mantenimiento, energía y calidad para
     detectar pérdidas, anomalías y riesgos antes de que se conviertan en problemas.</p>
@@ -345,18 +276,107 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
       <a class="btn sec" href="#como">Ver cómo funciona</a>
     </div>
     <p class="hero-nota">Sin obra en la red · sin cambiar de ERP · sin tocar el PLC</p>
-  </div>
 
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,44 C220,96 430,4 720,34 C1010,64 1230,100 1440,40 L1440,92 L0,92 Z"
-          fill="#FFFFFF"/>
-  </svg>
-</header>
+    <!-- ILUSTRACION 1 · la nave. Dibujo propio: cerchas, linea de maquinas y
+         una encargada revisando la tablet delante de la estacion. -->
+    <div class="foto revela">
+      <svg viewBox="0 0 1200 560" role="img"
+           aria-label="Interior de una nave industrial: una línea de máquinas y una encargada revisando una tablet junto a una estación.">
+        <rect width="1200" height="560" fill="#E9EDEC"/>
+        <!-- cerchas -->
+        <g stroke="#D3DAD9" stroke-width="3" fill="none">
+          <path d="M0 96 H1200 M0 128 H1200"/>
+          <path d="M120 96 V128 M300 96 V128 M480 96 V128 M660 96 V128 M840 96 V128 M1020 96 V128"/>
+          <path d="M60 96 L150 58 L240 96 M420 96 L510 58 L600 96 M780 96 L870 58 L960 96"/>
+        </g>
+        <!-- luminarias -->
+        <g fill="#F2F5F4"><rect x="200" y="128" width="90" height="12" rx="6"/>
+          <rect x="560" y="128" width="90" height="12" rx="6"/>
+          <rect x="920" y="128" width="90" height="12" rx="6"/></g>
+        <!-- ventanales al fondo -->
+        <g fill="#DFE5E4"><rect x="70" y="170" width="130" height="80" rx="6"/>
+          <rect x="1000" y="170" width="130" height="80" rx="6"/></g>
+        <!-- suelo -->
+        <rect y="430" width="1200" height="130" fill="#DCE2E1"/>
+        <path d="M0 430 H1200" stroke="#CBD3D2" stroke-width="3"/>
+        <!-- marcas viales del suelo -->
+        <g stroke="#F5C86B" stroke-width="5" stroke-linecap="round" opacity=".85">
+          <path d="M40 500 H260 M320 500 H540 M600 500 H820"/></g>
+
+        <!-- maquina 1 -->
+        <g><rect x="90" y="250" width="230" height="180" rx="10" fill="#8C99A2"/>
+          <rect x="112" y="272" width="110" height="72" rx="6" fill="#5C6970"/>
+          <rect x="124" y="284" width="86" height="48" rx="4" fill="#AFBBC1"/>
+          <rect x="248" y="272" width="52" height="140" rx="6" fill="#6E7B84"/>
+          <circle cx="274" cy="300" r="12" fill="#E0115F"/>
+          <circle cx="274" cy="336" r="12" fill="#C6D0D5"/></g>
+        <!-- cinta transportadora -->
+        <g><rect x="320" y="360" width="330" height="18" rx="9" fill="#6E7B84"/>
+          <g fill="#AFBBC1"><rect x="352" y="330" width="46" height="30" rx="4"/>
+            <rect x="432" y="330" width="46" height="30" rx="4"/>
+            <rect x="512" y="330" width="46" height="30" rx="4"/>
+            <rect x="592" y="330" width="46" height="30" rx="4"/></g>
+          <g fill="#5C6970"><rect x="344" y="378" width="14" height="52" rx="5"/>
+            <rect x="608" y="378" width="14" height="52" rx="5"/></g></g>
+        <!-- maquina 2, la estacion que se mira -->
+        <g><rect x="660" y="212" width="270" height="218" rx="12" fill="#79868F"/>
+          <rect x="686" y="238" width="126" height="94" rx="8" fill="#4E5A62"/>
+          <rect x="700" y="252" width="98" height="66" rx="5" fill="#0E1116"/>
+          <path d="M708 300 L730 286 L752 302 L774 274 L790 292" stroke="#E0115F"
+                stroke-width="4" fill="none" stroke-linejoin="round"/>
+          <rect x="840" y="238" width="66" height="164" rx="8" fill="#66737C"/>
+          <g fill="#C6D0D5"><rect x="856" y="256" width="34" height="10" rx="5"/>
+            <rect x="856" y="278" width="34" height="10" rx="5"/></g>
+          <circle cx="873" cy="330" r="14" fill="#F59B00"/></g>
+        <!-- torre de aviso -->
+        <g><rect x="960" y="286" width="26" height="144" rx="6" fill="#66737C"/>
+          <circle cx="973" cy="272" r="16" fill="#E0115F"/></g>
+
+        <!-- LA ENCARGADA: de perfil, mirando la estacion, con la tablet -->
+        <g>
+          <!-- piernas -->
+          <path d="M470 528 V452 h20 v76 z" fill="#3E4A52"/>
+          <path d="M500 528 V452 h20 v76 z" fill="#36414A"/>
+          <rect x="462" y="524" width="36" height="14" rx="6" fill="#24262B"/>
+          <rect x="494" y="524" width="36" height="14" rx="6" fill="#24262B"/>
+          <!-- chaleco de alta visibilidad -->
+          <path d="M462 358 q34 -16 68 0 l10 100 q-44 14 -88 0 z" fill="#F59B00"/>
+          <path d="M478 356 v104 M516 356 v104" stroke="#F7F5F0" stroke-width="6" opacity=".9"/>
+          <!-- brazos -->
+          <path d="M462 372 q-22 26 -6 58 l24 -8 q-10 -26 4 -42 z" fill="#E08A00"/>
+          <path d="M534 372 q22 26 6 58 l-24 -8 q10 -26 -4 -42 z" fill="#E08A00"/>
+          <!-- manos y tablet -->
+          <rect x="452" y="424" width="24" height="18" rx="8" fill="#D8A783"/>
+          <rect x="516" y="424" width="24" height="18" rx="8" fill="#D8A783"/>
+          <g transform="rotate(-8 496 424)">
+            <rect x="452" y="396" width="92" height="62" rx="7" fill="#24262B"/>
+            <rect x="459" y="403" width="78" height="48" rx="4" fill="#0E1116"/>
+            <path d="M466 438 L486 428 L504 440 L522 418" stroke="#E0115F" stroke-width="4"
+                  fill="none" stroke-linejoin="round"/>
+            <rect x="466" y="410" width="30" height="6" rx="3" fill="#4E5A62"/></g>
+          <!-- cabeza, coleta y casco -->
+          <circle cx="498" cy="326" r="25" fill="#E5B48D"/>
+          <path d="M474 320 q6 -30 34 -28 q22 2 24 24 q-8 -12 -30 -12 q-20 0 -28 16 z" fill="#4A3A2E"/>
+          <path d="M528 326 q22 4 20 26 q-2 16 -18 14 q10 -18 -2 -40 z" fill="#4A3A2E"/>
+          <path d="M470 314 a29 29 0 0 1 58 0 z" fill="#F59B00"/>
+          <rect x="464" y="310" width="70" height="10" rx="5" fill="#E08A00"/>
+        </g>
+      </svg>
+    </div>
+    <p class="pie-foto">Lo que ve el turno de mañana. Lo que no ve, se lo decimos nosotros.</p>
+  </div>
+</section>
 
 <!-- EL PRODUCTO ------------------------------------------------------------ -->
-<section style="padding-top:clamp(56px,6vw,84px)">
+<section class="blanca">
   <div class="centro">
-    <div class="pantalla revela">
+    <div class="estrecho centrado">
+      <p class="sobre">La pantalla de los 30 segundos</p>
+      <h2>Cinco líneas, y un euro detrás de cada una</h2>
+      <p class="entradilla">No cincuenta gráficas. Cada alerta dice qué ha cambiado, por qué,
+      cuánto cuesta y qué hacer — y cada euro abre su cuenta hasta el dato del que sale.</p>
+    </div>
+    <div class="pantalla revela" style="margin-top:clamp(46px,5vw,70px)">
       <div class="chrome"><i></i><i></i><i></i><span class="url">radactory.com/planta/torrelavega</span></div>
       <div class="marco-bar"><b>Estado de planta</b><span>martes · 07:41 · turno de mañana</span></div>
       <div class="marco-cuerpo">
@@ -378,20 +398,18 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
       </div>
       <div class="marco-pie"><span>Impacto detectado este mes</span><b data-a="45669">0 €</b></div>
     </div>
-    <p class="pie-foto">La pantalla que el director de planta abre a las 7:40.
-      Cinco líneas, y cada euro abre su cuenta hasta el dato del que sale.</p>
   </div>
 </section>
 
 <!-- CIFRAS ---------------------------------------------------------------- -->
-<section class="gris">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
-  <div class="centro centrado">
-    <h2>Lo que encuentra en una planta de tres líneas</h2>
-    <p class="entradilla estrecho">Cifras de una planta de demostración con noventa días de
-    datos. Los cuatro problemas no estaban marcados en ninguna parte: el motor los encontró solo.</p>
-    <div class="cifras revela" style="text-align:left">
+<section class="tinte">
+  <div class="centro">
+    <div class="estrecho centrado">
+      <h2>Lo que encuentra en una planta de tres líneas</h2>
+      <p class="entradilla">Cifras de una planta de demostración con noventa días de datos. Los
+      cuatro problemas no estaban marcados en ninguna parte: el motor los encontró solo.</p>
+    </div>
+    <div class="cifras revela">
       <div class="cifra"><div class="n">129.218 €</div>
         <div class="t">al año en una sola estación, por microparadas que nadie medía</div></div>
       <div class="cifra"><div class="n">67%</div>
@@ -404,45 +422,84 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
   </div>
 </section>
 
-<!-- QUÉ NECESITAS SABER HOY ----------------------------------------------- -->
+<!-- EL TÉCNICO ------------------------------------------------------------- -->
 <section>
-  <div class="centro">
-    <h2 class="estrecho" style="text-align:center;margin-bottom:14px">¿Qué necesitas saber hoy?</h2>
-    <p class="entradilla estrecho" style="text-align:center">Cinco líneas, no cincuenta
-    gráficas. Cada una termina en un euro y en un verbo.</p>
-    <div class="rej c3">
-      <div class="bloque revela"><div class="q">Producción</div>
-        <h3>La pérdida que nadie mide</h3>
-        <p>Las microparadas —esas de 40 a 90 segundos que no llegan al registro— se llevan entre
-        tres y ocho puntos de OEE. Las deducimos del hueco en el contador, y les ponemos precio.</p></div>
-      <div class="bloque revela"><div class="q">Mantenimiento</div>
-        <h3>El aviso antes de la avería</h3>
-        <p>El compresor 02 bajó de 82 a 74 puntos de salud en treinta días: su consumo específico
-        sube un 14,6% y acumula tres alarmas. <strong>Sin una sola avería todavía</strong>, así
-        que no aparecería en ningún GMAO.</p></div>
-      <div class="bloque revela"><div class="q">Calidad</div>
-        <h3>La causa, no el porcentaje</h3>
-        <p>Tu sistema ya te dice que rechazas un 4%. Nosotros te decimos que dos de cada tres de
-        esos rechazos vienen de un lote concreto de un proveedor concreto.</p></div>
+  <div class="centro duo">
+    <div class="txt">
+      <p class="sobre">Mantenimiento</p>
+      <h2>El aviso llega antes que la avería</h2>
+      <p class="entradilla">El compresor 02 bajó de 82 a 74 puntos de salud en treinta días. Su
+      consumo específico sube un 14,6% y acumula tres alarmas de presión.</p>
+      <p class="entradilla"><strong>No ha dado ni una avería todavía</strong>, así que no
+      aparecería en ningún GMAO. Cuando la dé, será un jueves por la tarde y parará la línea.</p>
+      <div class="ctas"><a class="btn sec" href="#como">Ver cómo se detecta</a></div>
+    </div>
+
+    <!-- ILUSTRACION 2 · el tecnico ante el cuadro de la maquina -->
+    <div class="foto revela">
+      <svg viewBox="0 0 600 520" role="img"
+           aria-label="Un técnico de mantenimiento consulta su móvil delante del cuadro de control de una máquina.">
+        <rect width="600" height="520" fill="#E9EDEC"/>
+        <rect y="410" width="600" height="110" fill="#DCE2E1"/>
+        <path d="M0 410 H600" stroke="#CBD3D2" stroke-width="3"/>
+        <!-- la maquina -->
+        <g><rect x="250" y="70" width="300" height="340" rx="12" fill="#79868F"/>
+          <rect x="278" y="104" width="160" height="120" rx="8" fill="#4E5A62"/>
+          <rect x="292" y="118" width="132" height="92" rx="5" fill="#0E1116"/>
+          <path d="M302 190 L328 172 L352 194 L378 156 L404 178" stroke="#E0115F"
+                stroke-width="5" fill="none" stroke-linejoin="round"/>
+          <rect x="302" y="132" width="52" height="8" rx="4" fill="#4E5A62"/>
+          <!-- pulsadores -->
+          <g><circle cx="480" cy="128" r="18" fill="#E5484D"/>
+            <circle cx="480" cy="180" r="18" fill="#46C68A"/>
+            <rect x="462" y="222" width="36" height="14" rx="7" fill="#C6D0D5"/>
+            <rect x="462" y="250" width="36" height="14" rx="7" fill="#C6D0D5"/></g>
+          <rect x="278" y="256" width="220" height="126" rx="8" fill="#66737C"/>
+          <g fill="#8C99A2"><rect x="296" y="276" width="80" height="14" rx="7"/>
+            <rect x="296" y="304" width="120" height="14" rx="7"/>
+            <rect x="296" y="332" width="60" height="14" rx="7"/></g></g>
+        <!-- torre de aviso -->
+        <g><rect x="200" y="180" width="24" height="230" rx="6" fill="#66737C"/>
+          <circle cx="212" cy="166" r="15" fill="#F59B00"/></g>
+
+        <!-- EL TECNICO, de perfil, mirando el movil -->
+        <g>
+          <path d="M96 500 V420 h20 v80 z" fill="#3E4A52"/>
+          <path d="M126 500 V420 h20 v80 z" fill="#36414A"/>
+          <rect x="88" y="496" width="36" height="14" rx="6" fill="#24262B"/>
+          <rect x="120" y="496" width="36" height="14" rx="6" fill="#24262B"/>
+          <path d="M88 322 q34 -16 68 0 l10 104 q-44 14 -88 0 z" fill="#F59B00"/>
+          <path d="M104 320 v108 M142 320 v108" stroke="#F7F5F0" stroke-width="6" opacity=".9"/>
+          <!-- brazo doblado sujetando el movil -->
+          <path d="M156 338 q26 20 18 54 l-26 -4 q6 -24 -6 -38 z" fill="#E08A00"/>
+          <rect x="140" y="384" width="24" height="18" rx="8" fill="#B4763F"/>
+          <g transform="rotate(-14 158 380)">
+            <rect x="142" y="352" width="34" height="52" rx="6" fill="#24262B"/>
+            <rect x="147" y="358" width="24" height="40" rx="3" fill="#0E1116"/>
+            <path d="M151 386 L159 378 L167 384" stroke="#E0115F" stroke-width="3" fill="none"/></g>
+          <!-- brazo apoyado -->
+          <path d="M88 338 q-24 22 -14 54 l24 -6 q-8 -24 4 -36 z" fill="#E08A00"/>
+          <!-- cabeza y casco -->
+          <circle cx="124" cy="288" r="26" fill="#C89060"/>
+          <path d="M100 282 q4 -26 26 -26 q24 0 26 26 z" fill="#3A2E26"/>
+          <path d="M94 276 a30 30 0 0 1 60 0 z" fill="#F59B00"/>
+          <rect x="88" y="272" width="72" height="10" rx="5" fill="#E08A00"/>
+          <!-- proteccion auditiva -->
+          <circle cx="102" cy="290" r="9" fill="#E0115F"/>
+        </g>
+      </svg>
     </div>
   </div>
 </section>
 
 <!-- NO CAMBIES TU FÁBRICA -------------------------------------------------- -->
-<section class="gris">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
+<section class="blanca">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">No cambies tu fábrica</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Integración</p>
+      <h2>No cambies tu fábrica</h2>
       <p class="entradilla">Nos adaptamos nosotros. Si lo único que hay es un Excel que rellenan
       a mano en el turno de noche, empezamos por ese Excel — y hay valor en tres días.</p>
-    </div>
-    <div class="conect" style="justify-content:center;margin-top:38px">
-      <span class="si">Excel · CSV</span><span class="si">SQL del historiador</span>
-      <span class="si">API del ERP</span><span>SCADA</span><span>MES</span>
-      <span>OPC UA</span><span>MQTT</span><span>GMAO</span><span>Modbus</span>
-      <span>Analizadores de red</span><span>LIMS</span>
     </div>
     <div class="tw estrecho"><table>
       <thead><tr><th>Peldaño</th><th>De dónde sale el dato</th><th class="n">Valor en</th></tr></thead>
@@ -454,21 +511,21 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
         <tr><td class="n">4</td><td>Sensórica añadida donde falta</td><td class="n">proyecto aparte</td></tr>
       </tbody>
     </table></div>
+    <p class="pie-foto">Los tres primeros peldaños no tocan nada de tu red.</p>
   </div>
 </section>
 
-<!-- DE DATOS A DECISIONES -------------------------------------------------- -->
-<section class="gris" id="como">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
+<!-- CÓMO FUNCIONA ---------------------------------------------------------- -->
+<section class="tinte" id="como">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">De datos a decisiones</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Cómo funciona</p>
+      <h2>De datos a decisiones</h2>
       <p class="entradilla">La mayoría del mercado llega hasta el segundo eslabón —te pinta la
       serie— o hasta el tercero —te dispara una alarma. RADACTORY empieza a valer dinero en el
       quinto.</p>
     </div>
-    <div class="cadena">
+    <div class="pasos">
       <div class="paso revela"><div class="n">01</div><h3>Dato</h3>
         <p>Contador de la línea 3, cada cinco minutos.</p></div>
       <div class="paso revela"><div class="n">02</div><h3>Contexto</h3>
@@ -476,7 +533,7 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
       <div class="paso revela"><div class="n">03</div><h3>Anomalía</h3>
         <p>Rendimiento 11 puntos por debajo de su propia línea base.</p></div>
       <div class="paso revela"><div class="n">04</div><h3>Diagnóstico</h3>
-        <p>92 microparadas al día en P4 desde el cambio a REF-2210.</p></div>
+        <p>92 microparadas al día en P4 desde el cambio de formato.</p></div>
       <div class="paso hot revela"><div class="n">05</div><h3>Impacto</h3>
         <p>2.575 uds/semana × 1,25 € de margen × 48 semanas.</p></div>
       <div class="paso hot revela"><div class="n">06</div><h3>Acción</h3>
@@ -486,11 +543,92 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
   </div>
 </section>
 
+<!-- EL RELEVO -------------------------------------------------------------- -->
+<section>
+  <div class="centro duo invertido">
+    <div class="txt">
+      <p class="sobre">Producción</p>
+      <h2>El turno entra sabiendo qué pasó en el anterior</h2>
+      <p class="entradilla">Las microparadas —esas de 40 a 90 segundos que no llegan al
+      registro— se llevan entre tres y ocho puntos de OEE. Las deducimos del hueco en el
+      contador, y les ponemos precio.</p>
+      <p class="entradilla">El relevo deja de ser una conversación de pasillo y pasa a ser una
+      pantalla que los dos miran.</p>
+      <div class="ctas"><a class="btn sec" href="#radares">Ver los radares</a></div>
+    </div>
+
+    <!-- ILUSTRACION 3 · el relevo de turno ante la pantalla de planta -->
+    <div class="foto revela">
+      <svg viewBox="0 0 600 520" role="img"
+           aria-label="Dos operarios comentan el estado de la planta delante de una pantalla colgada en el taller.">
+        <rect width="600" height="520" fill="#E9EDEC"/>
+        <rect y="410" width="600" height="110" fill="#DCE2E1"/>
+        <path d="M0 410 H600" stroke="#CBD3D2" stroke-width="3"/>
+        <!-- pantalla colgada -->
+        <g><rect x="150" y="52" width="330" height="212" rx="12" fill="#24262B"/>
+          <rect x="164" y="66" width="302" height="184" rx="6" fill="#0E1116"/>
+          <rect x="176" y="80" width="86" height="10" rx="5" fill="#5C6970"/>
+          <g><rect x="176" y="102" width="130" height="42" rx="5" fill="#161D22"/>
+            <rect x="186" y="112" width="52" height="9" rx="4" fill="#93A1B0"/>
+            <rect x="186" y="128" width="76" height="8" rx="4" fill="#E8EDF2"/></g>
+          <g><rect x="318" y="102" width="130" height="42" rx="5" fill="#161D22"/>
+            <rect x="328" y="112" width="52" height="9" rx="4" fill="#93A1B0"/>
+            <rect x="328" y="128" width="60" height="8" rx="4" fill="#F5A524"/></g>
+          <path d="M180 218 L226 200 L268 214 L310 182 L354 200 L400 172 L448 190"
+                stroke="#E0115F" stroke-width="4" fill="none" stroke-linejoin="round"/>
+          <g fill="#3E4A52"><rect x="176" y="158" width="272" height="6" rx="3"/></g>
+          <rect x="300" y="264" width="30" height="34" fill="#8C99A2"/>
+          <rect x="272" y="296" width="86" height="12" rx="6" fill="#79868F"/></g>
+
+        <!-- OPERARIO A · de espaldas, senalando la pantalla -->
+        <g>
+          <path d="M176 500 V424 h20 v76 z" fill="#3E4A52"/>
+          <path d="M206 500 V424 h20 v76 z" fill="#36414A"/>
+          <rect x="168" y="496" width="36" height="14" rx="6" fill="#24262B"/>
+          <rect x="200" y="496" width="36" height="14" rx="6" fill="#24262B"/>
+          <path d="M168 330 q34 -16 68 0 l10 100 q-44 14 -88 0 z" fill="#F59B00"/>
+          <path d="M184 328 v104 M222 328 v104" stroke="#F7F5F0" stroke-width="6" opacity=".9"/>
+          <!-- brazo levantado senalando -->
+          <path d="M236 344 q34 -26 46 -62 l-22 -12 q-12 32 -38 50 z" fill="#E08A00"/>
+          <rect x="252" y="262" width="24" height="18" rx="8" fill="#D8A783"
+                transform="rotate(-32 264 271)"/>
+          <path d="M168 346 q-24 24 -12 58 l24 -8 q-10 -26 2 -40 z" fill="#E08A00"/>
+          <circle cx="202" cy="298" r="26" fill="#D8A783"/>
+          <path d="M178 292 q4 -26 26 -26 q24 0 26 26 z" fill="#2F2A26"/>
+        </g>
+
+        <!-- OPERARIA B · de perfil, escuchando, con carpeta -->
+        <g>
+          <path d="M420 500 V430 h18 v70 z" fill="#3E4A52"/>
+          <path d="M446 500 V430 h18 v70 z" fill="#36414A"/>
+          <rect x="412" y="496" width="34" height="14" rx="6" fill="#24262B"/>
+          <rect x="440" y="496" width="34" height="14" rx="6" fill="#24262B"/>
+          <path d="M414 346 q30 -14 60 0 l8 92 q-38 12 -76 0 z" fill="#F59B00"/>
+          <path d="M428 344 v96 M462 344 v96" stroke="#F7F5F0" stroke-width="5" opacity=".9"/>
+          <path d="M414 360 q-20 22 -10 50 l22 -6 q-8 -22 2 -34 z" fill="#E08A00"/>
+          <path d="M474 360 q20 22 10 50 l-22 -6 q8 -22 -2 -34 z" fill="#E08A00"/>
+          <rect x="404" y="404" width="22" height="16" rx="7" fill="#C89060"/>
+          <rect x="472" y="404" width="22" height="16" rx="7" fill="#C89060"/>
+          <g transform="rotate(9 448 404)">
+            <rect x="410" y="378" width="76" height="52" rx="5" fill="#C6D0D5"/>
+            <rect x="418" y="388" width="46" height="6" rx="3" fill="#8C99A2"/>
+            <rect x="418" y="402" width="58" height="6" rx="3" fill="#8C99A2"/>
+            <rect x="418" y="416" width="34" height="6" rx="3" fill="#8C99A2"/></g>
+          <circle cx="444" cy="316" r="24" fill="#C89060"/>
+          <path d="M422 310 q4 -24 24 -24 q22 0 24 24 q-8 -10 -24 -10 q-16 0 -24 10 z" fill="#4A3A2E"/>
+          <path d="M468 316 q18 6 14 26 q-2 12 -14 10 q8 -16 0 -36 z" fill="#4A3A2E"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
 <!-- RADARES ---------------------------------------------------------------- -->
-<section id="radares">
+<section class="blanca" id="radares">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">Seis radares, seis preguntas</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Módulos</p>
+      <h2>Seis radares, seis preguntas</h2>
       <p class="entradilla">Cada uno existe porque contesta una pregunta de negocio, no porque
       quede bien en un folleto.</p>
     </div>
@@ -524,24 +662,24 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 </section>
 
 <!-- COPILOT ---------------------------------------------------------------- -->
-<section>
+<section class="tinte">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">Pregunta a tu fábrica</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Industrial AI Copilot</p>
+      <h2>Pregunta a tu fábrica</h2>
       <p class="entradilla">Consulta el dato real. No estima nunca. Y cita siempre de dónde
       sale, para que puedas comprobarlo.</p>
     </div>
-    <div class="rej c2" style="margin-top:clamp(44px,5vw,64px)">
+    <div class="rej c2">
       <div class="bloque revela"><div class="q">Tú preguntas</div>
-        <h3 >¿Qué máquina debería revisar mantenimiento?</h3>
+        <h3>¿Qué máquina debería revisar mantenimiento?</h3>
         <p>En castellano, sin filtros ni menús desplegables.</p></div>
       <div class="bloque revela"><div class="q">RADACTORY responde</div>
-        <h3 >Compresor 02. Ha bajado de 82 a 74 puntos de salud
-          en treinta días.</h3>
+        <h3>Compresor 02. Ha bajado de 82 a 74 puntos de salud en treinta días.</h3>
         <p>Su consumo específico sube un 14,6% y acumula tres alarmas de presión este mes. No ha
         dado ninguna avería todavía, y por eso no aparecería en tu GMAO.</p>
-        <p class="mono" style="font-size:.72rem;color:var(--tinta-3)">FUENTES · salud del
-          activo 9 sep y 10 ago · consumo diario · alarmas del PLC</p></div>
+        <p class="mono" style="font-size:.74rem;color:var(--tinta-3)">FUENTES · salud del activo
+          9 sep y 10 ago · consumo diario · alarmas del PLC</p></div>
     </div>
     <div class="nota estrecho">No escribe consultas contra tu base: elige una plantilla del
       catálogo y se ejecuta con los permisos de quien pregunta. <strong>La IA no es una puerta
@@ -550,12 +688,11 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 </section>
 
 <!-- ROI --------------------------------------------------------------------- -->
-<section class="gris">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
+<section>
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">Lo que se recupera, con rangos honestos</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Retorno</p>
+      <h2>Lo que se recupera, con rangos honestos</h2>
       <p class="entradilla">No decimos «hasta un 40%». Estas son las horquillas que se ven en
       plantas del tamaño de la tuya, y en el piloto medimos las tuyas.</p>
     </div>
@@ -579,49 +716,49 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
           <td class="n">4 h → menos de 1 h</td></tr>
       </tbody>
     </table></div>
-    <div class="nota"><strong>Si en el piloto no aparecen 30.000 € de mejora identificada, el
-      producto no vale para tu planta y te lo decimos.</strong></div>
+    <div class="nota estrecho"><strong>Si en el piloto no aparecen 30.000 € de mejora
+      identificada, el producto no vale para tu planta y te lo decimos.</strong></div>
   </div>
 </section>
 
 <!-- SEGURIDAD --------------------------------------------------------------- -->
-<section class="gris" id="seguridad">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
+<section class="blanca" id="seguridad">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
+    <div class="estrecho centrado">
       <p class="sobre">Para reenviar a tu responsable de IT</p>
-      <h2 style="margin-bottom:14px">El dato sube. Nunca baja.</h2>
+      <h2>El dato sube. Nunca baja.</h2>
       <p class="entradilla">Sabemos que esto no lo decides tú solo.</p>
     </div>
     <div class="rej c2">
-      <div class="bloque revela"><h3 >Ningún puerto abierto</h3>
+      <div class="bloque revela"><h3>Ningún puerto abierto</h3>
         <p>El conector abre él la conexión, TLS mutuo por el 443 de salida. No escucha en ningún
         puerto: tu cortafuegos no necesita ninguna regla de entrada. Sin VPN entrante, sin túnel
         inverso, sin escritorio remoto.</p></div>
-      <div class="bloque revela"><h3 >Solo lectura, y no es una opción</h3>
+      <div class="bloque revela"><h3>Solo lectura, y no es una opción</h3>
         <p>No hay código capaz de escribir en un PLC. No está desactivado: no está implementado,
         y te enseñamos el repositorio. Nunca escribiremos en un sistema OT — eso es otro
         producto, con otra certificación y otro seguro.</p></div>
-      <div class="bloque revela"><h3 >Aguanta sin línea</h3>
+      <div class="bloque revela"><h3>Aguanta sin línea</h3>
         <p>Siete días de memoria local. Si cae internet sigue recogiendo, y al volver reenvía en
         orden, sin duplicar y sin perder. Tampoco insiste contra un PLC antiguo: saturarlo puede
         afectar a su ciclo de scan.</p></div>
-      <div class="bloque revela"><h3 >Tu dato es solo tuyo</h3>
+      <div class="bloque revela"><h3>Tu dato es solo tuyo</h3>
         <p>Aislamiento en el propio motor de base de datos, no solo en el código. Servidores en
         la Unión Europea. Arquitectura conforme a IEC 62443 e ISO 27001, y contrato de encargado
         del tratamiento desde el primer día.</p></div>
     </div>
-    <div class="nota estrecho">Los operarios van seudonimizados por defecto. Cruzar productividad
-      con nombre y apellidos es tratamiento de datos personales en contexto laboral.</div>
+    <div class="nota estrecho">Los operarios van seudonimizados por defecto. Cruzar
+      productividad con nombre y apellidos es tratamiento de datos personales en contexto
+      laboral.</div>
   </div>
 </section>
 
 <!-- EMPEZAR ----------------------------------------------------------------- -->
-<section id="empezar">
+<section class="tinte" id="empezar">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">Seis semanas. Una línea. 4.900 €.</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Cómo empezamos</p>
+      <h2>Seis semanas. Una línea. 4.900 €.</h2>
       <p class="entradilla">No te pedimos que te comprometas con la planta entera ni con doce
       meses. En la semana seis presentamos a dirección lo que hemos encontrado, en euros.</p>
     </div>
@@ -642,18 +779,16 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
           <td><strong>Informe de oportunidades en euros</strong></td></tr>
       </tbody>
     </table></div>
-    <div class="nota estrecho">Los 4.900 € se descuentan de la implantación si sigues adelante.
-      La semana 1 casi siempre descubre algo que ya justifica el piloto.</div>
+    <div class="nota estrecho">Los 4.900 € se descuentan de la implantación si sigues adelante.</div>
   </div>
 </section>
 
 <!-- PRECIO ------------------------------------------------------------------ -->
-<section class="gris" id="precio">
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
-  <svg class="ola abajo" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,52 C230,4 450,96 720,56 C990,16 1210,0 1440,50 L1440,92 L0,92 Z" fill="#FFFFFF"/></svg>
+<section id="precio">
   <div class="centro">
-    <div class="estrecho" style="text-align:center">
-      <h2 style="margin-bottom:14px">Suscripción, con la implantación aparte</h2>
+    <div class="estrecho centrado">
+      <p class="sobre">Precio</p>
+      <h2>Suscripción, con la implantación aparte</h2>
       <p class="entradilla">Separadas a propósito: meterlo todo en la cuota mensual obliga a un
       compromiso de veinticuatro meses que nadie firma en la primera compra.</p>
     </div>
@@ -676,15 +811,15 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
           <li>Integración a medida</li><li>SSO · SLA 99,5%</li>
           <li>Factory Brain · modelo propio</li></ul></div>
     </div>
-    <div class="nota">Un PRO son 17.180 € el primer año. Una sola parada no planificada evitada
-      en una línea principal ronda los 10.000 €.</div>
+    <div class="nota estrecho">Un PRO son 17.180 € el primer año. Una sola parada no planificada
+      evitada en una línea principal ronda los 10.000 €.</div>
   </div>
 </section>
 
 <!-- CIERRE ------------------------------------------------------------------ -->
-<section>
+<section class="blanca">
   <div class="centro centrado">
-    <h2 class="estrecho" style="margin-bottom:14px">Abre tu fábrica cada mañana y sabe qué mirar</h2>
+    <h2 class="estrecho">Abre tu fábrica cada mañana y sabe qué mirar</h2>
     <p class="entradilla estrecho">Treinta segundos, cinco líneas y un euro detrás de cada una.
     Eso es todo lo que pedimos que pruebes.</p>
     <div class="ctas">
@@ -695,31 +830,19 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
 </section>
 
 <footer>
-  <svg class="ola arriba" viewBox="0 0 1440 92" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 L1440,0 L1440,38 C1210,92 990,4 720,40 C450,76 230,88 0,34 Z" fill="#FFFFFF"/></svg>
   <div class="centro">
-    <div class="cifras">
-      <div class="cifra"><div class="n">4</div>
-        <div class="t">problemas escondidos en la demo, y ninguno marcado en la base</div></div>
-      <div class="cifra"><div class="n">90</div>
-        <div class="t">días de datos simulados que cuadran entre módulos</div></div>
-      <div class="cifra"><div class="n">6</div>
-        <div class="t">semanas desde la primera visita hasta el informe a dirección</div></div>
-      <div class="cifra"><div class="n">0</div>
-        <div class="t">puertos que hay que abrir en tu cortafuegos</div></div>
-    </div>
-    <div class="abajo">
-      <a class="marca" href="#">
-        <svg viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
-          <rect width="100" height="100" fill="#F59B00"/>
-          <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
-          <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
-        </svg>
-        <span>RADACTORY</span>
-      </a>
-      <div class="mono">
-        Índole Data Technology · Torrelavega, Cantabria<br>
-        Las cifras de esta página salen de la planta de demostración, no de un cliente real
-      </div>
+    <a class="marca" href="#">
+      <svg class="simbolo" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
+        <rect width="100" height="100" fill="#F59B00"/>
+        <path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/>
+        <path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/>
+      </svg>
+      <span>RADACTORY</span>
+    </a>
+    <div class="mono">
+      Índole Data Technology · Torrelavega, Cantabria<br>
+      Las cifras de esta página salen de la planta de demostración, no de un cliente real<br>
+      Ilustraciones propias
     </div>
   </div>
 </footer>
@@ -729,8 +852,6 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
   "use strict";
   var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Las cifras del panel cuentan hacia arriba una sola vez: la cifra ES el
-  // mensaje, y el movimiento sirve para que se mire, no para decorar.
   document.querySelectorAll('[data-a]').forEach(function (el) {
     var fin = parseFloat(el.dataset.a);
     var resto = el.innerHTML.replace(/^[^<]*/, '');
@@ -756,7 +877,7 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2; }
         e.target.classList.add('on');
         obs.unobserve(e.target);
       });
-    }, { threshold: .16 });
+    }, { threshold: .15 });
     document.querySelectorAll('.revela').forEach(function (n) { obs.observe(n); });
   } else {
     document.querySelectorAll('.revela').forEach(function (n) { n.classList.add('on'); });
