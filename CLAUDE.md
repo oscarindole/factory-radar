@@ -1,4 +1,4 @@
-# FACTORY RADAR — instrucciones
+# RADACTORY — instrucciones
 
 Plataforma de inteligencia industrial. El repositorio contiene la **FASE A**
 (definición, en `doc/`), la **FASE B** (estructura real: `db/`, `src/`, `edge/`,
@@ -71,6 +71,6 @@ borran al refactorizar.
 
 ## Este repositorio va solo
 
-FACTORY RADAR no depende de ningún otro proyecto ni lo menciona. Si algo de aquí
+RADACTORY no depende de ningún otro proyecto ni lo menciona. Si algo de aquí
 te recuerda a otro producto, no lo enlaces: no se comparten commits, ni código
 sin revisar, ni números de un cliente a otro.

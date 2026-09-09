@@ -5,7 +5,7 @@
 
 <style>
 /* ---------------------------------------------------------------------------
-   Panel de FACTORY RADAR. El sistema visual sale de panel/src/estilo/tokens.css.
+   Panel de RADACTORY. El sistema visual sale de panel/src/estilo/tokens.css.
 
    OSCURO POR DEFECTO y a proposito: esto se mira en una oficina de planta con
    luz de nave y en una pantalla colgada en el taller. No sigue el tema del
@@ -46,8 +46,12 @@ body { background:var(--fondo); color:var(--texto); font-family:var(--f);
 .lat { background:var(--fondo-2); border-right:1px solid var(--linea);
        display:flex; flex-direction:column; position:sticky; top:0; height:100vh; }
 .marca { padding:16px 18px 14px; border-bottom:1px solid var(--linea); }
-.marca b { font-size:.8rem; font-weight:800; letter-spacing:.14em; display:block; }
-.marca b i { font-style:normal; color:var(--alta); }
+/* El rosa de marca aparece SOLO aqui. En el resto del panel el color es
+   informacion —critica, alta, media— y mezclarlo con el corporativo hace que
+   una alarma y un logotipo se lean igual. */
+.marca .fila-marca { display:flex; align-items:center; gap:9px; }
+.marca .logo { width:22px; height:22px; flex:0 0 auto; border-radius:2px; }
+.marca b { font-size:.78rem; font-weight:800; letter-spacing:.1em; color:#E0115F; }
 .marca span { font-family:var(--m); font-size:.6rem; color:var(--texto-3);
               display:block; margin-top:5px; letter-spacing:.05em; }
 .menu { padding:10px 0; flex:1; overflow-y:auto; }
@@ -207,7 +211,7 @@ td .barra.aviso { background:var(--alta); }
 
 <div class="app">
   <aside class="lat">
-    <div class="marca"><b>FACTORY <i>RADAR</i></b><span id="planta-nom"></span></div>
+    <div class="marca"><div class="fila-marca"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="RADACTORY"><rect width="100" height="100" fill="#F59B00"/><path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/><path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/></svg><b>RADACTORY</b></div><span id="planta-nom"></span></div>
     <nav class="menu" id="menu"></nav>
     <div class="pie">
       <span class="m" style="font-size:.6rem;color:var(--texto-3)">DEMO</span>
@@ -720,7 +724,7 @@ td .barra.aviso { background:var(--alta); }
     const c = COPILOT[i];
     document.getElementById('respuesta').innerHTML = `
       <div class="pregunta"><div class="q">Tú</div>${esc(c.q)}</div>
-      <div class="caja"><h3>Factory Radar</h3><p>${c.f()}</p>
+      <div class="caja"><h3>Radactory</h3><p>${c.f()}</p>
         <div class="fuentes">FUENTES · <em>${esc(c.fuentes)}</em></div></div>`;
   };
 

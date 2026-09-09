@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- FACTORY RADAR :: 07 · metricas calculadas
+-- RADACTORY :: 07 · metricas calculadas
 --
 -- Regla que gobierna todas las tablas de este fichero: nada calculado se
 -- guarda sin su explicacion. `calc_version` y `entradas` permiten abrir

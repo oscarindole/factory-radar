@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- FACTORY RADAR :: 06 · eventos y causas
+-- RADACTORY :: 06 · eventos y causas
 -- ---------------------------------------------------------------------------
 
 -- Catalogo de causas POR CLIENTE, jerarquico.

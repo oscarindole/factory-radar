@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- FACTORY RADAR :: 08 · linea base, alertas, IA y documentos
+-- RADACTORY :: 08 · linea base, alertas, IA y documentos
 -- ---------------------------------------------------------------------------
 
 -- LA LINEA BASE ES POR CONTEXTO, NO GLOBAL (decision 09).

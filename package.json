@@ -1,9 +1,9 @@
 {
-  "name": "factory-radar",
+  "name": "radactory",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Capa de inteligencia industrial sobre los sistemas que la fabrica ya tiene.",
+  "description": "RADACTORY · capa de inteligencia industrial sobre los sistemas que la fabrica ya tiene.",
   "engines": { "node": ">=22.6.0" },
   "scripts": {
     "migrar": "node scripts/migrar.mjs",

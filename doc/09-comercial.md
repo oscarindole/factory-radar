@@ -94,7 +94,7 @@ que la justifican en la reunión.
         TU FÁBRICA YA GENERA LOS DATOS.
         NOSOTROS TE DECIMOS QUÉ SIGNIFICAN.
 
-  FACTORY RADAR conecta producción, mantenimiento, energía y calidad
+  RADACTORY conecta producción, mantenimiento, energía y calidad
   para detectar pérdidas, anomalías y riesgos antes de que se
   conviertan en problemas.
 

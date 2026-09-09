@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- FACTORY RADAR :: 05 · serie temporal
+-- RADACTORY :: 05 · serie temporal
 -- ---------------------------------------------------------------------------
 
 -- Serie densa. Append-only: nunca se corrige una lectura, se inserta la

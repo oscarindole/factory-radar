@@ -65,7 +65,7 @@ De ahí tres reglas de diseño que no se negocian pantalla a pantalla:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  FACTORY RADAR      Planta Torrelavega ▾        [Pregunta a tu fábrica]  │
+│  RADACTORY      Planta Torrelavega ▾        [Pregunta a tu fábrica]  │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ESTADO DE PLANTA                        martes 9 · 07:41 · turno mañana │

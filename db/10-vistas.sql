@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- FACTORY RADAR :: 10 · vistas de consulta
+-- RADACTORY :: 10 · vistas de consulta
 --
 -- Ninguna consulta del panel toca `measurement`. Siempre lee del agregado del
 -- nivel adecuado. Es la diferencia entre un panel que abre en 200 ms y uno que

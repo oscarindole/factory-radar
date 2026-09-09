@@ -1,4 +1,4 @@
-<title>Explorador de Factory Radar</title>
+<title>Explorador de Radactory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -56,8 +56,9 @@ body { background:var(--paper); color:var(--ink); font-family:var(--f-disp);
 .rail { border-right:1px solid var(--rule); display:flex; flex-direction:column;
         min-height:0; background:var(--paper-2); }
 .marca { padding:16px 18px 12px; border-bottom:1px solid var(--rule); }
-.marca b { font-size:.82rem; font-weight:800; letter-spacing:.13em; display:block; line-height:1.3; }
-.marca b i { font-style:normal; color:var(--signal); }
+.marca .fila-marca { display:flex; align-items:center; gap:9px; }
+.marca .logo { width:22px; height:22px; flex:0 0 auto; border-radius:2px; }
+.marca b { font-size:.8rem; font-weight:800; letter-spacing:.1em; color:#E0115F; }
 .marca span { font-family:var(--f-mono); font-size:.62rem; color:var(--ink-3);
               letter-spacing:.06em; display:block; margin-top:4px; }
 .buscar { padding:10px 14px; border-bottom:1px solid var(--rule); }
@@ -174,7 +175,7 @@ body { background:var(--paper); color:var(--ink); font-family:var(--f-disp);
 <div class="app">
   <aside class="rail">
     <div class="marca">
-      <b>FACTORY <i>RADAR</i></b>
+      <div class="fila-marca"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="RADACTORY"><rect width="100" height="100" fill="#F59B00"/><path fill="#E0115F" d="M8 20 H86 V42 H30 V84 H8 Z"/><path fill="#E0115F" d="M46 42 H68 L88 84 H64 Z"/></svg><b>RADACTORY</b></div>
       <span id="sello">fases A y B · 9 sep 2026</span>
     </div>
     <div class="buscar">
