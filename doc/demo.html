@@ -1,0 +1,859 @@
+<title>Demo Factory · Torrelavega</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* ---------------------------------------------------------------------------
+   Panel de FACTORY RADAR. El sistema visual sale de panel/src/estilo/tokens.css.
+
+   OSCURO POR DEFECTO y a proposito: esto se mira en una oficina de planta con
+   luz de nave y en una pantalla colgada en el taller. No sigue el tema del
+   navegador; el interruptor esta en la propia aplicacion, como lo estara en el
+   producto. Todo color se declara explicitamente para que la pagina se sostenga
+   sobre cualquier fondo del anfitrion.
+--------------------------------------------------------------------------- */
+:root {
+  --fondo:#0E1116; --fondo-2:#161D22; --fondo-3:#1D262C; --linea:#27333A;
+  --texto:#E8EDF2; --texto-2:#93A1B0; --texto-3:#6B7A85;
+  --critica:#E5484D; --alta:#F5A524; --media:#3E9EFF; --baja:#7C8794; --bien:#46C68A;
+  --dato:#FFFFFF; --base-linea:#93A1B0;
+  /* Series categoricas: azul · verde-agua · violeta. Validadas con el script de
+     la guia (banda de luminosidad, croma, separacion para daltonismo y
+     contraste sobre fondo oscuro). NO se reutiliza ningun color de severidad:
+     esos estan reservados para el estado, no para la identidad de una serie. */
+  --s1:#3987e5; --s2:#199e70; --s3:#9085e9;
+  --r:3px;
+  --f:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+:root[data-tema="claro"] {
+  --fondo:#F2F4F6; --fondo-2:#FFFFFF; --fondo-3:#E8ECEF; --linea:#D3DAE0;
+  --texto:#10161B; --texto-2:#4A5A66; --texto-3:#74848F;
+  --critica:#C0281D; --alta:#A2620A; --media:#14639E; --baja:#64717B; --bien:#12764C;
+  --dato:#000000; --base-linea:#74848F;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#4a3aa7;
+}
+* { box-sizing:border-box; }
+body { background:var(--fondo); color:var(--texto); font-family:var(--f);
+       font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+:focus-visible { outline:2px solid var(--alta); outline-offset:2px; }
+.cifra, table td, .m, tspan { font-variant-numeric:tabular-nums; }
+.m { font-family:var(--m); }
+
+/* --- armazon -------------------------------------------------------------- */
+.app { display:grid; grid-template-columns:212px minmax(0,1fr); min-height:100vh; }
+.lat { background:var(--fondo-2); border-right:1px solid var(--linea);
+       display:flex; flex-direction:column; position:sticky; top:0; height:100vh; }
+.marca { padding:16px 18px 14px; border-bottom:1px solid var(--linea); }
+.marca b { font-size:.8rem; font-weight:800; letter-spacing:.14em; display:block; }
+.marca b i { font-style:normal; color:var(--alta); }
+.marca span { font-family:var(--m); font-size:.6rem; color:var(--texto-3);
+              display:block; margin-top:5px; letter-spacing:.05em; }
+.menu { padding:10px 0; flex:1; overflow-y:auto; }
+.menu a { display:flex; justify-content:space-between; align-items:center; gap:8px;
+  padding:7px 18px; color:var(--texto-2); text-decoration:none; font-size:.83rem;
+  border-left:2px solid transparent; }
+.menu a:hover { color:var(--texto); background:var(--fondo-3); }
+.menu a.on { color:var(--texto); border-left-color:var(--alta); background:var(--fondo-3);
+             font-weight:600; }
+.menu a .n { font-family:var(--m); font-size:.62rem; padding:1px 5px; border-radius:8px;
+             background:var(--critica); color:#fff; }
+.menu .sep { font-family:var(--m); font-size:.56rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--texto-3); padding:14px 18px 5px; }
+.pie { border-top:1px solid var(--linea); padding:11px 18px; display:flex;
+       justify-content:space-between; align-items:center; }
+.pie button { background:none; border:1px solid var(--linea); color:var(--texto-2);
+  font-family:var(--m); font-size:.62rem; padding:4px 8px; border-radius:var(--r);
+  cursor:pointer; }
+.pie button:hover { color:var(--texto); border-color:var(--texto-3); }
+
+main { padding:22px clamp(18px,3vw,34px) 80px; min-width:0; }
+.cab { display:flex; justify-content:space-between; align-items:flex-end; gap:16px;
+       flex-wrap:wrap; margin-bottom:20px; }
+h1 { font-size:1.42rem; font-weight:700; letter-spacing:-.02em; margin:0; }
+h2 { font-size:.96rem; font-weight:700; margin:30px 0 10px; letter-spacing:-.01em; }
+h2:first-child { margin-top:0; }
+.sub { font-family:var(--m); font-size:.66rem; color:var(--texto-3); letter-spacing:.06em; }
+
+/* --- cifras --------------------------------------------------------------- */
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+        gap:1px; background:var(--linea); border:1px solid var(--linea); }
+.kpi { background:var(--fondo-2); padding:13px 15px 12px; }
+.kpi .k { font-family:var(--m); font-size:.57rem; letter-spacing:.11em;
+          text-transform:uppercase; color:var(--texto-3); margin-bottom:8px; }
+.kpi .v { font-size:1.8rem; font-weight:700; letter-spacing:-.035em; line-height:1;
+          color:var(--dato); }
+.kpi .v small { font-size:.95rem; font-weight:600; }
+.kpi .d { font-family:var(--m); font-size:.64rem; margin-top:6px; color:var(--texto-2); }
+.kpi .d.bien { color:var(--bien); } .kpi .d.mal { color:var(--critica); }
+.kpi .d.ojo { color:var(--alta); }
+.kpi .vacio { color:var(--texto-3); font-size:1.4rem; }
+
+/* --- alertas -------------------------------------------------------------- */
+.lista { border:1px solid var(--linea); background:var(--fondo-2); }
+.fila { display:grid; grid-template-columns:3px 74px minmax(0,1fr) auto;
+  gap:0 14px; align-items:start; padding:13px 15px 13px 0; width:100%;
+  text-align:left; background:none; border:0; border-top:1px solid var(--linea);
+  cursor:pointer; color:inherit; font-family:inherit; }
+.fila:first-child { border-top:0; }
+.fila:hover { background:var(--fondo-3); }
+.fila .st { align-self:stretch; border-radius:0 2px 2px 0; }
+.fila.critica .st{background:var(--critica)} .fila.alta .st{background:var(--alta)}
+.fila.media .st{background:var(--media)} .fila.baja .st{background:var(--baja)}
+.sev { font-family:var(--m); font-size:.57rem; letter-spacing:.1em; text-transform:uppercase;
+       padding-top:3px; display:flex; align-items:center; gap:4px; }
+.fila.critica .sev{color:var(--critica)} .fila.alta .sev{color:var(--alta)}
+.fila.media .sev{color:var(--media)} .fila.baja .sev{color:var(--baja)}
+.fila .t { font-size:.9rem; font-weight:600; letter-spacing:-.005em; }
+.fila .s { font-family:var(--m); font-size:.69rem; color:var(--texto-2); line-height:1.5;
+           margin-top:4px; }
+.fila .eur { font-family:var(--m); font-size:.78rem; font-weight:600; color:var(--alta);
+             white-space:nowrap; text-align:right; padding-top:2px; }
+.fila .eur em { display:block; font-style:normal; font-size:.6rem; color:var(--texto-3);
+                font-weight:400; margin-top:2px; }
+
+/* --- bloques -------------------------------------------------------------- */
+.caja { border:1px solid var(--linea); background:var(--fondo-2); padding:16px 18px;
+        margin:16px 0; }
+.caja h3 { font-family:var(--m); font-size:.6rem; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--texto-3); margin:0 0 9px; font-weight:600; }
+.caja p { margin:0 0 9px; font-size:.9rem; max-width:78ch; }
+.caja p:last-child { margin-bottom:0; }
+.cuenta { font-family:var(--m); font-size:.73rem; line-height:1.85; background:var(--fondo-3);
+  border-left:2px solid var(--alta); padding:11px 14px; overflow-x:auto; color:var(--texto-2); }
+.cuenta b { color:var(--dato); font-weight:600; }
+.cuenta i { color:var(--alta); font-style:normal; font-weight:600; }
+.fuentes { font-family:var(--m); font-size:.65rem; color:var(--texto-3); line-height:1.8;
+  border-top:1px solid var(--linea); margin-top:14px; padding-top:11px; }
+.fuentes em { font-style:normal; color:var(--media); }
+.btns { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.btns button { font-family:var(--m); font-size:.68rem; padding:7px 12px;
+  border:1px solid var(--linea); background:none; color:var(--texto); border-radius:var(--r);
+  cursor:pointer; }
+.btns button.pri { border-color:var(--alta); color:var(--alta); }
+.btns button:hover { background:var(--fondo-3); }
+
+/* --- tablas --------------------------------------------------------------- */
+.tw { overflow-x:auto; border:1px solid var(--linea); margin:14px 0; }
+table { border-collapse:collapse; width:100%; font-size:.82rem; }
+th,td { text-align:left; padding:8px 13px; border-bottom:1px solid var(--linea); }
+thead th { font-family:var(--m); font-size:.58rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--texto-3); background:var(--fondo-3); white-space:nowrap; font-weight:600; }
+tbody tr:last-child td { border-bottom:0; }
+tbody tr { background:var(--fondo-2); }
+td.n, th.n { text-align:right; font-family:var(--m); white-space:nowrap; }
+td .barra { display:block; height:5px; background:var(--s1); border-radius:2px; margin-top:4px; }
+td .barra.aviso { background:var(--alta); }
+
+/* --- salud ---------------------------------------------------------------- */
+.salud { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:6px 12px;
+         align-items:center; font-size:.8rem; }
+.salud .lab { font-family:var(--m); font-size:.63rem; color:var(--texto-2); }
+.salud .bar { height:6px; background:var(--fondo-3); border-radius:3px; overflow:hidden; }
+.salud .bar i { display:block; height:100%; background:var(--s1); border-radius:3px; }
+.salud .val { font-family:var(--m); font-size:.72rem; color:var(--dato); }
+.score { font-size:2.4rem; font-weight:800; letter-spacing:-.04em; line-height:1; }
+.score small { font-size:.9rem; font-weight:600; color:var(--texto-3); }
+
+/* --- graficas ------------------------------------------------------------- */
+.viz { border:1px solid var(--linea); background:var(--fondo-2); padding:14px 16px 10px;
+       margin:14px 0; position:relative; }
+.viz .titulo { font-size:.86rem; font-weight:600; margin-bottom:2px; }
+.viz .nota { font-family:var(--m); font-size:.63rem; color:var(--texto-3); margin-bottom:10px; }
+.viz svg { display:block; width:100%; overflow:visible; }
+.leyenda { display:flex; gap:14px; flex-wrap:wrap; font-family:var(--m); font-size:.65rem;
+           color:var(--texto-2); margin-top:8px; }
+.leyenda span { display:flex; align-items:center; gap:6px; }
+.leyenda i { width:11px; height:3px; border-radius:2px; display:block; }
+.leyenda i.disc { height:0; border-top:2px dashed var(--base-linea); }
+.tip { position:absolute; pointer-events:none; background:var(--fondo-3);
+  border:1px solid var(--linea); border-radius:var(--r); padding:7px 10px;
+  font-family:var(--m); font-size:.66rem; color:var(--texto); white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.35); opacity:0; transition:opacity .1s; z-index:9; }
+.tip b { color:var(--dato); }
+.tip .sw { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:5px; }
+
+/* --- copilot -------------------------------------------------------------- */
+.chat { max-width:76ch; }
+.pregunta { background:var(--fondo-3); border:1px solid var(--linea); padding:10px 14px;
+  border-radius:var(--r); font-size:.88rem; margin:14px 0 0; }
+.pregunta .q { font-family:var(--m); font-size:.6rem; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--texto-3); margin-bottom:5px; }
+.sugerencias { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+.sugerencias button { font-size:.78rem; padding:7px 12px; border:1px solid var(--linea);
+  background:var(--fondo-2); color:var(--texto-2); border-radius:14px; cursor:pointer;
+  font-family:inherit; text-align:left; }
+.sugerencias button:hover { color:var(--texto); border-color:var(--texto-3); }
+
+.vacio-est { border:1px dashed var(--linea); padding:22px; text-align:center;
+  color:var(--texto-3); font-size:.85rem; }
+.aviso-dato { border-left:3px solid var(--alta); background:var(--fondo-2);
+  padding:11px 14px; margin:14px 0; font-size:.84rem; }
+.aviso-dato b { display:block; font-family:var(--m); font-size:.58rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--alta); margin-bottom:4px; }
+
+@media (max-width:860px) {
+  .app { grid-template-columns:1fr; }
+  .lat { position:static; height:auto; }
+  .menu { display:flex; flex-wrap:wrap; padding:8px; }
+  .menu .sep { display:none; }
+  .menu a { border-left:0; border-bottom:2px solid transparent; padding:6px 11px; }
+  .menu a.on { border-left:0; border-bottom-color:var(--alta); }
+  .fila { grid-template-columns:3px minmax(0,1fr); }
+  .fila .sev { grid-column:2; } .fila .eur { grid-column:2; text-align:left; padding-top:6px; }
+}
+</style>
+
+<div class="app">
+  <aside class="lat">
+    <div class="marca"><b>FACTORY <i>RADAR</i></b><span id="planta-nom"></span></div>
+    <nav class="menu" id="menu"></nav>
+    <div class="pie">
+      <span class="m" style="font-size:.6rem;color:var(--texto-3)">DEMO</span>
+      <button id="tema" type="button">tema</button>
+    </div>
+  </aside>
+  <main id="vista"></main>
+</div>
+
+<script>window.__DEMO__={"generado":"2026-09-09T12:16:01.838Z","hoy":"2026-09-09","planta":{"nombre":"Planta de Torrelavega","direccion":"Pol. Ind. de Barros, Torrelavega (Cantabria)","precio_kwh":0.142,"empresa":"DEMO FACTORY, S.L."},"indicadores":{"uds_ok":40302,"uds_nok":2230,"oee":0.7101258064516129,"disp":0.9149870967741935,"rend":0.8163677419354839,"cal":0.9530838709677419,"oee_prev":0.7532936044604789,"cal_prev":0.9709004526074123,"rechazo_prev":0.02974948953827914,"kwh":31442.5794,"coste_eur":4464.87,"kwh_ud":0.7801741700163763,"kwh_ud_prev":0.6825681874547429,"pct_sin_causa":72.9},"alertas":[{"id":"2d4a1d32-db0d-4acb-be08-3008a1c2e02a","modulo":"production","severidad":"critica","confianza":80,"titulo":"Estación P4 · Alimentador · el rendimiento cayó del 87% al 76%","que_cambio":"Turno de mañana: media de 75.8% en 4 turnos de los últimos 7 días, frente a una línea base de 86.6%. Afecta también a tarde y noche. REF-2210 es demasiado reciente para tener línea base propia: se compara con el comportamiento de la máquina en otros formatos.","por_que":"657 microparadas en 7 días (94/día frente a 8 habituales), de 64 s de media. Coincide con la fabricación de REF-2210.","impacto_eur_anual":129218.23,"impacto_base":{"detalle":[{"turno":"mañana","formula":"uds_perdidas_semana * margen_unitario * semanas_anio","producto":"REF-2210","eur_semana":1145.77,"semanas_anio":48,"margen_unitario":1.25,"caida_rendimiento":0.1079,"uds_perdidas_semana":916.6,"capacidad_semanal_uds":8492.307692307691},{"turno":"tarde","formula":"uds_perdidas_semana * margen_unitario * semanas_anio","producto":"REF-2210","eur_semana":792.75,"semanas_anio":48,"margen_unitario":1.25,"caida_rendimiento":0.0996,"uds_perdidas_semana":634.2,"capacidad_semanal_uds":6369.2307692307695},{"turno":"noche","formula":"uds_perdidas_semana * margen_unitario * semanas_anio","producto":"REF-2210","eur_semana":753.53,"semanas_anio":48,"margen_unitario":1.25,"caida_rendimiento":0.0946,"uds_perdidas_semana":602.8,"capacidad_semanal_uds":6369.2307692307695}],"formula":"suma por turno de uds_perdidas_semana * margen_unitario * semanas_anio","eur_semana":2692.05,"turnos_afectados":3},"evidencia":[{"tipo":"nodo","codigo":"L3.P4"},{"tipo":"ventana","desde":"2026-09-01T22:00:00.000Z","hasta":"2026-09-09T00:00:00+02:00","turnos":10},{"tipo":"linea_base","media":0.8660096153846154,"muestras":52,"comparador":"genérico (nodo × turno)","minimo_turnos_exigido":3},{"tipo":"eventos","microparadas":657}],"accion_recomendada":"Revisar el ajuste de L3.P4 para el formato REF-2210.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":"L3.P4","nodo_nombre":"Estación P4 · Alimentador"},{"id":"9cb87f03-4243-425e-a03a-6ee69baf75b6","modulo":"quality","severidad":"alta","confianza":81,"titulo":"Proveedor Suministros ZETA · 67% de los rechazos de REF-1140","que_cambio":"67% de las unidades rechazadas de REF-1140 en los últimos 45 días corresponden al lote L-4471, de Suministros ZETA. En la ventana hay 4 lotes distintos.","por_que":"Correlación, no causa demostrada: n=140 incidencias sobre 4 lotes. Confirmar con un ensayo del material.","impacto_eur_anual":null,"impacto_base":{"nota":"No se anualiza: el problema termina con el lote.","formula":"coste de los rechazos ya imputados al lote","dias_ventana":45,"uds_rechazadas":9873,"lotes_en_ventana":4,"pct_sobre_producto":67,"coste_incurrido_eur":23695.2},"evidencia":[{"tipo":"lote","codigo":"L-4471","proveedor":"ZETA"},{"tipo":"producto","codigo":"REF-1140"},{"n":140,"tipo":"muestra","lotes":4,"minimo_exigido":30},{"tipo":"ventana","desde":"2026-08-29T12:00:00.000Z","hasta":"2026-09-07T20:00:00.000Z"}],"accion_recomendada":"Bloquear el lote L-4471 y abrir reclamación a Suministros ZETA.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":null,"nodo_nombre":null},{"id":"2d97eb83-499b-4096-bcba-d8e580d6490c","modulo":"quality","severidad":"alta","confianza":80,"titulo":"Proveedor Suministros ZETA · 45% de los rechazos de REF-1180","que_cambio":"45% de las unidades rechazadas de REF-1180 en los últimos 45 días corresponden al lote L-4471, de Suministros ZETA. En la ventana hay 4 lotes distintos.","por_que":"Correlación, no causa demostrada: n=132 incidencias sobre 4 lotes. Confirmar con un ensayo del material.","impacto_eur_anual":null,"impacto_base":{"nota":"No se anualiza: el problema termina con el lote.","formula":"coste de los rechazos ya imputados al lote","dias_ventana":45,"uds_rechazadas":1928,"lotes_en_ventana":4,"pct_sobre_producto":45,"coste_incurrido_eur":6940.8},"evidencia":[{"tipo":"lote","codigo":"L-4471","proveedor":"ZETA"},{"tipo":"producto","codigo":"REF-1180"},{"n":132,"tipo":"muestra","lotes":4,"minimo_exigido":30},{"tipo":"ventana","desde":"2026-08-20T12:00:00.000Z","hasta":"2026-08-28T20:00:00.000Z"}],"accion_recomendada":"Bloquear el lote L-4471 y abrir reclamación a Suministros ZETA.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":null,"nodo_nombre":null},{"id":"4e1919fa-27e8-488f-85ed-0dd3f340e65d","modulo":"energy","severidad":"media","confianza":92,"titulo":"Compresor 02 · consume 44 kW con la planta parada","que_cambio":"Fuera del horario productivo mantiene 43.9 kW de media, unas 49 h por semana.","por_que":"El equipo no se detiene al acabar el último turno.","impacto_eur_anual":14661.9,"impacto_base":{"kw":43.9,"formula":"kw * horas_semana * semanas_anio * precio_kwh","kwh_anio":103252.8,"precio_kwh":0.142,"horas_semana":49,"semanas_anio":48},"evidencia":[{"tipo":"nodo","codigo":"COMP-02"},{"tipo":"ventana","desde":"2026-08-25T22:00:00.000Z","hasta":"2026-09-09T00:00:00+02:00"},{"tipo":"criterio","regla":"consumo fuera de toda instancia de turno"}],"accion_recomendada":"Programar la parada automática de COMP-02 al cierre del último turno.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":"COMP-02","nodo_nombre":"Compresor 02"},{"id":"b62e648b-e06d-4212-8606-a99cb0a07e70","modulo":"energy","severidad":"media","confianza":92,"titulo":"Enfriadora · consume 9 kW con la planta parada","que_cambio":"Fuera del horario productivo mantiene 8.5 kW de media, unas 49 h por semana.","por_que":"El equipo no se detiene al acabar el último turno.","impacto_eur_anual":2838.86,"impacto_base":{"kw":8.5,"formula":"kw * horas_semana * semanas_anio * precio_kwh","kwh_anio":19992,"precio_kwh":0.142,"horas_semana":49,"semanas_anio":48},"evidencia":[{"tipo":"nodo","codigo":"CHILLER"},{"tipo":"ventana","desde":"2026-08-25T22:00:00.000Z","hasta":"2026-09-09T00:00:00+02:00"},{"tipo":"criterio","regla":"consumo fuera de toda instancia de turno"}],"accion_recomendada":"Programar la parada automática de CHILLER al cierre del último turno.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":"CHILLER","nodo_nombre":"Enfriadora"},{"id":"8e0bbfe9-4fdc-4b3c-a665-26bce937cd09","modulo":"energy","severidad":"media","confianza":92,"titulo":"Línea 3 · Envasado · consume 7 kW con la planta parada","que_cambio":"Fuera del horario productivo mantiene 7.3 kW de media, unas 49 h por semana.","por_que":"El equipo no se detiene al acabar el último turno.","impacto_eur_anual":2438.08,"impacto_base":{"kw":7.3,"formula":"kw * horas_semana * semanas_anio * precio_kwh","kwh_anio":17169.6,"precio_kwh":0.142,"horas_semana":49,"semanas_anio":48},"evidencia":[{"tipo":"nodo","codigo":"L3"},{"tipo":"ventana","desde":"2026-08-25T22:00:00.000Z","hasta":"2026-09-09T00:00:00+02:00"},{"tipo":"criterio","regla":"consumo fuera de toda instancia de turno"}],"accion_recomendada":"Programar la parada automática de L3 al cierre del último turno.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":"L3","nodo_nombre":"Línea 3 · Envasado"},{"id":"7f5207e9-98ed-4238-b209-2de247ce9433","modulo":"energy","severidad":"media","confianza":92,"titulo":"Línea 1 · Mecanizado · consume 5 kW con la planta parada","que_cambio":"Fuera del horario productivo mantiene 5.0 kW de media, unas 49 h por semana.","por_que":"El equipo no se detiene al acabar el último turno.","impacto_eur_anual":1669.92,"impacto_base":{"kw":5,"formula":"kw * horas_semana * semanas_anio * precio_kwh","kwh_anio":11760,"precio_kwh":0.142,"horas_semana":49,"semanas_anio":48},"evidencia":[{"tipo":"nodo","codigo":"L1"},{"tipo":"ventana","desde":"2026-08-25T22:00:00.000Z","hasta":"2026-09-09T00:00:00+02:00"},{"tipo":"criterio","regla":"consumo fuera de toda instancia de turno"}],"accion_recomendada":"Programar la parada automática de L1 al cierre del último turno.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":"L1","nodo_nombre":"Línea 1 · Mecanizado"},{"id":"e26f5c57-85ff-4eca-b989-0e6d44c2236e","modulo":"quality","severidad":"media","confianza":62,"titulo":"Proveedor Iberpack · 84% de los rechazos de REF-2210","que_cambio":"84% de las unidades rechazadas de REF-2210 en los últimos 45 días corresponden al lote L-4215, de Iberpack. En la ventana hay 2 lotes distintos.","por_que":"Correlación, no causa demostrada: n=52 incidencias sobre 2 lotes. Confirmar con un ensayo del material.","impacto_eur_anual":null,"impacto_base":{"nota":"No se anualiza: el problema termina con el lote.","formula":"coste de los rechazos ya imputados al lote","dias_ventana":45,"uds_rechazadas":1971,"lotes_en_ventana":2,"pct_sobre_producto":84,"coste_incurrido_eur":2463.75},"evidencia":[{"tipo":"lote","codigo":"L-4215","proveedor":"IBERPACK"},{"tipo":"producto","codigo":"REF-2210"},{"n":52,"tipo":"muestra","lotes":2,"minimo_exigido":30},{"tipo":"ventana","desde":"2026-09-03T04:00:00.000Z","hasta":"2026-09-08T04:00:00.000Z"}],"accion_recomendada":"Bloquear el lote L-4215 y abrir reclamación a Iberpack.","detectado_en":"2026-09-09T12:15:40.169Z","nodo_codigo":null,"nodo_nombre":null}],"activos":[{"id":"bc8a59ae-5092-4505-943f-2c9c75828600","parent_id":null,"tipo":"area","codigo":"NAVE-1","nombre":"Nave de producción","fabricante":null,"modelo":null,"criticidad":3,"coste_parada_hora":null,"score":null,"c_fiabilidad":null,"c_comportamiento":null,"c_mantenimiento":null,"c_criticidad":null,"pesos":null,"entradas":null,"score_prev":null,"n_senales":0},{"id":"d7596aa7-61a7-4e7d-a1fd-b790a44bc19e","parent_id":null,"tipo":"area","codigo":"SERV","nombre":"Servicios auxiliares","fabricante":null,"modelo":null,"criticidad":3,"coste_parada_hora":null,"score":null,"c_fiabilidad":null,"c_comportamiento":null,"c_mantenimiento":null,"c_criticidad":null,"pesos":null,"entradas":null,"score_prev":null,"n_senales":0},{"id":"746c28b7-17f2-47ba-8673-440fdc290df3","parent_id":"d7596aa7-61a7-4e7d-a1fd-b790a44bc19e","tipo":"auxiliar","codigo":"CHILLER","nombre":"Enfriadora","fabricante":"Atlas Copco","modelo":null,"criticidad":3,"coste_parada_hora":900,"score":89,"c_fiabilidad":100,"c_comportamiento":100,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":0,"consumo_14d":432.071,"consumo_base":447.62,"deriva_consumo_pct":-3.5,"sin_plan_preventivo":true,"averias_media_30d_previa":0},"score_prev":89,"n_senales":1},{"id":"89f77375-bc97-432f-b72f-b251fc19d6c5","parent_id":"d7596aa7-61a7-4e7d-a1fd-b790a44bc19e","tipo":"auxiliar","codigo":"COMP-01","nombre":"Compresor 01","fabricante":"Atlas Copco","modelo":null,"criticidad":4,"coste_parada_hora":900,"score":85,"c_fiabilidad":100,"c_comportamiento":100,"c_mantenimiento":85,"c_criticidad":40,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":0,"consumo_14d":587.709,"consumo_base":624.795,"deriva_consumo_pct":-5.9,"sin_plan_preventivo":true,"averias_media_30d_previa":0},"score_prev":85,"n_senales":1},{"id":"c1b81ce7-51a4-4117-a380-53b792bdf7a2","parent_id":"d7596aa7-61a7-4e7d-a1fd-b790a44bc19e","tipo":"auxiliar","codigo":"COMP-02","nombre":"Compresor 02","fabricante":"Atlas Copco","modelo":null,"criticidad":4,"coste_parada_hora":900,"score":74,"c_fiabilidad":100,"c_comportamiento":55,"c_mantenimiento":85,"c_criticidad":40,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":3,"averias_30d":0,"consumo_14d":1007.723,"consumo_base":880.14,"deriva_consumo_pct":14.5,"sin_plan_preventivo":true,"averias_media_30d_previa":0},"score_prev":83,"n_senales":1},{"id":"1d9a5037-e25e-4616-a5e8-e7691eaab0ed","parent_id":"bc8a59ae-5092-4505-943f-2c9c75828600","tipo":"linea","codigo":"L1","nombre":"Línea 1 · Mecanizado","fabricante":null,"modelo":null,"criticidad":5,"coste_parada_hora":1450,"score":null,"c_fiabilidad":null,"c_comportamiento":null,"c_mantenimiento":null,"c_criticidad":null,"pesos":null,"entradas":null,"score_prev":null,"n_senales":1},{"id":"dba5e843-12bf-49ba-afcc-b9c1306d3cf5","parent_id":"bc8a59ae-5092-4505-943f-2c9c75828600","tipo":"linea","codigo":"L2","nombre":"Línea 2 · Montaje","fabricante":null,"modelo":null,"criticidad":5,"coste_parada_hora":1900,"score":null,"c_fiabilidad":null,"c_comportamiento":null,"c_mantenimiento":null,"c_criticidad":null,"pesos":null,"entradas":null,"score_prev":null,"n_senales":1},{"id":"c2538c73-0372-40b1-aa06-7da29938ad9c","parent_id":"bc8a59ae-5092-4505-943f-2c9c75828600","tipo":"linea","codigo":"L3","nombre":"Línea 3 · Envasado","fabricante":null,"modelo":null,"criticidad":5,"coste_parada_hora":3200,"score":null,"c_fiabilidad":null,"c_comportamiento":null,"c_mantenimiento":null,"c_criticidad":null,"pesos":null,"entradas":null,"score_prev":null,"n_senales":1},{"id":"6e1b4d6a-e43e-453c-898e-a3e63fff0fc4","parent_id":"1d9a5037-e25e-4616-a5e8-e7691eaab0ed","tipo":"maquina","codigo":"L1.CTRL","nombre":"Control dimensional","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":3,"coste_parada_hora":1450,"score":64,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":37,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":37},"score_prev":57,"n_senales":1},{"id":"206c80ef-46ba-427f-8f0e-a083776f4bed","parent_id":"1d9a5037-e25e-4616-a5e8-e7691eaab0ed","tipo":"maquina","codigo":"L1.FRESA","nombre":"Fresadora 2","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":3,"coste_parada_hora":1450,"score":64,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":37,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":39},"score_prev":57,"n_senales":1},{"id":"837dd12c-58ce-4b1a-8793-42119daad354","parent_id":"1d9a5037-e25e-4616-a5e8-e7691eaab0ed","tipo":"maquina","codigo":"L1.LAVADO","nombre":"Túnel de lavado","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":2,"coste_parada_hora":1450,"score":61,"c_fiabilidad":20,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":80,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":41,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":38},"score_prev":61,"n_senales":1},{"id":"de72fbac-a836-48ac-a01b-cb5ffd252c05","parent_id":"1d9a5037-e25e-4616-a5e8-e7691eaab0ed","tipo":"maquina","codigo":"L1.TORNO","nombre":"Torno CNC 1","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":4,"coste_parada_hora":1450,"score":60,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":40,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":37,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":39.5},"score_prev":53,"n_senales":1},{"id":"4135e10e-4f03-4002-9add-8328c2f1bb8c","parent_id":"dba5e843-12bf-49ba-afcc-b9c1306d3cf5","tipo":"maquina","codigo":"L2.P1","nombre":"Puesto montaje 1","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":3,"coste_parada_hora":1900,"score":59,"c_fiabilidad":25,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":38,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":36.5},"score_prev":57,"n_senales":1},{"id":"4284251f-6a43-4bf6-9d75-e46e0f8aa302","parent_id":"dba5e843-12bf-49ba-afcc-b9c1306d3cf5","tipo":"maquina","codigo":"L2.P2","nombre":"Puesto montaje 2","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":3,"coste_parada_hora":1900,"score":64,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":38,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":42.5},"score_prev":57,"n_senales":1},{"id":"9829c2e4-0d3f-479f-b07b-101a4ca5f90c","parent_id":"dba5e843-12bf-49ba-afcc-b9c1306d3cf5","tipo":"maquina","codigo":"L2.P3","nombre":"Puesto montaje 3","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":3,"coste_parada_hora":1900,"score":64,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":31,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":42.5},"score_prev":57,"n_senales":1},{"id":"a32784e4-839e-4c03-a27b-08cfe8be9fb6","parent_id":"dba5e843-12bf-49ba-afcc-b9c1306d3cf5","tipo":"maquina","codigo":"L2.PRENSA","nombre":"Prensa de inserción","fabricante":"DMG MORI","modelo":"NLX 2500","criticidad":4,"coste_parada_hora":1900,"score":53,"c_fiabilidad":20,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":40,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":43,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":38.5},"score_prev":53,"n_senales":1},{"id":"40b4a3cb-6e56-4c35-aa58-3f0e7c145dbb","parent_id":"c2538c73-0372-40b1-aa06-7da29938ad9c","tipo":"maquina","codigo":"L3.ETIQ","nombre":"Etiquetadora","fabricante":"KRONES","modelo":"Contiform 3","criticidad":4,"coste_parada_hora":3200,"score":60,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":40,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":52,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":57.5},"score_prev":53,"n_senales":1},{"id":"0dc700d4-ea5c-4b28-b4bf-2c17e99f160f","parent_id":"c2538c73-0372-40b1-aa06-7da29938ad9c","tipo":"maquina","codigo":"L3.LLEN","nombre":"Llenadora","fabricante":"KRONES","modelo":"Contiform 3","criticidad":5,"coste_parada_hora":3200,"score":56,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":20,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":57,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":58},"score_prev":49,"n_senales":1},{"id":"8224b05b-c1ee-4b83-b2a8-1e382b01a603","parent_id":"c2538c73-0372-40b1-aa06-7da29938ad9c","tipo":"maquina","codigo":"L3.P4","nombre":"Estación P4 · Alimentador","fabricante":"KRONES","modelo":"Contiform 3","criticidad":5,"coste_parada_hora":3200,"score":51,"c_fiabilidad":25,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":20,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":51,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":49.5},"score_prev":49,"n_senales":1},{"id":"be7bdc20-d5db-4045-8c67-a903311a8c94","parent_id":"c2538c73-0372-40b1-aa06-7da29938ad9c","tipo":"maquina","codigo":"L3.PALET","nombre":"Paletizador","fabricante":"KRONES","modelo":"Contiform 3","criticidad":3,"coste_parada_hora":3200,"score":64,"c_fiabilidad":40,"c_comportamiento":85,"c_mantenimiento":85,"c_criticidad":60,"pesos":{"criticidad":0.2,"fiabilidad":0.35,"mantenimiento":0.2,"comportamiento":0.25},"entradas":{"alarmas_30d":0,"averias_30d":46,"consumo_14d":null,"consumo_base":null,"deriva_consumo_pct":null,"sin_plan_preventivo":true,"averias_media_30d_previa":50},"score_prev":57,"n_senales":1}],"oeeLinea":[{"codigo":"L1","fecha":"2026-07-26T22:00:00.000Z","oee":0.7455,"disp":0.8698,"rend":0.8782,"cal":0.9758,"uds_ok":3292,"uds_nok":82},{"codigo":"L1","fecha":"2026-07-27T22:00:00.000Z","oee":0.805,"disp":0.9495,"rend":0.8696,"cal":0.9751,"uds_ok":3555,"uds_nok":91},{"codigo":"L1","fecha":"2026-07-28T22:00:00.000Z","oee":0.8057,"disp":0.907,"rend":0.9119,"cal":0.9749,"uds_ok":3558,"uds_nok":92},{"codigo":"L1","fecha":"2026-07-29T22:00:00.000Z","oee":0.5476,"disp":0.9244,"rend":0.6072,"cal":0.9775,"uds_ok":2418,"uds_nok":56},{"codigo":"L1","fecha":"2026-07-30T22:00:00.000Z","oee":0.766,"disp":0.9122,"rend":0.8648,"cal":0.9711,"uds_ok":2349,"uds_nok":70},{"codigo":"L1","fecha":"2026-07-31T22:00:00.000Z","oee":0.7917,"disp":0.902,"rend":0.9052,"cal":0.9696,"uds_ok":1214,"uds_nok":38},{"codigo":"L1","fecha":"2026-08-02T22:00:00.000Z","oee":0.781,"disp":0.9201,"rend":0.8707,"cal":0.9749,"uds_ok":2395,"uds_nok":62},{"codigo":"L1","fecha":"2026-08-03T22:00:00.000Z","oee":0.7862,"disp":0.9052,"rend":0.8868,"cal":0.9788,"uds_ok":2411,"uds_nok":52},{"codigo":"L1","fecha":"2026-08-04T22:00:00.000Z","oee":0.7709,"disp":0.9081,"rend":0.8719,"cal":0.9732,"uds_ok":2364,"uds_nok":65},{"codigo":"L1","fecha":"2026-08-05T22:00:00.000Z","oee":0.7859,"disp":0.9322,"rend":0.8627,"cal":0.9773,"uds_ok":2410,"uds_nok":56},{"codigo":"L1","fecha":"2026-08-06T22:00:00.000Z","oee":0.7889,"disp":0.9307,"rend":0.8711,"cal":0.9731,"uds_ok":2419,"uds_nok":67},{"codigo":"L1","fecha":"2026-08-07T22:00:00.000Z","oee":0.6913,"disp":0.8136,"rend":0.8769,"cal":0.9689,"uds_ok":1060,"uds_nok":34},{"codigo":"L1","fecha":"2026-08-09T22:00:00.000Z","oee":0.7972,"disp":0.9439,"rend":0.8638,"cal":0.9772,"uds_ok":3520,"uds_nok":82},{"codigo":"L1","fecha":"2026-08-10T22:00:00.000Z","oee":0.7722,"disp":0.8866,"rend":0.8927,"cal":0.9773,"uds_ok":3410,"uds_nok":80},{"codigo":"L1","fecha":"2026-08-11T22:00:00.000Z","oee":0.7453,"disp":0.8696,"rend":0.883,"cal":0.9719,"uds_ok":3291,"uds_nok":95},{"codigo":"L1","fecha":"2026-08-12T22:00:00.000Z","oee":0.7471,"disp":0.8809,"rend":0.8728,"cal":0.9728,"uds_ok":3299,"uds_nok":92},{"codigo":"L1","fecha":"2026-08-13T22:00:00.000Z","oee":0.7464,"disp":0.8918,"rend":0.8626,"cal":0.9709,"uds_ok":3296,"uds_nok":99},{"codigo":"L1","fecha":"2026-08-14T22:00:00.000Z","oee":0.7264,"disp":0.8726,"rend":0.8527,"cal":0.9763,"uds_ok":1604,"uds_nok":39},{"codigo":"L1","fecha":"2026-08-16T22:00:00.000Z","oee":0.8146,"disp":0.964,"rend":0.8677,"cal":0.9738,"uds_ok":3597,"uds_nok":96},{"codigo":"L1","fecha":"2026-08-17T22:00:00.000Z","oee":0.6934,"disp":0.8709,"rend":0.881,"cal":0.9037,"uds_ok":3062,"uds_nok":324},{"codigo":"L1","fecha":"2026-08-18T22:00:00.000Z","oee":0.5295,"disp":0.9161,"rend":0.594,"cal":0.9741,"uds_ok":2338,"uds_nok":62},{"codigo":"L1","fecha":"2026-08-19T22:00:00.000Z","oee":0.7194,"disp":0.8552,"rend":0.8613,"cal":0.9769,"uds_ok":2206,"uds_nok":52},{"codigo":"L1","fecha":"2026-08-20T22:00:00.000Z","oee":0.7585,"disp":0.8961,"rend":0.8663,"cal":0.976,"uds_ok":2326,"uds_nok":57},{"codigo":"L1","fecha":"2026-08-21T22:00:00.000Z","oee":0.7826,"disp":0.895,"rend":0.8977,"cal":0.974,"uds_ok":1200,"uds_nok":32},{"codigo":"L1","fecha":"2026-08-23T22:00:00.000Z","oee":0.8065,"disp":0.9388,"rend":0.8824,"cal":0.9737,"uds_ok":2473,"uds_nok":67},{"codigo":"L1","fecha":"2026-08-24T22:00:00.000Z","oee":0.7696,"disp":0.899,"rend":0.883,"cal":0.97,"uds_ok":2360,"uds_nok":73},{"codigo":"L1","fecha":"2026-08-25T22:00:00.000Z","oee":0.7314,"disp":0.8335,"rend":0.9006,"cal":0.9748,"uds_ok":2243,"uds_nok":58},{"codigo":"L1","fecha":"2026-08-26T22:00:00.000Z","oee":0.7314,"disp":0.8648,"rend":0.8687,"cal":0.974,"uds_ok":2243,"uds_nok":61},{"codigo":"L1","fecha":"2026-08-27T22:00:00.000Z","oee":0.8149,"disp":0.9617,"rend":0.8695,"cal":0.9747,"uds_ok":2499,"uds_nok":65},{"codigo":"L1","fecha":"2026-08-28T22:00:00.000Z","oee":0.8079,"disp":0.9045,"rend":1,"cal":0.8933,"uds_ok":1615,"uds_nok":193},{"codigo":"L1","fecha":"2026-08-30T22:00:00.000Z","oee":0.6871,"disp":0.8603,"rend":0.8771,"cal":0.9094,"uds_ok":3034,"uds_nok":302},{"codigo":"L1","fecha":"2026-08-31T22:00:00.000Z","oee":0.7113,"disp":0.8611,"rend":0.9126,"cal":0.9053,"uds_ok":3141,"uds_nok":329},{"codigo":"L1","fecha":"2026-09-01T22:00:00.000Z","oee":0.6828,"disp":0.8548,"rend":0.892,"cal":0.8946,"uds_ok":3015,"uds_nok":356},{"codigo":"L1","fecha":"2026-09-02T22:00:00.000Z","oee":0.717,"disp":0.926,"rend":0.8506,"cal":0.9105,"uds_ok":3166,"uds_nok":311},{"codigo":"L1","fecha":"2026-09-03T22:00:00.000Z","oee":0.7036,"disp":0.8698,"rend":0.8891,"cal":0.9117,"uds_ok":3107,"uds_nok":302},{"codigo":"L1","fecha":"2026-09-04T22:00:00.000Z","oee":0.6798,"disp":0.8575,"rend":0.882,"cal":0.8988,"uds_ok":1501,"uds_nok":169},{"codigo":"L1","fecha":"2026-09-06T22:00:00.000Z","oee":0.7476,"disp":0.9455,"rend":0.8662,"cal":0.9127,"uds_ok":3301,"uds_nok":316},{"codigo":"L2","fecha":"2026-07-26T22:00:00.000Z","oee":0.7329,"disp":0.8976,"rend":0.8333,"cal":0.98,"uds_ok":1556,"uds_nok":32},{"codigo":"L2","fecha":"2026-07-27T22:00:00.000Z","oee":0.7188,"disp":0.8914,"rend":0.8312,"cal":0.9715,"uds_ok":1526,"uds_nok":45},{"codigo":"L2","fecha":"2026-07-28T22:00:00.000Z","oee":0.7424,"disp":0.891,"rend":0.8543,"cal":0.9753,"uds_ok":1576,"uds_nok":40},{"codigo":"L2","fecha":"2026-07-29T22:00:00.000Z","oee":0.7226,"disp":0.857,"rend":0.8664,"cal":0.9726,"uds_ok":1534,"uds_nok":43},{"codigo":"L2","fecha":"2026-07-30T22:00:00.000Z","oee":0.7866,"disp":0.9468,"rend":0.8552,"cal":0.9716,"uds_ok":1670,"uds_nok":49},{"codigo":"L2","fecha":"2026-07-31T22:00:00.000Z","oee":0.7687,"disp":0.9503,"rend":0.8337,"cal":0.9703,"uds_ok":816,"uds_nok":25},{"codigo":"L2","fecha":"2026-08-02T22:00:00.000Z","oee":0.7569,"disp":0.9227,"rend":0.8459,"cal":0.9687,"uds_ok":1607,"uds_nok":52},{"codigo":"L2","fecha":"2026-08-03T22:00:00.000Z","oee":0.6953,"disp":0.8429,"rend":0.8485,"cal":0.9724,"uds_ok":1476,"uds_nok":42},{"codigo":"L2","fecha":"2026-08-04T22:00:00.000Z","oee":0.7791,"disp":0.9724,"rend":0.8212,"cal":0.9758,"uds_ok":1654,"uds_nok":41},{"codigo":"L2","fecha":"2026-08-05T22:00:00.000Z","oee":0.7692,"disp":0.9127,"rend":0.8657,"cal":0.9738,"uds_ok":1633,"uds_nok":44},{"codigo":"L2","fecha":"2026-08-06T22:00:00.000Z","oee":0.7537,"disp":0.9084,"rend":0.8525,"cal":0.9733,"uds_ok":1600,"uds_nok":44},{"codigo":"L2","fecha":"2026-08-07T22:00:00.000Z","oee":0.7235,"disp":0.8795,"rend":0.8386,"cal":0.9808,"uds_ok":768,"uds_nok":15},{"codigo":"L2","fecha":"2026-08-09T22:00:00.000Z","oee":0.7682,"disp":0.9266,"rend":0.8505,"cal":0.9749,"uds_ok":1631,"uds_nok":42},{"codigo":"L2","fecha":"2026-08-10T22:00:00.000Z","oee":0.7951,"disp":0.9473,"rend":0.8632,"cal":0.9724,"uds_ok":1688,"uds_nok":48},{"codigo":"L2","fecha":"2026-08-11T22:00:00.000Z","oee":0.7664,"disp":0.9116,"rend":0.862,"cal":0.9755,"uds_ok":1627,"uds_nok":41},{"codigo":"L2","fecha":"2026-08-12T22:00:00.000Z","oee":0.7126,"disp":0.8596,"rend":0.8526,"cal":0.972,"uds_ok":1513,"uds_nok":44},{"codigo":"L2","fecha":"2026-08-13T22:00:00.000Z","oee":0.7155,"disp":0.871,"rend":0.8443,"cal":0.9732,"uds_ok":1519,"uds_nok":42},{"codigo":"L2","fecha":"2026-08-14T22:00:00.000Z","oee":0.8083,"disp":1,"rend":0.829,"cal":0.975,"uds_ok":858,"uds_nok":22},{"codigo":"L2","fecha":"2026-08-16T22:00:00.000Z","oee":0.7277,"disp":0.8875,"rend":0.8433,"cal":0.9729,"uds_ok":1545,"uds_nok":43},{"codigo":"L2","fecha":"2026-08-17T22:00:00.000Z","oee":0.7103,"disp":0.8644,"rend":0.846,"cal":0.9711,"uds_ok":1508,"uds_nok":45},{"codigo":"L2","fecha":"2026-08-18T22:00:00.000Z","oee":0.724,"disp":0.8655,"rend":0.8564,"cal":0.9765,"uds_ok":1537,"uds_nok":37},{"codigo":"L2","fecha":"2026-08-19T22:00:00.000Z","oee":0.7051,"disp":0.8509,"rend":0.8501,"cal":0.9745,"uds_ok":1497,"uds_nok":39},{"codigo":"L2","fecha":"2026-08-20T22:00:00.000Z","oee":0.7673,"disp":0.9475,"rend":0.8334,"cal":0.972,"uds_ok":1629,"uds_nok":47},{"codigo":"L2","fecha":"2026-08-21T22:00:00.000Z","oee":0.7791,"disp":0.9273,"rend":0.8635,"cal":0.9729,"uds_ok":827,"uds_nok":23},{"codigo":"L2","fecha":"2026-08-23T22:00:00.000Z","oee":0.7244,"disp":0.8842,"rend":0.8446,"cal":0.9711,"uds_ok":1538,"uds_nok":46},{"codigo":"L2","fecha":"2026-08-24T22:00:00.000Z","oee":0.7527,"disp":0.9029,"rend":0.8585,"cal":0.9698,"uds_ok":1598,"uds_nok":50},{"codigo":"L2","fecha":"2026-08-25T22:00:00.000Z","oee":0.7706,"disp":0.9532,"rend":0.8297,"cal":0.9744,"uds_ok":1636,"uds_nok":43},{"codigo":"L2","fecha":"2026-08-26T22:00:00.000Z","oee":0.7127,"disp":0.8937,"rend":0.8213,"cal":0.9712,"uds_ok":1513,"uds_nok":45},{"codigo":"L2","fecha":"2026-08-27T22:00:00.000Z","oee":0.7485,"disp":0.9231,"rend":0.8343,"cal":0.9719,"uds_ok":1589,"uds_nok":46},{"codigo":"L2","fecha":"2026-08-28T22:00:00.000Z","oee":0.8007,"disp":0.9419,"rend":0.8751,"cal":0.9714,"uds_ok":850,"uds_nok":25},{"codigo":"L2","fecha":"2026-08-30T22:00:00.000Z","oee":0.7442,"disp":0.9062,"rend":0.8411,"cal":0.9763,"uds_ok":1580,"uds_nok":38},{"codigo":"L2","fecha":"2026-08-31T22:00:00.000Z","oee":0.7315,"disp":0.8753,"rend":0.8591,"cal":0.9725,"uds_ok":1553,"uds_nok":44},{"codigo":"L2","fecha":"2026-09-01T22:00:00.000Z","oee":0.7565,"disp":0.9173,"rend":0.845,"cal":0.9763,"uds_ok":1606,"uds_nok":39},{"codigo":"L2","fecha":"2026-09-02T22:00:00.000Z","oee":0.7847,"disp":0.9318,"rend":0.8611,"cal":0.9783,"uds_ok":1666,"uds_nok":37},{"codigo":"L2","fecha":"2026-09-03T22:00:00.000Z","oee":0.7254,"disp":0.883,"rend":0.843,"cal":0.9747,"uds_ok":1540,"uds_nok":40},{"codigo":"L2","fecha":"2026-09-04T22:00:00.000Z","oee":0.698,"disp":0.851,"rend":0.838,"cal":0.9789,"uds_ok":741,"uds_nok":16},{"codigo":"L2","fecha":"2026-09-06T22:00:00.000Z","oee":0.7555,"disp":0.9508,"rend":0.8155,"cal":0.9745,"uds_ok":1604,"uds_nok":42},{"codigo":"L3","fecha":"2026-07-26T22:00:00.000Z","oee":0.7612,"disp":0.911,"rend":0.8601,"cal":0.9717,"uds_ok":5042,"uds_nok":147},{"codigo":"L3","fecha":"2026-07-27T22:00:00.000Z","oee":0.7501,"disp":0.9254,"rend":0.8351,"cal":0.9719,"uds_ok":4969,"uds_nok":144},{"codigo":"L3","fecha":"2026-07-28T22:00:00.000Z","oee":0.7438,"disp":0.8901,"rend":0.8587,"cal":0.9735,"uds_ok":4927,"uds_nok":135},{"codigo":"L3","fecha":"2026-07-29T22:00:00.000Z","oee":0.8057,"disp":0.9441,"rend":0.8781,"cal":0.9734,"uds_ok":5337,"uds_nok":146},{"codigo":"L3","fecha":"2026-07-30T22:00:00.000Z","oee":0.7489,"disp":0.8866,"rend":0.8682,"cal":0.9734,"uds_ok":4961,"uds_nok":136},{"codigo":"L3","fecha":"2026-07-31T22:00:00.000Z","oee":0.7785,"disp":0.9445,"rend":0.8483,"cal":0.9717,"uds_ok":1719,"uds_nok":50},{"codigo":"L3","fecha":"2026-08-02T22:00:00.000Z","oee":0.7917,"disp":0.9173,"rend":0.884,"cal":0.9762,"uds_ok":5244,"uds_nok":128},{"codigo":"L3","fecha":"2026-08-03T22:00:00.000Z","oee":0.7518,"disp":0.8956,"rend":0.8663,"cal":0.9713,"uds_ok":4980,"uds_nok":148},{"codigo":"L3","fecha":"2026-08-04T22:00:00.000Z","oee":0.755,"disp":0.9031,"rend":0.8554,"cal":0.9779,"uds_ok":5001,"uds_nok":113},{"codigo":"L3","fecha":"2026-08-05T22:00:00.000Z","oee":0.7957,"disp":0.9314,"rend":0.8747,"cal":0.9767,"uds_ok":5271,"uds_nok":126},{"codigo":"L3","fecha":"2026-08-06T22:00:00.000Z","oee":0.7869,"disp":0.9356,"rend":0.8657,"cal":0.9736,"uds_ok":5212,"uds_nok":141},{"codigo":"L3","fecha":"2026-08-07T22:00:00.000Z","oee":0.7758,"disp":0.8826,"rend":0.9021,"cal":0.9744,"uds_ok":1713,"uds_nok":45},{"codigo":"L3","fecha":"2026-08-09T22:00:00.000Z","oee":0.7473,"disp":0.8997,"rend":0.854,"cal":0.9725,"uds_ok":4950,"uds_nok":141},{"codigo":"L3","fecha":"2026-08-10T22:00:00.000Z","oee":0.7656,"disp":0.9322,"rend":0.8446,"cal":0.9721,"uds_ok":5071,"uds_nok":146},{"codigo":"L3","fecha":"2026-08-11T22:00:00.000Z","oee":0.7548,"disp":0.8833,"rend":0.8788,"cal":0.9737,"uds_ok":5000,"uds_nok":136},{"codigo":"L3","fecha":"2026-08-12T22:00:00.000Z","oee":0.8116,"disp":0.9747,"rend":0.8566,"cal":0.9723,"uds_ok":5376,"uds_nok":153},{"codigo":"L3","fecha":"2026-08-13T22:00:00.000Z","oee":0.7911,"disp":0.9218,"rend":0.8778,"cal":0.9782,"uds_ok":5240,"uds_nok":117},{"codigo":"L3","fecha":"2026-08-14T22:00:00.000Z","oee":0.8361,"disp":1,"rend":0.8582,"cal":0.9741,"uds_ok":1846,"uds_nok":49},{"codigo":"L3","fecha":"2026-08-16T22:00:00.000Z","oee":0.7704,"disp":0.9273,"rend":0.8544,"cal":0.9731,"uds_ok":5103,"uds_nok":141},{"codigo":"L3","fecha":"2026-08-17T22:00:00.000Z","oee":0.744,"disp":0.9094,"rend":0.8398,"cal":0.9743,"uds_ok":4928,"uds_nok":130},{"codigo":"L3","fecha":"2026-08-18T22:00:00.000Z","oee":0.7255,"disp":0.8573,"rend":0.8707,"cal":0.9715,"uds_ok":4806,"uds_nok":141},{"codigo":"L3","fecha":"2026-08-19T22:00:00.000Z","oee":0.7959,"disp":0.9191,"rend":0.8886,"cal":0.9743,"uds_ok":5272,"uds_nok":139},{"codigo":"L3","fecha":"2026-08-20T22:00:00.000Z","oee":0.7606,"disp":0.9254,"rend":0.8457,"cal":0.9741,"uds_ok":5038,"uds_nok":134},{"codigo":"L3","fecha":"2026-08-21T22:00:00.000Z","oee":0.7754,"disp":0.9383,"rend":0.8427,"cal":0.9805,"uds_ok":1712,"uds_nok":34},{"codigo":"L3","fecha":"2026-08-23T22:00:00.000Z","oee":0.7583,"disp":0.9125,"rend":0.8544,"cal":0.9713,"uds_ok":5023,"uds_nok":148},{"codigo":"L3","fecha":"2026-08-24T22:00:00.000Z","oee":0.7263,"disp":0.8741,"rend":0.8523,"cal":0.9746,"uds_ok":4811,"uds_nok":126},{"codigo":"L3","fecha":"2026-08-25T22:00:00.000Z","oee":0.7755,"disp":0.9165,"rend":0.869,"cal":0.974,"uds_ok":5137,"uds_nok":137},{"codigo":"L3","fecha":"2026-08-26T22:00:00.000Z","oee":0.7219,"disp":0.8445,"rend":0.8758,"cal":0.9761,"uds_ok":4782,"uds_nok":117},{"codigo":"L3","fecha":"2026-08-27T22:00:00.000Z","oee":0.7474,"disp":0.8832,"rend":0.8711,"cal":0.9715,"uds_ok":4951,"uds_nok":146},{"codigo":"L3","fecha":"2026-08-28T22:00:00.000Z","oee":0.7767,"disp":0.9132,"rend":0.8679,"cal":0.98,"uds_ok":1715,"uds_nok":35},{"codigo":"L3","fecha":"2026-08-30T22:00:00.000Z","oee":0.7367,"disp":0.8669,"rend":0.8722,"cal":0.9745,"uds_ok":4880,"uds_nok":128},{"codigo":"L3","fecha":"2026-08-31T22:00:00.000Z","oee":0.6874,"disp":0.8915,"rend":0.7989,"cal":0.9686,"uds_ok":4108,"uds_nok":134},{"codigo":"L3","fecha":"2026-09-01T22:00:00.000Z","oee":0.708,"disp":0.9371,"rend":0.7815,"cal":0.9692,"uds_ok":4690,"uds_nok":149},{"codigo":"L3","fecha":"2026-09-02T22:00:00.000Z","oee":0.715,"disp":0.9706,"rend":0.7584,"cal":0.9714,"uds_ok":4554,"uds_nok":134},{"codigo":"L3","fecha":"2026-09-03T22:00:00.000Z","oee":0.6622,"disp":0.9084,"rend":0.7547,"cal":0.9665,"uds_ok":4218,"uds_nok":146},{"codigo":"L3","fecha":"2026-09-04T22:00:00.000Z","oee":0.6297,"disp":0.8517,"rend":0.7604,"cal":0.9724,"uds_ok":1337,"uds_nok":38},{"codigo":"L3","fecha":"2026-09-06T22:00:00.000Z","oee":0.6682,"disp":0.9327,"rend":0.7394,"cal":0.9692,"uds_ok":4256,"uds_nok":135}],"rendP4":[{"bucket":"2026-08-10T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8852},{"bucket":"2026-08-10T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.835},{"bucket":"2026-08-10T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8442},{"bucket":"2026-08-11T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8401},{"bucket":"2026-08-11T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8465},{"bucket":"2026-08-11T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8191},{"bucket":"2026-08-12T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8859},{"bucket":"2026-08-12T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8247},{"bucket":"2026-08-12T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8482},{"bucket":"2026-08-13T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8687},{"bucket":"2026-08-13T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.846},{"bucket":"2026-08-13T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8578},{"bucket":"2026-08-14T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8841},{"bucket":"2026-08-14T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8788},{"bucket":"2026-08-14T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.851},{"bucket":"2026-08-15T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8582},{"bucket":"2026-08-17T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8669},{"bucket":"2026-08-17T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8424},{"bucket":"2026-08-17T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8138},{"bucket":"2026-08-18T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8432},{"bucket":"2026-08-18T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8597},{"bucket":"2026-08-18T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8166},{"bucket":"2026-08-19T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8471},{"bucket":"2026-08-19T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8831},{"bucket":"2026-08-19T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8147},{"bucket":"2026-08-20T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8786},{"bucket":"2026-08-20T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8551},{"bucket":"2026-08-20T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8439},{"bucket":"2026-08-21T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.86},{"bucket":"2026-08-21T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8268},{"bucket":"2026-08-21T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8114},{"bucket":"2026-08-22T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8427},{"bucket":"2026-08-24T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.875},{"bucket":"2026-08-24T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8639},{"bucket":"2026-08-24T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8601},{"bucket":"2026-08-25T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8895},{"bucket":"2026-08-25T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8488},{"bucket":"2026-08-25T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8274},{"bucket":"2026-08-26T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8465},{"bucket":"2026-08-26T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8582},{"bucket":"2026-08-26T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8517},{"bucket":"2026-08-27T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8474},{"bucket":"2026-08-27T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8591},{"bucket":"2026-08-27T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8279},{"bucket":"2026-08-28T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8608},{"bucket":"2026-08-28T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8524},{"bucket":"2026-08-28T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8475},{"bucket":"2026-08-29T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8619},{"bucket":"2026-08-31T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.8662},{"bucket":"2026-08-31T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.8528},{"bucket":"2026-08-31T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.8591},{"bucket":"2026-09-01T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.7819},{"bucket":"2026-09-01T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.7689},{"bucket":"2026-09-01T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.7072},{"bucket":"2026-09-02T04:00:00.000Z","turno":"mañana","producto":"REF-2200","rend":0.7655},{"bucket":"2026-09-02T12:00:00.000Z","turno":"tarde","producto":"REF-2200","rend":0.7509},{"bucket":"2026-09-02T20:00:00.000Z","turno":"noche","producto":"REF-2200","rend":0.7165},{"bucket":"2026-09-03T04:00:00.000Z","turno":"mañana","producto":"REF-2210","rend":0.7594},{"bucket":"2026-09-03T12:00:00.000Z","turno":"tarde","producto":"REF-2210","rend":0.7637},{"bucket":"2026-09-03T20:00:00.000Z","turno":"noche","producto":"REF-2210","rend":0.7522},{"bucket":"2026-09-04T04:00:00.000Z","turno":"mañana","producto":"REF-2210","rend":0.7669},{"bucket":"2026-09-04T12:00:00.000Z","turno":"tarde","producto":"REF-2210","rend":0.7462},{"bucket":"2026-09-04T20:00:00.000Z","turno":"noche","producto":"REF-2210","rend":0.7511},{"bucket":"2026-09-05T04:00:00.000Z","turno":"mañana","producto":"REF-2210","rend":0.7604},{"bucket":"2026-09-07T04:00:00.000Z","turno":"mañana","producto":"REF-2210","rend":0.7456},{"bucket":"2026-09-07T12:00:00.000Z","turno":"tarde","producto":"REF-2210","rend":0.7548},{"bucket":"2026-09-07T20:00:00.000Z","turno":"noche","producto":"REF-2210","rend":0.7179}],"baseP4":[{"turno":"tarde","producto":"REF-2200","media":0.8545,"n_muestras":43},{"turno":"mañana","producto":"REF-2200","media":0.866,"n_muestras":52},{"turno":"noche","producto":"REF-2200","media":0.835,"n_muestras":43},{"turno":"tarde","producto":"(genérica)","media":0.8545,"n_muestras":43},{"turno":"mañana","producto":"(genérica)","media":0.866,"n_muestras":52},{"turno":"noche","producto":"(genérica)","media":0.835,"n_muestras":43}],"energiaDia":[{"codigo":"CHILLER","fecha":"2026-07-25T22:00:00.000Z","kwh":204.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-07-26T22:00:00.000Z","kwh":473.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-07-27T22:00:00.000Z","kwh":526.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-07-28T22:00:00.000Z","kwh":530.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-07-29T22:00:00.000Z","kwh":525.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-07-30T22:00:00.000Z","kwh":527.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-07-31T22:00:00.000Z","kwh":365.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-01T22:00:00.000Z","kwh":205.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-02T22:00:00.000Z","kwh":474.1,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-03T22:00:00.000Z","kwh":527.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-04T22:00:00.000Z","kwh":523.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-05T22:00:00.000Z","kwh":525.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-06T22:00:00.000Z","kwh":529.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-07T22:00:00.000Z","kwh":364,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-08T22:00:00.000Z","kwh":202.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-09T22:00:00.000Z","kwh":473.1,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-10T22:00:00.000Z","kwh":528.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-11T22:00:00.000Z","kwh":529.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-12T22:00:00.000Z","kwh":530.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-13T22:00:00.000Z","kwh":528.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-14T22:00:00.000Z","kwh":366.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-15T22:00:00.000Z","kwh":204.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-16T22:00:00.000Z","kwh":472.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-17T22:00:00.000Z","kwh":529.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-18T22:00:00.000Z","kwh":526.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-19T22:00:00.000Z","kwh":527.3,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-20T22:00:00.000Z","kwh":529.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-21T22:00:00.000Z","kwh":367.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-22T22:00:00.000Z","kwh":203.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-23T22:00:00.000Z","kwh":476.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-24T22:00:00.000Z","kwh":529.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-25T22:00:00.000Z","kwh":526.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-26T22:00:00.000Z","kwh":528.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-27T22:00:00.000Z","kwh":529.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-08-28T22:00:00.000Z","kwh":367.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-29T22:00:00.000Z","kwh":204,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-30T22:00:00.000Z","kwh":474.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-08-31T22:00:00.000Z","kwh":528.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-09-01T22:00:00.000Z","kwh":527.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-09-02T22:00:00.000Z","kwh":531.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-09-03T22:00:00.000Z","kwh":528.3,"kwh_ud":null,"fuera_horario":false},{"codigo":"CHILLER","fecha":"2026-09-04T22:00:00.000Z","kwh":366.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-09-05T22:00:00.000Z","kwh":204.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-09-06T22:00:00.000Z","kwh":469.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"CHILLER","fecha":"2026-09-07T22:00:00.000Z","kwh":261.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-07-25T22:00:00.000Z","kwh":42.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-07-26T22:00:00.000Z","kwh":686.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-07-27T22:00:00.000Z","kwh":817.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-07-28T22:00:00.000Z","kwh":819.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-07-29T22:00:00.000Z","kwh":814.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-07-30T22:00:00.000Z","kwh":816.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-07-31T22:00:00.000Z","kwh":428.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-01T22:00:00.000Z","kwh":43.2,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-02T22:00:00.000Z","kwh":688.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-03T22:00:00.000Z","kwh":821.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-04T22:00:00.000Z","kwh":812.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-05T22:00:00.000Z","kwh":817.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-06T22:00:00.000Z","kwh":810.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-07T22:00:00.000Z","kwh":428.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-08T22:00:00.000Z","kwh":43.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-09T22:00:00.000Z","kwh":684.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-10T22:00:00.000Z","kwh":811.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-11T22:00:00.000Z","kwh":818.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-12T22:00:00.000Z","kwh":811.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-13T22:00:00.000Z","kwh":819.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-14T22:00:00.000Z","kwh":427.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-15T22:00:00.000Z","kwh":42.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-16T22:00:00.000Z","kwh":684.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-17T22:00:00.000Z","kwh":817,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-18T22:00:00.000Z","kwh":817.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-19T22:00:00.000Z","kwh":817,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-20T22:00:00.000Z","kwh":816.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-21T22:00:00.000Z","kwh":428.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-22T22:00:00.000Z","kwh":42.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-23T22:00:00.000Z","kwh":690.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-24T22:00:00.000Z","kwh":815.3,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-25T22:00:00.000Z","kwh":817.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-26T22:00:00.000Z","kwh":818.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-27T22:00:00.000Z","kwh":819.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-08-28T22:00:00.000Z","kwh":429.2,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-29T22:00:00.000Z","kwh":43.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-30T22:00:00.000Z","kwh":689.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-08-31T22:00:00.000Z","kwh":817,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-09-01T22:00:00.000Z","kwh":821,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-09-02T22:00:00.000Z","kwh":814.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-09-03T22:00:00.000Z","kwh":816.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-01","fecha":"2026-09-04T22:00:00.000Z","kwh":429.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-09-05T22:00:00.000Z","kwh":42.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-09-06T22:00:00.000Z","kwh":688.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-01","fecha":"2026-09-07T22:00:00.000Z","kwh":181.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-07-25T22:00:00.000Z","kwh":912.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-07-26T22:00:00.000Z","kwh":871.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-07-27T22:00:00.000Z","kwh":865.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-07-28T22:00:00.000Z","kwh":863.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-07-29T22:00:00.000Z","kwh":868.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-07-30T22:00:00.000Z","kwh":871.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-07-31T22:00:00.000Z","kwh":898.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-01T22:00:00.000Z","kwh":932.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-02T22:00:00.000Z","kwh":890.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-03T22:00:00.000Z","kwh":888.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-04T22:00:00.000Z","kwh":889,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-05T22:00:00.000Z","kwh":896.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-06T22:00:00.000Z","kwh":898.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-07T22:00:00.000Z","kwh":923.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-08T22:00:00.000Z","kwh":956.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-09T22:00:00.000Z","kwh":915.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-10T22:00:00.000Z","kwh":914.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-11T22:00:00.000Z","kwh":917.2,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-12T22:00:00.000Z","kwh":921.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-13T22:00:00.000Z","kwh":923.6,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-14T22:00:00.000Z","kwh":950.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-15T22:00:00.000Z","kwh":980.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-16T22:00:00.000Z","kwh":943.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-17T22:00:00.000Z","kwh":935.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-18T22:00:00.000Z","kwh":945.1,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-19T22:00:00.000Z","kwh":946.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-20T22:00:00.000Z","kwh":950.9,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-21T22:00:00.000Z","kwh":980.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-22T22:00:00.000Z","kwh":1014.2,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-23T22:00:00.000Z","kwh":969.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-24T22:00:00.000Z","kwh":965.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-25T22:00:00.000Z","kwh":967.8,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-26T22:00:00.000Z","kwh":970,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-27T22:00:00.000Z","kwh":974.7,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-08-28T22:00:00.000Z","kwh":1007.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-29T22:00:00.000Z","kwh":1034.2,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-30T22:00:00.000Z","kwh":991.1,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-08-31T22:00:00.000Z","kwh":990.5,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-09-01T22:00:00.000Z","kwh":994,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-09-02T22:00:00.000Z","kwh":997.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-09-03T22:00:00.000Z","kwh":999.4,"kwh_ud":null,"fuera_horario":false},{"codigo":"COMP-02","fecha":"2026-09-04T22:00:00.000Z","kwh":1032.9,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-09-05T22:00:00.000Z","kwh":1064,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-09-06T22:00:00.000Z","kwh":1021.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"COMP-02","fecha":"2026-09-07T22:00:00.000Z","kwh":1062.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-07-25T22:00:00.000Z","kwh":119.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-07-26T22:00:00.000Z","kwh":1042.1,"kwh_ud":0.31654,"fuera_horario":true},{"codigo":"L1","fecha":"2026-07-27T22:00:00.000Z","kwh":1052.3,"kwh_ud":0.29602,"fuera_horario":false},{"codigo":"L1","fecha":"2026-07-28T22:00:00.000Z","kwh":1046.4,"kwh_ud":0.29411,"fuera_horario":false},{"codigo":"L1","fecha":"2026-07-29T22:00:00.000Z","kwh":1046.6,"kwh_ud":0.43285,"fuera_horario":false},{"codigo":"L1","fecha":"2026-07-30T22:00:00.000Z","kwh":1050.8,"kwh_ud":0.44736,"fuera_horario":false},{"codigo":"L1","fecha":"2026-07-31T22:00:00.000Z","kwh":585.4,"kwh_ud":0.48219,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-01T22:00:00.000Z","kwh":119.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-02T22:00:00.000Z","kwh":1049.1,"kwh_ud":0.43802,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-03T22:00:00.000Z","kwh":1037.4,"kwh_ud":0.4303,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-04T22:00:00.000Z","kwh":1042,"kwh_ud":0.44078,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-05T22:00:00.000Z","kwh":1046.3,"kwh_ud":0.43416,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-06T22:00:00.000Z","kwh":1037.9,"kwh_ud":0.42904,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-07T22:00:00.000Z","kwh":585.5,"kwh_ud":0.55234,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-08T22:00:00.000Z","kwh":121.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-09T22:00:00.000Z","kwh":1044.7,"kwh_ud":0.29679,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-10T22:00:00.000Z","kwh":1048.9,"kwh_ud":0.30761,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-11T22:00:00.000Z","kwh":1045.9,"kwh_ud":0.31779,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-12T22:00:00.000Z","kwh":1052.7,"kwh_ud":0.31909,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-13T22:00:00.000Z","kwh":1041,"kwh_ud":0.31584,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-14T22:00:00.000Z","kwh":583.6,"kwh_ud":0.36386,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-15T22:00:00.000Z","kwh":120.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-16T22:00:00.000Z","kwh":1046.9,"kwh_ud":0.29105,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-17T22:00:00.000Z","kwh":1045,"kwh_ud":0.34126,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-18T22:00:00.000Z","kwh":1058,"kwh_ud":0.45252,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-19T22:00:00.000Z","kwh":1041.3,"kwh_ud":0.47203,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-20T22:00:00.000Z","kwh":1048.3,"kwh_ud":0.45071,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-21T22:00:00.000Z","kwh":580.8,"kwh_ud":0.484,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-22T22:00:00.000Z","kwh":121.2,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-23T22:00:00.000Z","kwh":1046.9,"kwh_ud":0.42335,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-24T22:00:00.000Z","kwh":1047.7,"kwh_ud":0.44395,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-25T22:00:00.000Z","kwh":1045.5,"kwh_ud":0.46612,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-26T22:00:00.000Z","kwh":1052.4,"kwh_ud":0.46919,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-27T22:00:00.000Z","kwh":1048.2,"kwh_ud":0.41944,"fuera_horario":false},{"codigo":"L1","fecha":"2026-08-28T22:00:00.000Z","kwh":577.9,"kwh_ud":0.35781,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-29T22:00:00.000Z","kwh":120.1,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-30T22:00:00.000Z","kwh":1042.3,"kwh_ud":0.34355,"fuera_horario":true},{"codigo":"L1","fecha":"2026-08-31T22:00:00.000Z","kwh":1050.5,"kwh_ud":0.33446,"fuera_horario":false},{"codigo":"L1","fecha":"2026-09-01T22:00:00.000Z","kwh":1049.6,"kwh_ud":0.34814,"fuera_horario":false},{"codigo":"L1","fecha":"2026-09-02T22:00:00.000Z","kwh":1047.8,"kwh_ud":0.33095,"fuera_horario":false},{"codigo":"L1","fecha":"2026-09-03T22:00:00.000Z","kwh":1046.5,"kwh_ud":0.33682,"fuera_horario":false},{"codigo":"L1","fecha":"2026-09-04T22:00:00.000Z","kwh":595.1,"kwh_ud":0.39648,"fuera_horario":true},{"codigo":"L1","fecha":"2026-09-05T22:00:00.000Z","kwh":120.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L1","fecha":"2026-09-06T22:00:00.000Z","kwh":1049.3,"kwh_ud":0.31787,"fuera_horario":true},{"codigo":"L1","fecha":"2026-09-07T22:00:00.000Z","kwh":121.3,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-07-25T22:00:00.000Z","kwh":80.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-07-26T22:00:00.000Z","kwh":938.3,"kwh_ud":0.603,"fuera_horario":true},{"codigo":"L2","fecha":"2026-07-27T22:00:00.000Z","kwh":939.3,"kwh_ud":0.61554,"fuera_horario":false},{"codigo":"L2","fecha":"2026-07-28T22:00:00.000Z","kwh":936.3,"kwh_ud":0.59412,"fuera_horario":false},{"codigo":"L2","fecha":"2026-07-29T22:00:00.000Z","kwh":947.2,"kwh_ud":0.61744,"fuera_horario":false},{"codigo":"L2","fecha":"2026-07-30T22:00:00.000Z","kwh":943.1,"kwh_ud":0.56471,"fuera_horario":false},{"codigo":"L2","fecha":"2026-07-31T22:00:00.000Z","kwh":506.2,"kwh_ud":0.6203,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-01T22:00:00.000Z","kwh":81.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-02T22:00:00.000Z","kwh":932.5,"kwh_ud":0.58026,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-03T22:00:00.000Z","kwh":937.4,"kwh_ud":0.63511,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-04T22:00:00.000Z","kwh":938.9,"kwh_ud":0.56763,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-05T22:00:00.000Z","kwh":941.7,"kwh_ud":0.57667,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-06T22:00:00.000Z","kwh":948.4,"kwh_ud":0.59273,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-07T22:00:00.000Z","kwh":508.2,"kwh_ud":0.66174,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-08T22:00:00.000Z","kwh":79.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-09T22:00:00.000Z","kwh":937.1,"kwh_ud":0.57456,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-10T22:00:00.000Z","kwh":940.6,"kwh_ud":0.55722,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-11T22:00:00.000Z","kwh":933.5,"kwh_ud":0.57376,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-12T22:00:00.000Z","kwh":937,"kwh_ud":0.61931,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-13T22:00:00.000Z","kwh":936.3,"kwh_ud":0.6164,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-14T22:00:00.000Z","kwh":506.5,"kwh_ud":0.5903,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-15T22:00:00.000Z","kwh":81.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-16T22:00:00.000Z","kwh":944.8,"kwh_ud":0.61153,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-17T22:00:00.000Z","kwh":934.9,"kwh_ud":0.61996,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-18T22:00:00.000Z","kwh":926.8,"kwh_ud":0.60298,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-19T22:00:00.000Z","kwh":946,"kwh_ud":0.63195,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-20T22:00:00.000Z","kwh":935.6,"kwh_ud":0.57434,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-21T22:00:00.000Z","kwh":512.5,"kwh_ud":0.61967,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-22T22:00:00.000Z","kwh":79.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-23T22:00:00.000Z","kwh":946,"kwh_ud":0.61505,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-24T22:00:00.000Z","kwh":944.4,"kwh_ud":0.59098,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-25T22:00:00.000Z","kwh":935.2,"kwh_ud":0.57163,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-26T22:00:00.000Z","kwh":935.9,"kwh_ud":0.61857,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-27T22:00:00.000Z","kwh":939.6,"kwh_ud":0.59128,"fuera_horario":false},{"codigo":"L2","fecha":"2026-08-28T22:00:00.000Z","kwh":502.7,"kwh_ud":0.59146,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-29T22:00:00.000Z","kwh":79.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-30T22:00:00.000Z","kwh":945,"kwh_ud":0.5981,"fuera_horario":true},{"codigo":"L2","fecha":"2026-08-31T22:00:00.000Z","kwh":937.5,"kwh_ud":0.6037,"fuera_horario":false},{"codigo":"L2","fecha":"2026-09-01T22:00:00.000Z","kwh":941.2,"kwh_ud":0.58605,"fuera_horario":false},{"codigo":"L2","fecha":"2026-09-02T22:00:00.000Z","kwh":938.2,"kwh_ud":0.56316,"fuera_horario":false},{"codigo":"L2","fecha":"2026-09-03T22:00:00.000Z","kwh":939.4,"kwh_ud":0.60997,"fuera_horario":false},{"codigo":"L2","fecha":"2026-09-04T22:00:00.000Z","kwh":516.5,"kwh_ud":0.69701,"fuera_horario":true},{"codigo":"L2","fecha":"2026-09-05T22:00:00.000Z","kwh":82.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"L2","fecha":"2026-09-06T22:00:00.000Z","kwh":935.9,"kwh_ud":0.58348,"fuera_horario":true},{"codigo":"L2","fecha":"2026-09-07T22:00:00.000Z","kwh":77.6,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-07-25T22:00:00.000Z","kwh":172.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-07-26T22:00:00.000Z","kwh":1430.1,"kwh_ud":0.28363,"fuera_horario":true},{"codigo":"L3","fecha":"2026-07-27T22:00:00.000Z","kwh":1706,"kwh_ud":0.34332,"fuera_horario":false},{"codigo":"L3","fecha":"2026-07-28T22:00:00.000Z","kwh":1706.6,"kwh_ud":0.34637,"fuera_horario":false},{"codigo":"L3","fecha":"2026-07-29T22:00:00.000Z","kwh":1699.6,"kwh_ud":0.31846,"fuera_horario":false},{"codigo":"L3","fecha":"2026-07-30T22:00:00.000Z","kwh":1710.2,"kwh_ud":0.34473,"fuera_horario":false},{"codigo":"L3","fecha":"2026-07-31T22:00:00.000Z","kwh":930.6,"kwh_ud":0.54137,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-01T22:00:00.000Z","kwh":174.8,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-02T22:00:00.000Z","kwh":1448.1,"kwh_ud":0.27615,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-03T22:00:00.000Z","kwh":1708.6,"kwh_ud":0.3431,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-04T22:00:00.000Z","kwh":1704.7,"kwh_ud":0.34087,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-05T22:00:00.000Z","kwh":1699.8,"kwh_ud":0.32248,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-06T22:00:00.000Z","kwh":1709.6,"kwh_ud":0.32801,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-07T22:00:00.000Z","kwh":938.7,"kwh_ud":0.54797,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-08T22:00:00.000Z","kwh":175.5,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-09T22:00:00.000Z","kwh":1438,"kwh_ud":0.29051,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-10T22:00:00.000Z","kwh":1709.5,"kwh_ud":0.33711,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-11T22:00:00.000Z","kwh":1710.1,"kwh_ud":0.34202,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-12T22:00:00.000Z","kwh":1698.8,"kwh_ud":0.316,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-13T22:00:00.000Z","kwh":1712.8,"kwh_ud":0.32688,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-14T22:00:00.000Z","kwh":942.1,"kwh_ud":0.51037,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-15T22:00:00.000Z","kwh":173.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-16T22:00:00.000Z","kwh":1457.2,"kwh_ud":0.28555,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-17T22:00:00.000Z","kwh":1692.8,"kwh_ud":0.3435,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-18T22:00:00.000Z","kwh":1702.2,"kwh_ud":0.35418,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-19T22:00:00.000Z","kwh":1690.9,"kwh_ud":0.32073,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-20T22:00:00.000Z","kwh":1709.4,"kwh_ud":0.3393,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-21T22:00:00.000Z","kwh":938.8,"kwh_ud":0.54838,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-22T22:00:00.000Z","kwh":175.1,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-23T22:00:00.000Z","kwh":1452.2,"kwh_ud":0.28912,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-24T22:00:00.000Z","kwh":1711.8,"kwh_ud":0.35582,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-25T22:00:00.000Z","kwh":1705.9,"kwh_ud":0.33208,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-26T22:00:00.000Z","kwh":1706.1,"kwh_ud":0.35677,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-27T22:00:00.000Z","kwh":1709.3,"kwh_ud":0.34525,"fuera_horario":false},{"codigo":"L3","fecha":"2026-08-28T22:00:00.000Z","kwh":945.3,"kwh_ud":0.5512,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-29T22:00:00.000Z","kwh":175.7,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-30T22:00:00.000Z","kwh":1455.7,"kwh_ud":0.2983,"fuera_horario":true},{"codigo":"L3","fecha":"2026-08-31T22:00:00.000Z","kwh":1701.1,"kwh_ud":0.41409,"fuera_horario":false},{"codigo":"L3","fecha":"2026-09-01T22:00:00.000Z","kwh":1705.7,"kwh_ud":0.3637,"fuera_horario":false},{"codigo":"L3","fecha":"2026-09-02T22:00:00.000Z","kwh":1708.9,"kwh_ud":0.37524,"fuera_horario":false},{"codigo":"L3","fecha":"2026-09-03T22:00:00.000Z","kwh":1693.2,"kwh_ud":0.40142,"fuera_horario":false},{"codigo":"L3","fecha":"2026-09-04T22:00:00.000Z","kwh":931.3,"kwh_ud":0.69655,"fuera_horario":true},{"codigo":"L3","fecha":"2026-09-05T22:00:00.000Z","kwh":178.4,"kwh_ud":null,"fuera_horario":true},{"codigo":"L3","fecha":"2026-09-06T22:00:00.000Z","kwh":1449.3,"kwh_ud":0.34052,"fuera_horario":true},{"codigo":"L3","fecha":"2026-09-07T22:00:00.000Z","kwh":458,"kwh_ud":null,"fuera_horario":true}],"paradas":[{"causa":"Descanso de turno","planificada":true,"n":636,"horas":212},{"causa":"SIN CAUSA REGISTRADA","planificada":false,"n":2522,"horas":173.3},{"causa":"Avería mecánica","planificada":false,"n":103,"horas":64.1},{"causa":"Falta de material","planificada":false,"n":29,"horas":17.2},{"causa":"Avería eléctrica","planificada":false,"n":26,"horas":16.2},{"causa":"Cambio de referencia","planificada":true,"n":12,"horas":9}],"calidad":[{"producto":"REF-1140","proveedor":"Suministros ZETA","lote":"L-4471","uds":9873,"eur":23695.2,"n":56},{"producto":"REF-1180","proveedor":"Suministros ZETA","lote":"L-4471","uds":1928,"eur":6940.8,"n":60},{"producto":"REF-1140","proveedor":"Suministros ZETA","lote":"L-4151","uds":2633,"eur":6319.2,"n":36},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4142","uds":998,"eur":6187.6,"n":44},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4572","uds":961,"eur":5958.2,"n":44},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4088","uds":943,"eur":5846.6,"n":44},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4225","uds":939,"eur":5821.8,"n":44},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4161","uds":930,"eur":5766,"n":44},{"producto":"REF-1180","proveedor":"Suministros ZETA","lote":"L-4481","uds":1481,"eur":5331.6,"n":44},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4384","uds":621,"eur":3850.2,"n":28},{"producto":"REF-2200","proveedor":"Iberpack","lote":"L-4210","uds":3045,"eur":3349.5,"n":64},{"producto":"REF-2200","proveedor":"Iberpack","lote":"L-4348","uds":3044,"eur":3348.4,"n":64},{"producto":"REF-2200","proveedor":"Iberpack","lote":"L-4704","uds":2986,"eur":3284.6,"n":64},{"producto":"REF-2200","proveedor":"Iberpack","lote":"L-4507","uds":2971,"eur":3268.1,"n":64},{"producto":"REF-3050","proveedor":"Alfa Metal","lote":"L-4837","uds":485,"eur":3007,"n":24},{"producto":"REF-2200","proveedor":"Iberpack","lote":"L-4805","uds":2610,"eur":2871,"n":56},{"producto":"REF-1140","proveedor":"Suministros ZETA","lote":"L-4714","uds":1136,"eur":2726.4,"n":24},{"producto":"REF-1140","proveedor":"Suministros ZETA","lote":"L-4330","uds":1118,"eur":2683.2,"n":24},{"producto":"REF-2210","proveedor":"Iberpack","lote":"L-4215","uds":1971,"eur":2463.75,"n":44},{"producto":"REF-1180","proveedor":"Suministros ZETA","lote":"L-4714","uds":659,"eur":2372.4,"n":20}],"turnos":[{"turno":"mañana","codigo":"L1","oee":0.742,"rend":0.8733,"n":25},{"turno":"tarde","codigo":"L1","oee":0.7285,"rend":0.8606,"n":21},{"turno":"mañana","codigo":"L2","oee":0.7552,"rend":0.8533,"n":25},{"turno":"tarde","codigo":"L2","oee":0.7334,"rend":0.8372,"n":21},{"turno":"mañana","codigo":"L3","oee":0.7435,"rend":0.8446,"n":25},{"turno":"noche","codigo":"L3","oee":0.7247,"rend":0.8275,"n":21},{"turno":"tarde","codigo":"L3","oee":0.7587,"rend":0.8454,"n":21}]};</script>
+<script>
+(function () {
+  "use strict";
+  const D = window.__DEMO__;
+  const vista = document.getElementById('vista');
+  const menuEl = document.getElementById('menu');
+
+  // --- formato -------------------------------------------------------------
+  const nf = (n, d = 0) => n === null || n === undefined || Number.isNaN(+n)
+    ? '—' : (+n).toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const pct = (n, d = 1) => n === null || n === undefined ? '—' : nf(+n * 100, d) + '%';
+  const eur = (n, d = 0) => n === null || n === undefined ? null : nf(n, d) + ' €';
+  const fecha = (s) => new Date(s).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  const SEVS = { critica: 'Crítica', alta: 'Alta', media: 'Media', baja: 'Baja' };
+  const ICONO = { critica: '■', alta: '▲', media: '●', baja: '–' };
+  const COLOR_LINEA = { L1: 'var(--s1)', L2: 'var(--s2)', L3: 'var(--s3)' };
+
+  // -------------------------------------------------------------------------
+  // GRAFICA DE LINEAS
+  //
+  // Reglas que se aplican aqui y no se negocian:
+  //  · el hueco se dibuja COMO HUECO. Si faltan dias (domingos, paradas), la
+  //    linea se parte. Unirla por encima de un vacio es inventarse un dato.
+  //  · la linea base siempre presente y discontinua.
+  //  · maximo cuatro series, con etiqueta directa ademas de leyenda: el color
+  //    nunca es el unico portador de identidad.
+  // -------------------------------------------------------------------------
+  function grafLineas(cfg) {
+    const W = 760, H = cfg.alto || 210, P = { t: 14, r: 54, b: 26, l: 40 };
+    const todos = cfg.series.flatMap((s) => s.puntos.map((p) => p.y)).filter((v) => v != null);
+    if (!todos.length) return `<div class="vacio-est">Sin datos para este periodo.</div>`;
+
+    let min = Math.min(...todos), max = Math.max(...todos);
+    if (cfg.base != null) { min = Math.min(min, cfg.base); max = Math.max(max, cfg.base); }
+    const pad = (max - min) * 0.18 || 0.05;
+    min = cfg.desdeCero ? 0 : min - pad; max = max + pad;
+
+    const xs = cfg.series[0].puntos.map((p) => p.x);
+    const X = (i) => P.l + (i / Math.max(1, xs.length - 1)) * (W - P.l - P.r);
+    const Y = (v) => P.t + (1 - (v - min) / (max - min || 1)) * (H - P.t - P.b);
+
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(cfg.alt || cfg.titulo)}">`;
+    // rejilla recesiva
+    for (let k = 0; k <= 3; k++) {
+      const v = min + (k / 3) * (max - min), y = Y(v);
+      svg += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" style="stroke:var(--linea)" stroke-width="1"/>`;
+      svg += `<text x="${P.l - 7}" y="${y + 3.5}" text-anchor="end" font-size="9"
+               style="font-family:var(--m);fill:var(--texto-3)">${cfg.fmtY ? cfg.fmtY(v) : nf(v, 0)}</text>`;
+    }
+    if (cfg.base != null) {
+      svg += `<line x1="${P.l}" y1="${Y(cfg.base)}" x2="${W - P.r}" y2="${Y(cfg.base)}"
+               style="stroke:var(--base-linea)" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="${W - P.r + 5}" y="${Y(cfg.base) + 3}" font-size="9"
+               style="font-family:var(--m);fill:var(--base-linea)">base</text>`;
+    }
+    if (cfg.marca != null) {
+      const mx = X(cfg.marca.i);
+      svg += `<line x1="${mx}" y1="${P.t - 6}" x2="${mx}" y2="${H - P.b}" style="stroke:var(--alta)"
+               stroke-width="1" stroke-dasharray="2 3"/>
+              <text x="${mx + 4}" y="${P.t - 1}" font-size="9"
+               style="font-family:var(--m);fill:var(--alta)">${esc(cfg.marca.texto)}</text>`;
+    }
+
+    cfg.series.forEach((s) => {
+      let d = '', abierto = false;
+      s.puntos.forEach((p, i) => {
+        if (p.y == null) { abierto = false; return; }   // hueco: se corta el trazo
+        d += (abierto ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(p.y).toFixed(1) + ' ';
+        abierto = true;
+      });
+      svg += `<path d="${d}" fill="none" style="stroke:${s.color}" stroke-width="2"
+               stroke-linejoin="round" stroke-linecap="round"/>`;
+      // etiqueta directa al final: identidad sin depender del color
+      const ult = [...s.puntos].reverse().find((p) => p.y != null);
+      if (ult) {
+        const i = s.puntos.lastIndexOf(ult);
+        svg += `<circle cx="${X(i)}" cy="${Y(ult.y)}" r="3.5"
+                 style="fill:${s.color};stroke:var(--fondo-2)" stroke-width="2"/>
+                <text x="${X(i) + 7}" y="${Y(ult.y) + 3.5}" font-size="10" font-weight="600"
+                 style="font-family:var(--m);fill:${s.color}">${esc(s.nombre)}</text>`;
+      }
+    });
+
+    // eje X: solo tres marcas, para no saturar
+    [0, Math.floor(xs.length / 2), xs.length - 1].forEach((i) => {
+      if (i < 0 || i >= xs.length) return;
+      svg += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle" font-size="9"
+               style="font-family:var(--m);fill:var(--texto-3)">${esc(xs[i])}</text>`;
+    });
+    svg += `<line class="cruz" x1="0" y1="${P.t}" x2="0" y2="${H - P.b}" style="stroke:var(--texto-3)"
+             stroke-width="1" opacity="0"/>`;
+    svg += `<rect class="captura" x="${P.l}" y="0" width="${W - P.l - P.r}" height="${H}" fill="transparent"/>`;
+    svg += '</svg>';
+
+    return { svg, X, Y, xs, P, W, H };
+  }
+
+  function pintarLineas(cont, cfg) {
+    const g = grafLineas(cfg);
+    if (typeof g === 'string') { cont.innerHTML = g; return; }
+    cont.innerHTML = g.svg + `<div class="leyenda">` +
+      cfg.series.map((s) => `<span><i style="background:${s.color}"></i>${esc(s.nombre)}</span>`).join('') +
+      (cfg.base != null ? `<span><i class="disc"></i>línea base</span>` : '') +
+      `</div><div class="tip"></div>`;
+
+    // Capa de interaccion: cruz + tooltip. Una grafica HTML sin hover deja al
+    // usuario adivinando el valor exacto, que es justo lo que no queremos.
+    const svg = cont.querySelector('svg');
+    const cruz = svg.querySelector('.cruz');
+    const cap = svg.querySelector('.captura');
+    const tip = cont.querySelector('.tip');
+
+    cap.addEventListener('mousemove', (e) => {
+      const caja = svg.getBoundingClientRect();
+      const rel = ((e.clientX - caja.left) / caja.width) * g.W;
+      let i = Math.round(((rel - g.P.l) / (g.W - g.P.l - g.P.r)) * (g.xs.length - 1));
+      i = Math.max(0, Math.min(g.xs.length - 1, i));
+      cruz.setAttribute('x1', g.X(i)); cruz.setAttribute('x2', g.X(i));
+      cruz.setAttribute('opacity', '.55');
+      tip.innerHTML = `<b>${esc(g.xs[i])}</b><br>` + cfg.series.map((s) => {
+        const p = s.puntos[i];
+        return `<span class="sw" style="background:${s.color}"></span>${esc(s.nombre)} ` +
+               (p && p.y != null ? `<b>${cfg.fmtTip ? cfg.fmtTip(p.y) : nf(p.y, 2)}</b>`
+                                 : '<span style="color:var(--texto-3)">sin dato</span>');
+      }).join('<br>');
+      tip.style.opacity = '1';
+      const px = (g.X(i) / g.W) * caja.width;
+      tip.style.left = Math.min(caja.width - 170, Math.max(0, px + 12)) + 'px';
+      tip.style.top = '22px';
+    });
+    cap.addEventListener('mouseleave', () => {
+      cruz.setAttribute('opacity', '0'); tip.style.opacity = '0';
+    });
+  }
+
+  // --- barras horizontales (magnitud, categorias con nombre largo) ----------
+  function barras(filas, opts = {}) {
+    const max = Math.max(...filas.map((f) => f.valor), 1);
+    return `<div class="tw"><table><thead><tr>
+      <th>${esc(opts.col || 'Concepto')}</th><th class="n">${esc(opts.unidad || '')}</th>
+      </tr></thead><tbody>` + filas.map((f) => `
+      <tr><td>${esc(f.etiqueta)}${f.nota ? ` <span class="m" style="font-size:.62rem;color:var(--texto-3)">${esc(f.nota)}</span>` : ''}
+        <span class="barra${f.destacar ? ' aviso' : ''}" style="width:${(f.valor / max) * 100}%"></span></td>
+        <td class="n">${esc(f.texto ?? nf(f.valor, 1))}</td></tr>`).join('') +
+      `</tbody></table></div>`;
+  }
+
+  // -------------------------------------------------------------------------
+  // PANTALLAS
+  // -------------------------------------------------------------------------
+  const P = {};
+
+  P.estado = () => {
+    const I = D.indicadores;
+    const rechazo = I.uds_nok / (I.uds_ok + I.uds_nok);
+    const impacto = D.alertas.reduce((a, x) =>
+      a + (x.impacto_eur_anual ? x.impacto_eur_anual / 12 : 0)
+        + (+(x.impacto_base?.coste_incurrido_eur) || 0), 0);
+    const criticas = D.activos.filter((a) => a.score != null && a.score < 55).length;
+    const top = D.alertas.slice(0, 5);
+
+    return `
+      <div class="cab">
+        <div><h1>Estado de planta</h1>
+          <div class="sub">${esc(D.planta.nombre)} · miércoles 9 de septiembre · 07:41 · turno de mañana</div></div>
+      </div>
+
+      <div class="kpis">
+        ${kpi('Producción 7 d', nf(I.uds_ok, 0), '', 'uds conformes')}
+        ${kpi('OEE', pct(I.oee, 0), delta(I.oee, I.oee_prev, true, 'pts', 100), 'ponderado por tiempo')}
+        ${kpi('Calidad', pct(I.cal, 1), delta(I.cal, I.cal_prev, true, 'pts', 100), '')}
+        ${kpi('Rechazos', pct(rechazo, 1), delta(rechazo, I.rechazo_prev, false, 'pts', 100), '')}
+        ${kpi('Energía / ud', nf(I.kwh_ud, 3), delta(I.kwh_ud, I.kwh_ud_prev, false, '%', null, true), 'kWh por unidad')}
+        ${kpi('Activos en riesgo', criticas, '', 'salud < 55')}
+      </div>
+
+      <h2>Atención hoy <span class="sub" style="font-weight:400">
+        ${top.length} de ${D.alertas.length} · <a href="#/alertas" style="color:var(--media)">ver todas</a></span></h2>
+      <div class="lista">${top.map(filaAlerta).join('')}</div>
+
+      <div class="kpis" style="margin-top:16px">
+        <div class="kpi" style="grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px">
+          <div><div class="k">Impacto detectado este mes</div>
+            <div class="v" style="color:var(--alta)">${eur(impacto)}</div></div>
+          <div class="d">suma de las pérdidas anuales prorrateadas más el coste ya incurrido.
+            Cada cifra abre su cuenta.</div>
+        </div>
+      </div>
+
+      <div class="aviso-dato">
+        <b>Calidad del dato</b>
+        El <strong>${nf(I.pct_sin_causa, 1)}%</strong> de las paradas no tiene causa registrada.
+        Sin causa podemos medir cuánto se pierde, pero no diagnosticar por qué.
+        Es el primer trabajo del piloto, y se dice aquí en vez de disimularlo.
+      </div>`;
+  };
+
+  const kpi = (k, v, d, pie) => `<div class="kpi"><div class="k">${esc(k)}</div>
+    <div class="v">${v}</div><div class="d ${d ? d.clase : ''}">${d ? d.txt : esc(pie)}</div></div>`;
+
+  function delta(act, prev, subirBien, unidad, escala, relativo) {
+    if (act == null || prev == null) return { txt: '—', clase: '' };
+    const dif = relativo ? ((act - prev) / prev) * 100 : (act - prev) * (escala || 1);
+    if (Math.abs(dif) < 0.05) return { txt: 'sin cambio', clase: '' };
+    const bien = (dif > 0) === subirBien;
+    return { txt: `${dif > 0 ? '▲' : '▼'} ${nf(Math.abs(dif), 1)} ${unidad} vs 30 d`,
+             clase: bien ? 'bien' : 'mal' };
+  }
+
+  function filaAlerta(a) {
+    const imp = a.impacto_eur_anual != null
+      ? `${eur(a.impacto_eur_anual)}<em>al año</em>`
+      : (a.impacto_base?.coste_incurrido_eur != null
+          ? `${eur(a.impacto_base.coste_incurrido_eur)}<em>ya incurridos</em>` : '—');
+    return `<button class="fila ${a.severidad}" onclick="location.hash='#/alerta/${a.id}'">
+      <span class="st"></span>
+      <span class="sev">${ICONO[a.severidad]} ${SEVS[a.severidad]}</span>
+      <span><span class="t">${esc(a.titulo)}</span>
+        <span class="s">${esc(a.por_que || a.que_cambio)}</span></span>
+      <span class="eur">${imp}</span></button>`;
+  }
+
+  P.alertas = () => `
+    <div class="cab"><div><h1>Alertas</h1>
+      <div class="sub">${D.alertas.length} abiertas · ordenadas por severidad e impacto</div></div></div>
+    <div class="lista">${D.alertas.map(filaAlerta).join('')}</div>
+    <div class="caja"><h3>Por qué solo hay una crítica</h3>
+      <p>El motor no puede emitir más de cinco críticas por planta y semana. Si genera más,
+      el problema es de calibración y se avisa en el panel interno, en vez de inundar la
+      bandeja. Una bandeja con cuarenta críticas es una bandeja cerrada.</p></div>`;
+
+  P.alerta = (id) => {
+    const a = D.alertas.find((x) => x.id === id);
+    if (!a) return `<div class="vacio-est">Esa alerta no existe.</div>`;
+    const cuenta = a.impacto_base || {};
+    const ETQ = {
+      formula: 'Fórmula', nota: 'Nota', eur_semana: 'Pérdida por semana (€)',
+      turnos_afectados: 'Turnos afectados', detalle: null,
+      kw: 'Potencia media (kW)', horas_semana: 'Horas por semana',
+      semanas_anio: 'Semanas productivas al año', kwh_anio: 'kWh al año',
+      precio_kwh: 'Precio del kWh (contrato de la planta)',
+      coste_incurrido_eur: 'Coste ya incurrido (€)', uds_rechazadas: 'Unidades rechazadas',
+      pct_sobre_producto: '% sobre los rechazos del producto',
+      lotes_en_ventana: 'Lotes distintos en la ventana', dias_ventana: 'Días de la ventana',
+    };
+    const filas = Object.entries(cuenta)
+      .filter(([k]) => k !== 'detalle')
+      .map(([k, v]) => `${ETQ[k] || k} <b>${esc(typeof v === 'number' ? nf(v, 2) : v)}</b>`);
+
+    const det = Array.isArray(cuenta.detalle) ? cuenta.detalle : [];
+
+    return `
+      <div class="cab"><div>
+        <div class="sub"><a href="#/alertas" style="color:var(--media)">← Alertas</a></div>
+        <h1>${esc(a.titulo)}</h1>
+        <div class="sub">${ICONO[a.severidad]} ${SEVS[a.severidad]} · confianza ${a.confianza}%
+          · detectado el ${fecha(a.detectado_en)} · módulo ${esc(a.modulo)}</div>
+      </div></div>
+
+      <div class="caja"><h3>Qué ha cambiado</h3><p>${esc(a.que_cambio)}</p></div>
+      ${a.por_que ? `<div class="caja"><h3>Por qué · causa probable</h3><p>${esc(a.por_que)}</p></div>` : ''}
+      ${a.nodo_codigo === 'L3.P4' ? `<div class="viz" id="viz-alerta"></div>` : ''}
+      ${a.nodo_codigo === 'COMP-02' ? `<div class="viz" id="viz-alerta"></div>` : ''}
+
+      <div class="caja"><h3>Cuánto cuesta ${a.impacto_eur_anual != null
+        ? '· ' + eur(a.impacto_eur_anual) + ' al año'
+        : (cuenta.coste_incurrido_eur ? '· ' + eur(cuenta.coste_incurrido_eur) + ' ya incurridos' : '')}</h3>
+        <div class="cuenta">${filas.join('<br>')}</div>
+        ${det.length ? `<div style="margin-top:10px" class="sub">Desglose por turno</div>
+          <div class="tw"><table><thead><tr><th>Turno</th><th>Producto</th>
+            <th class="n">Caída</th><th class="n">Uds/semana</th><th class="n">€/semana</th></tr></thead>
+            <tbody>${det.map((d) => `<tr><td>${esc(d.turno)}</td><td>${esc(d.producto ?? '—')}</td>
+              <td class="n">${pct(d.caida_rendimiento, 1)}</td>
+              <td class="n">${nf(d.uds_perdidas_semana, 0)}</td>
+              <td class="n">${eur(d.uds_perdidas_semana * d.margen_unitario)}</td></tr>`).join('')}
+            </tbody></table></div>` : ''}
+      </div>
+
+      ${a.accion_recomendada ? `<div class="caja"><h3>Qué hacer</h3>
+        <p>${esc(a.accion_recomendada)}</p>
+        <div class="btns"><button class="pri" type="button">Crear orden de mantenimiento</button>
+          <button type="button">Avisar a producción</button>
+          <button type="button">Descartar</button></div>
+        <div class="fuentes">FUENTES · ${(a.evidencia || []).map((e) =>
+          `<em>${esc(Object.entries(e).map(([k, v]) => k === 'tipo' ? v : `${k}=${v}`).join(' '))}</em>`
+          ).join(' · ')}<br>
+          ¿HA SIDO ÚTIL? &nbsp; Sí · No era nada · Ya lo sabía</div>
+      </div>` : ''}`;
+  };
+
+  P.produccion = () => `
+    <div class="cab"><div><h1>Producción</h1>
+      <div class="sub">OEE desglosado · 45 días · ${D.planta.nombre}</div></div></div>
+
+    <div class="kpis">
+      ${kpi('Disponibilidad', pct(D.indicadores.disp, 0), '', 'tiempo en marcha')}
+      ${kpi('Rendimiento', pct(D.indicadores.rend, 0), '', 'frente a ciclo nominal')}
+      ${kpi('Calidad', pct(D.indicadores.cal, 1), '', 'a la primera')}
+      ${kpi('OEE', pct(D.indicadores.oee, 0), '', 'D × R × C')}
+    </div>
+    <div class="caja"><h3>Por qué se enseña desglosado</h3>
+      <p>Un OEE del ${pct(D.indicadores.oee, 0)} no dice nada. Ese mismo número abierto en
+      ${pct(D.indicadores.disp, 0)} × ${pct(D.indicadores.rend, 0)} × ${pct(D.indicadores.cal, 0)}
+      dice que el problema está en el rendimiento, y que hay que mirar tiempos de ciclo y
+      microparadas, no averías.</p></div>
+
+    <div class="viz" id="viz-oee"></div>
+    <h2>Paradas por causa · 30 días</h2>
+    ${barras(D.paradas.map((p) => ({
+      etiqueta: p.causa, valor: +p.horas, texto: nf(p.horas, 1) + ' h',
+      nota: `${p.n} paradas${p.planificada ? ' · planificada' : ''}`,
+      destacar: p.causa === 'SIN CAUSA REGISTRADA',
+    })), { col: 'Causa', unidad: 'Horas' })}
+    <h2>Comparativa entre turnos</h2>
+    <div class="tw"><table><thead><tr><th>Línea</th><th>Turno</th><th class="n">OEE</th>
+      <th class="n">Rendimiento</th><th class="n">Turnos</th></tr></thead><tbody>
+      ${D.turnos.map((t) => `<tr><td>${esc(t.codigo)}</td><td>${esc(t.turno)}</td>
+        <td class="n">${pct(t.oee, 1)}</td><td class="n">${pct(t.rend, 1)}</td>
+        <td class="n">${t.n}</td></tr>`).join('')}
+    </tbody></table></div>`;
+
+  P.mantenimiento = () => {
+    const act = D.activos.filter((a) => a.score != null)
+      .sort((a, b) => (a.score - (a.score_prev ?? a.score)) - (b.score - (b.score_prev ?? b.score)));
+    return `
+      <div class="cab"><div><h1>Mantenimiento</h1>
+        <div class="sub">salud de los activos · ordenados por caída, no por nivel</div></div></div>
+      <div class="caja"><h3>Por qué se ordena por caída</h3>
+        <p>Un activo con 74 puntos que hace treinta días tenía 82 es una llamada esta semana.
+        Uno con 49 estable es un hecho conocido, y probablemente ya presupuestado.
+        La señal es la derivada, no el nivel.</p></div>
+      <div class="tw"><table><thead><tr><th>Activo</th><th class="n">Salud</th>
+        <th class="n">30 d</th><th class="n">Fiabilidad</th><th class="n">Comportamiento</th>
+        <th>Por qué</th></tr></thead><tbody>
+        ${act.map((a) => {
+          const d = a.score_prev != null ? a.score - a.score_prev : null;
+          const e = a.entradas || {};
+          const motivo = e.deriva_consumo_pct > 5
+            ? `consumo +${nf(e.deriva_consumo_pct, 1)}%${e.alarmas_30d > 0 ? ` · ${e.alarmas_30d} alarmas` : ''}`
+            : (e.averias_30d > 0 ? `${e.averias_30d} averías en 30 d` : '—');
+          return `<tr><td><a href="#/activo/${a.id}" style="color:var(--texto)">${esc(a.nombre)}</a>
+            <span class="m" style="font-size:.62rem;color:var(--texto-3)"> ${esc(a.codigo)}</span></td>
+            <td class="n" style="color:var(--dato);font-weight:700">${a.score}</td>
+            <td class="n" style="color:${d < 0 ? 'var(--critica)' : d > 0 ? 'var(--bien)' : 'var(--texto-3)'}">
+              ${d == null ? '—' : (d > 0 ? '+' : '') + d}</td>
+            <td class="n">${a.c_fiabilidad}</td><td class="n">${a.c_comportamiento}</td>
+            <td class="m" style="font-size:.7rem;color:var(--texto-2)">${esc(motivo)}</td></tr>`;
+        }).join('')}
+      </tbody></table></div>`;
+  };
+
+  P.activo = (id) => {
+    const a = D.activos.find((x) => x.id === id);
+    if (!a) return `<div class="vacio-est">Ese activo no existe.</div>`;
+    if (a.score == null) return `
+      <div class="cab"><div><h1>${esc(a.nombre)}</h1><div class="sub">${esc(a.codigo)}</div></div></div>
+      <div class="vacio-est">Este nodo es una agrupación (${esc(a.tipo)}), no un activo con salud propia.</div>`;
+    const p = a.pesos || {}, e = a.entradas || {};
+    const comp = [
+      ['Fiabilidad', a.c_fiabilidad, p.fiabilidad, `${e.averias_30d} averías no planificadas en 30 d (media previa ${nf(e.averias_media_30d_previa, 1)})`],
+      ['Comportamiento', a.c_comportamiento, p.comportamiento,
+        e.deriva_consumo_pct != null ? `consumo ${e.deriva_consumo_pct > 0 ? '+' : ''}${nf(e.deriva_consumo_pct, 1)}% · ${e.alarmas_30d} alarmas`
+                                     : 'sin serie de consumo: se parte de 85'],
+      ['Mantenimiento', a.c_mantenimiento, p.mantenimiento, 'sin plan preventivo cargado'],
+      ['Criticidad', a.c_criticidad, p.criticidad, `criticidad ${a.criticidad}/5 declarada`],
+    ];
+    const d = a.score_prev != null ? a.score - a.score_prev : null;
+    return `
+      <div class="cab"><div>
+        <div class="sub"><a href="#/mantenimiento" style="color:var(--media)">← Mantenimiento</a></div>
+        <h1>${esc(a.nombre)}</h1>
+        <div class="sub">${esc(a.codigo)}${a.fabricante ? ' · ' + esc(a.fabricante) : ''}${a.modelo ? ' ' + esc(a.modelo) : ''}
+          · coste de parada ${eur(a.coste_parada_hora)}/h</div></div></div>
+
+      <div class="caja">
+        <div style="display:flex;gap:26px;align-items:baseline;flex-wrap:wrap;margin-bottom:14px">
+          <div><div class="score">${a.score}<small>/100</small></div></div>
+          <div class="m" style="font-size:.75rem;color:${d < 0 ? 'var(--critica)' : 'var(--texto-2)'}">
+            ${d == null ? 'sin histórico' : `${d > 0 ? '▲ +' : '▼ '}${d} puntos en 30 días`}</div>
+        </div>
+        <div class="salud">
+          ${comp.map(([n, v, w, por]) => `
+            <span class="lab">${esc(n)} <span style="color:var(--texto-3)">×${w ?? '—'}</span></span>
+            <span class="bar"><i style="width:${v}%"></i></span>
+            <span class="val">${v}</span>
+            <span></span><span class="m" style="font-size:.65rem;color:var(--texto-3);grid-column:2/4">${esc(por)}</span>
+          `).join('')}
+        </div>
+        <div class="cuenta" style="margin-top:14px">SALUD = ${comp.map(([n, v, w]) =>
+          `<b>${v}</b>×${w}`).join(' + ')} = <i>${a.score}</i></div>
+        <p style="margin-top:10px;font-size:.82rem;color:var(--texto-2)">
+          Nunca se muestra una puntuación sin poder abrir su fórmula con los valores de este
+          activo. Los pesos son configurables por cliente y viajan guardados con la fila,
+          para que un score antiguo siga siendo legible.</p>
+      </div>
+      ${a.codigo === 'COMP-02' ? `<div class="viz" id="viz-activo"></div>` : ''}`;
+  };
+
+  P.energia = () => {
+    const nodos = [...new Set(D.energiaDia.map((e) => e.codigo))];
+    const resumen = nodos.map((c) => {
+      const f = D.energiaDia.filter((e) => e.codigo === c);
+      const kwh = f.reduce((a, x) => a + (+x.kwh || 0), 0);
+      return { codigo: c, kwh, eur: kwh * D.planta.precio_kwh,
+               fuera: f.some((x) => x.fuera_horario) };
+    }).sort((a, b) => b.kwh - a.kwh);
+    return `
+      <div class="cab"><div><h1>Energía</h1>
+        <div class="sub">45 días · precio de contrato ${nf(D.planta.precio_kwh, 5)} €/kWh</div></div></div>
+      <div class="caja"><h3>La métrica que manda</h3>
+        <p>El consumo absoluto sube y baja con la producción y no dice nada.
+        El <strong>consumo por unidad producida</strong> es comparable entre turnos, entre meses
+        y contra uno mismo, y es el que detecta la máquina que se está degradando.</p></div>
+      <div class="viz" id="viz-energia"></div>
+      ${barras(resumen.map((r) => ({
+        etiqueta: r.codigo, valor: r.kwh, texto: nf(r.kwh, 0) + ' kWh',
+        nota: (r.fuera ? 'consume con la planta parada · ' : '') + eur(r.eur),
+        destacar: r.fuera,
+      })), { col: 'Nodo', unidad: 'kWh · 45 días' })}`;
+  };
+
+  P.calidad = () => `
+    <div class="cab"><div><h1>Calidad</h1>
+      <div class="sub">rechazos por lote y proveedor · 45 días</div></div></div>
+    <div class="caja"><h3>Correlación, nunca causa</h3>
+      <p>El sistema aporta la evidencia y su fuerza estadística. Quien decide que es causa es
+      el responsable de calidad. Confundir las dos cosas destruye la confianza en cuanto haya
+      una coincidencia falsa, y la habrá.</p></div>
+    <div class="tw"><table><thead><tr><th>Producto</th><th>Proveedor</th><th>Lote</th>
+      <th class="n">Unidades</th><th class="n">Incidencias</th><th class="n">Coste</th></tr></thead>
+      <tbody>${D.calidad.map((c) => `<tr>
+        <td>${esc(c.producto)}</td><td>${esc(c.proveedor ?? '—')}</td>
+        <td class="m">${esc(c.lote ?? '—')}</td>
+        <td class="n">${nf(c.uds, 0)}</td><td class="n">${c.n}</td>
+        <td class="n">${eur(c.eur)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+
+  // --- copilot: preguntas resueltas SOBRE EL DATO REAL de esta instantanea --
+  const COPILOT = [
+    { q: '¿Por qué ha bajado el OEE esta semana?', f: () => {
+        const a = D.alertas.find((x) => x.severidad === 'critica');
+        return a ? `El ${pct(D.indicadores.oee, 0)} de OEE de los últimos 7 días viene sobre todo de la
+          <strong>Estación P4</strong>: ${esc(a.por_que || a.que_cambio)}
+          El impacto estimado es de <strong>${eur(a.impacto_eur_anual)} al año</strong>.`
+          : 'No hay caída significativa esta semana.'; },
+      fuentes: 'métricas de turno 2–8 sep · eventos de L3.P4 · alerta crítica' },
+    { q: '¿Qué máquina debería revisar mantenimiento?', f: () => {
+        const c = D.activos.filter((a) => a.score != null && a.score_prev != null)
+          .sort((a, b) => (a.score - a.score_prev) - (b.score - b.score_prev))[0];
+        return `<strong>${esc(c.nombre)}</strong> (${esc(c.codigo)}): ha bajado de
+          ${c.score_prev} a ${c.score} en treinta días. Su consumo específico sube un
+          ${nf(c.entradas?.deriva_consumo_pct, 1)}% y acumula ${c.entradas?.alarmas_30d} alarmas
+          este mes. No ha dado ninguna avería todavía, y por eso no aparecería en un GMAO.`; },
+      fuentes: 'asset_score 9 sep y 10 ago · energy_reading · eventos de alarma' },
+    { q: '¿Qué proveedor genera más incidencias?', f: () => {
+        const a = D.alertas.find((x) => x.modulo === 'quality');
+        return a ? `${esc(a.que_cambio)} ${esc(a.por_que)}
+          El coste ya incurrido asciende a <strong>${eur(a.impacto_base.coste_incurrido_eur)}</strong>.`
+          : 'No hay correlación con fuerza suficiente.'; },
+      fuentes: 'incidencias de calidad · albaranes · lotes de entrega' },
+    { q: '¿Cuánto podría ahorrar apagando lo que no hace falta?', f: () => {
+        const e = D.alertas.filter((x) => x.modulo === 'energy');
+        const t = e.reduce((a, x) => a + (x.impacto_eur_anual || 0), 0);
+        return `${e.length} equipos siguen consumiendo con la planta parada. En conjunto,
+          <strong>${eur(t)} al año</strong>. El mayor es ${esc(e[0].nodo_nombre)}, con
+          ${eur(e[0].impacto_eur_anual)}. La acción es un temporizador, no una inversión.`; },
+      fuentes: 'potencia por nodo fuera de instancias de turno · precio de contrato' },
+    { q: '¿Cuántas paradas no tienen causa registrada?', f: () =>
+        `El <strong>${nf(D.indicadores.pct_sin_causa, 1)}%</strong>. Podemos medir cuánto se pierde,
+         pero no diagnosticar por qué. Bajarlo del 80% al 30% es, por sí solo, un resultado
+         del piloto: sin causa no hay diagnóstico posible, ni con IA ni sin ella.`,
+      fuentes: 'v_cobertura_causas · eventos de parada de 30 días' },
+    { q: '¿Cuánto margen se pierde por scrap?', f: () => {
+        const t = D.calidad.reduce((a, c) => a + (+c.eur || 0), 0);
+        return `<strong>${eur(t)}</strong> en 45 días, sobre ${D.calidad.length} combinaciones de
+          producto y lote. La mitad se concentra en un solo lote.`; },
+      fuentes: 'quality_incident · margen unitario de la ficha de producto' },
+  ];
+
+  P.copilot = () => `
+    <div class="cab"><div><h1>Pregunta a tu fábrica</h1>
+      <div class="sub">consulta el dato real · no estima · cita siempre la fuente</div></div></div>
+    <div class="chat">
+      <div class="sugerencias">${COPILOT.map((c, i) =>
+        `<button type="button" onclick="window.__resp(${i})">${esc(c.q)}</button>`).join('')}</div>
+      <div id="respuesta"></div>
+      <div class="caja"><h3>Qué pasa cuando no sabe</h3>
+        <p>Si la pregunta no encaja en ninguna consulta del catálogo, responde
+        «no sé contestar a eso todavía» y lo registra. Ese registro es el backlog del Copilot,
+        escrito por los propios usuarios. Nunca rellena el hueco con algo verosímil.</p>
+        <p style="color:var(--texto-2);font-size:.84rem">El modelo tampoco escribe SQL: elige
+        una plantilla parametrizada y se ejecuta con los permisos de quien pregunta. La IA no
+        es una puerta trasera a los permisos.</p></div>
+    </div>`;
+
+  window.__resp = (i) => {
+    const c = COPILOT[i];
+    document.getElementById('respuesta').innerHTML = `
+      <div class="pregunta"><div class="q">Tú</div>${esc(c.q)}</div>
+      <div class="caja"><h3>Factory Radar</h3><p>${c.f()}</p>
+        <div class="fuentes">FUENTES · <em>${esc(c.fuentes)}</em></div></div>`;
+  };
+
+  // -------------------------------------------------------------------------
+  // GRAFICAS DE CADA PANTALLA
+  // -------------------------------------------------------------------------
+  function serieDias(filas, campo, codigos) {
+    const dias = [...new Set(filas.map((f) => String(f.fecha).slice(0, 10)))].sort();
+    return {
+      dias,
+      series: codigos.map((c, i) => ({
+        nombre: c,
+        color: `var(--s${i + 1})`,
+        // Un dia sin fila queda como null y la linea SE PARTE. No se interpola.
+        puntos: dias.map((d) => {
+          const f = filas.find((x) => x.codigo === c && String(x.fecha).slice(0, 10) === d);
+          return { x: fecha(d), y: f ? +f[campo] : null };
+        }),
+      })),
+    };
+  }
+
+  function pintarGraficas(ruta, id) {
+    const cont = (s) => document.getElementById(s);
+
+    if (ruta === 'produccion' && cont('viz-oee')) {
+      const codigos = [...new Set(D.oeeLinea.map((o) => o.codigo))].sort();
+      const { series } = serieDias(D.oeeLinea, 'oee', codigos);
+      cont('viz-oee').innerHTML = `<div class="titulo">OEE diario por línea</div>
+        <div class="nota">45 días · los domingos no hay producción y la línea se corta:
+        un hueco se dibuja como hueco</div><div class="lienzo"></div>`;
+      pintarLineas(cont('viz-oee').querySelector('.lienzo'), {
+        series, titulo: 'OEE diario por línea', desdeCero: false,
+        fmtY: (v) => nf(v * 100, 0) + '%', fmtTip: (v) => nf(v * 100, 1) + '%',
+        alt: 'OEE diario de las tres líneas durante 45 días. La línea 3 cae en la última semana.',
+      });
+    }
+
+    if (cont('viz-alerta') || cont('viz-activo')) {
+      const a = D.alertas.find((x) => x.id === id);
+      const esP4 = a && a.nodo_codigo === 'L3.P4';
+      const el = cont('viz-alerta') || cont('viz-activo');
+
+      if (esP4) {
+        // Media diaria de rendimiento de P4 con su linea base y la marca del
+        // cambio de formato: es el grafico que cuenta la alerta entera.
+        const dias = [...new Set(D.rendP4.map((r) => String(r.bucket).slice(0, 10)))].sort();
+        const puntos = dias.map((d) => {
+          const f = D.rendP4.filter((r) => String(r.bucket).slice(0, 10) === d);
+          return { x: fecha(d), y: f.length ? f.reduce((s, r) => s + +r.rend, 0) / f.length : null };
+        });
+        const base = D.baseP4.filter((b) => b.producto === '(genérica)');
+        const media = base.length ? base.reduce((s, b) => s + +b.media, 0) / base.length : null;
+        const iCambio = dias.findIndex((d) =>
+          D.rendP4.some((r) => String(r.bucket).slice(0, 10) === d && r.producto === 'REF-2210'));
+
+        el.innerHTML = `<div class="titulo">Rendimiento de la Estación P4</div>
+          <div class="nota">media diaria de los tres turnos · 30 días</div><div class="lienzo"></div>`;
+        pintarLineas(el.querySelector('.lienzo'), {
+          series: [{ nombre: 'L3.P4', color: 'var(--critica)', puntos }],
+          base: media, marca: iCambio > 0 ? { i: iCambio, texto: 'cambio a REF-2210' } : null,
+          fmtY: (v) => nf(v * 100, 0) + '%', fmtTip: (v) => nf(v * 100, 1) + '%',
+          alt: 'El rendimiento de P4 se mantiene en torno a la línea base hasta el cambio de formato y luego cae.',
+        });
+      } else {
+        const { series } = serieDias(D.energiaDia, 'kwh', ['COMP-01', 'COMP-02']);
+        el.innerHTML = `<div class="titulo">Consumo diario · COMP-01 frente a COMP-02</div>
+          <div class="nota">dos equipos equivalentes: uno para fuera de horario y el otro no</div>
+          <div class="lienzo"></div>`;
+        pintarLineas(el.querySelector('.lienzo'), {
+          series, desdeCero: true, fmtY: (v) => nf(v, 0), fmtTip: (v) => nf(v, 1) + ' kWh',
+          alt: 'El consumo diario de COMP-02 crece y se mantiene alto los fines de semana; COMP-01 baja.',
+        });
+      }
+    }
+
+    if (ruta === 'energia' && cont('viz-energia')) {
+      const { series } = serieDias(D.energiaDia, 'kwh', ['L3', 'COMP-02', 'CHILLER']);
+      cont('viz-energia').innerHTML = `<div class="titulo">Consumo diario por nodo</div>
+        <div class="nota">45 días · los valles son los domingos con la planta parada</div>
+        <div class="lienzo"></div>`;
+      pintarLineas(cont('viz-energia').querySelector('.lienzo'), {
+        series, desdeCero: true, fmtY: (v) => nf(v, 0), fmtTip: (v) => nf(v, 1) + ' kWh',
+        alt: 'Consumo diario de la línea 3, el compresor 02 y la enfriadora durante 45 días.',
+      });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // MENU Y ENRUTADO
+  // -------------------------------------------------------------------------
+  const MENU = [
+    { grupo: 'Hoy' },
+    { r: 'estado', t: 'Estado de planta' },
+    { r: 'alertas', t: 'Alertas', n: () => D.alertas.filter((a) => a.severidad === 'critica').length },
+    { r: 'copilot', t: 'Pregunta a tu fábrica' },
+    { grupo: 'Radares' },
+    { r: 'produccion', t: 'Producción' },
+    { r: 'mantenimiento', t: 'Mantenimiento' },
+    { r: 'energia', t: 'Energía' },
+    { r: 'calidad', t: 'Calidad' },
+  ];
+
+  function pintarMenu(activa) {
+    menuEl.innerHTML = MENU.map((m) => {
+      if (m.grupo) return `<div class="sep">${esc(m.grupo)}</div>`;
+      const n = m.n ? m.n() : 0;
+      return `<a href="#/${m.r}" class="${activa === m.r ? 'on' : ''}">${esc(m.t)}
+        ${n ? `<span class="n">${n}</span>` : ''}</a>`;
+    }).join('');
+  }
+
+  function ir() {
+    const h = (location.hash || '#/estado').slice(2).split('/');
+    const ruta = h[0] || 'estado';
+    const id = h[1] ? decodeURIComponent(h[1]) : null;
+
+    const fn = P[ruta];
+    vista.innerHTML = fn ? fn(id) : `<div class="vacio-est">Esa pantalla no existe todavía.</div>`;
+    // 'alerta' y 'activo' son fichas: en el menu se marca su seccion padre.
+    pintarMenu(ruta === 'alerta' ? 'alertas' : ruta === 'activo' ? 'mantenimiento' : ruta);
+    pintarGraficas(ruta, id);
+    window.scrollTo(0, 0);
+  }
+
+  document.getElementById('planta-nom').textContent = D.planta.nombre.replace('Planta de ', '');
+  document.getElementById('tema').addEventListener('click', () => {
+    const claro = document.documentElement.getAttribute('data-tema') === 'claro';
+    document.documentElement.setAttribute('data-tema', claro ? 'oscuro' : 'claro');
+    ir();   // las graficas leen los colores del tema al dibujarse
+  });
+
+  window.addEventListener('hashchange', ir);
+  ir();
+})();
+</script>

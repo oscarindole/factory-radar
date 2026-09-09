@@ -1,0 +1,15 @@
+node_modules
+var/
+*.log
+*.pid
+
+# Credenciales: NUNCA salen de su maquina.
+.env
+.env.local
+
+.DS_Store
+
+# Copias que se dejan al editar a mano. Viven horas, no versiones: lo que hay
+# que poder recuperar es el commit anterior, no un fichero suelto en el disco.
+*.antes-*
+*.antes

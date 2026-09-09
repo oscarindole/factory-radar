@@ -1,0 +1,635 @@
+<title>Tu fábrica ya genera los datos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* ---------------------------------------------------------------------------
+   Web comercial de FACTORY RADAR.
+
+   Idea rectora: HORMIGON Y SEÑALIZACION. El fondo es el gris cálido de una nave
+   y el acento es el ámbar de la señal industrial. El producto aparece dentro en
+   oscuro, como un instrumento colocado encima. Esa tensión es el argumento de
+   venta: no cambiamos la fábrica, ponemos una capa encima.
+
+   Lo que NO se hace aquí, y está escrito en doc/09-comercial.md: nada de
+   "transformamos la industria con IA", nada de "Industria 4.0", ninguna foto de
+   robot azul. Se habla de paradas, de scrap, de kilovatios y de euros.
+--------------------------------------------------------------------------- */
+:root {
+  --hormigon:   #E6E4DE;
+  --hormigon-2: #DAD7CF;
+  --papel:      #F4F3EF;
+  --tinta:      #14161A;
+  --tinta-2:    #4E5359;
+  --tinta-3:    #7C8288;
+  --raya:       #C9C5BB;
+
+  /* Ámbar de señalización. Un solo acento, y se gasta con tiento. */
+  --ambar:      #B25E00;
+  --ambar-viva: #F5A524;
+
+  /* El instrumento: mismo aspecto en los dos temas, porque es una captura de
+     un producto que siempre se ve así. */
+  --in-fondo:   #0E1116;
+  --in-fondo-2: #161D22;
+  --in-raya:    #27333A;
+  --in-tinta:   #E8EDF2;
+  --in-tinta-2: #93A1B0;
+  --in-critica: #E5484D;
+  --in-alta:    #F5A524;
+  --in-media:   #3E9EFF;
+  --in-bien:    #46C68A;
+
+  --medida: 60ch;
+  --disp: "Saira Condensed", "Arial Narrow", sans-serif;
+  --body: "Source Serif 4", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hormigon:#15181C; --hormigon-2:#0F1216; --papel:#1B1F24;
+    --tinta:#ECEFF2; --tinta-2:#A0A7AE; --tinta-3:#787F86; --raya:#2C3238;
+    --ambar:#F0A44E; --ambar-viva:#F5A524;
+  }
+}
+:root[data-theme="dark"] {
+  --hormigon:#15181C; --hormigon-2:#0F1216; --papel:#1B1F24;
+  --tinta:#ECEFF2; --tinta-2:#A0A7AE; --tinta-3:#787F86; --raya:#2C3238;
+  --ambar:#F0A44E; --ambar-viva:#F5A524;
+}
+
+* { box-sizing:border-box; }
+body { background:var(--hormigon); color:var(--tinta); font-family:var(--body);
+       font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased; }
+:focus-visible { outline:2px solid var(--ambar); outline-offset:3px; }
+
+h1,h2,h3,.disp { font-family:var(--disp); text-wrap:balance; margin:0;
+                 letter-spacing:-.005em; text-transform:uppercase; }
+p { margin:0 0 16px; max-width:var(--medida); }
+strong { font-weight:600; }
+.mono, .num { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+/* --- bandas --------------------------------------------------------------- */
+section { padding:clamp(52px,7vw,96px) clamp(20px,5vw,40px); }
+section.papel { background:var(--papel); }
+section.oscuro { background:var(--in-fondo); color:var(--in-tinta); }
+section.oscuro p { color:var(--in-tinta-2); }
+section.oscuro strong { color:var(--in-tinta); }
+.centro { max-width:1080px; margin:0 auto; }
+
+.eyebrow { font-family:var(--mono); font-size:.68rem; font-weight:600;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--ambar);
+  display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.eyebrow::after { content:""; flex:1; height:2px; background:var(--raya); }
+section.oscuro .eyebrow { color:var(--in-alta); }
+section.oscuro .eyebrow::after { background:var(--in-raya); }
+
+h2 { font-size:clamp(1.9rem,4vw,2.9rem); font-weight:800; line-height:1;
+     margin-bottom:16px; }
+h2 em { font-style:normal; color:var(--ambar); }
+.entradilla { font-size:1.14rem; color:var(--tinta-2); max-width:64ch; }
+section.oscuro .entradilla { color:var(--in-tinta-2); }
+
+/* --- hero ----------------------------------------------------------------- */
+.hero { background:var(--hormigon); padding-top:clamp(38px,6vw,70px);
+        border-bottom:2px solid var(--raya); }
+.hero-rej { display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(28px,4vw,52px);
+            align-items:start; max-width:1080px; margin:0 auto; }
+.logo { font-family:var(--disp); font-weight:800; font-size:.95rem; letter-spacing:.2em;
+        margin-bottom:clamp(30px,5vw,54px); }
+.logo i { font-style:normal; color:var(--ambar); }
+h1 { font-size:clamp(2.5rem,6.2vw,4.7rem); font-weight:800; line-height:.9;
+     margin-bottom:22px; }
+h1 span { display:block; color:var(--ambar); }
+.hero p { font-size:1.2rem; color:var(--tinta-2); max-width:46ch; }
+.ctas { display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; }
+.cta { font-family:var(--disp); font-weight:700; font-size:1rem; letter-spacing:.06em;
+  text-transform:uppercase; padding:14px 22px; border:2px solid var(--tinta);
+  background:var(--tinta); color:var(--hormigon); text-decoration:none;
+  display:inline-block; }
+.cta:hover { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+.cta.sec { background:none; color:var(--tinta); }
+.cta.sec:hover { background:var(--tinta); color:var(--hormigon); border-color:var(--tinta); }
+
+/* --- el instrumento ------------------------------------------------------- */
+.inst { background:var(--in-fondo); color:var(--in-tinta); border:1px solid var(--in-raya);
+  font-family:var(--disp); box-shadow:0 24px 50px -34px rgba(0,0,0,.6); }
+.inst-bar { display:flex; justify-content:space-between; gap:10px; padding:10px 14px;
+  border-bottom:1px solid var(--in-raya); background:var(--in-fondo-2);
+  font-family:var(--mono); font-size:.63rem; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--in-tinta-2); }
+.inst-bar b { color:var(--in-tinta); }
+.inst-cuerpo { padding:14px; }
+.al { display:grid; grid-template-columns:3px 1fr; gap:0 12px; padding:11px 0;
+      border-top:1px solid var(--in-raya); }
+.al:first-child { border-top:0; padding-top:2px; }
+.al .st { align-self:stretch; border-radius:2px; }
+.al.critica .st { background:var(--in-critica); } .al.alta .st { background:var(--in-alta); }
+.al.media .st { background:var(--in-media); }
+.al .sv { font-family:var(--mono); font-size:.58rem; letter-spacing:.1em;
+          text-transform:uppercase; }
+.al.critica .sv { color:var(--in-critica); } .al.alta .sv { color:var(--in-alta); }
+.al.media .sv { color:var(--in-media); }
+.al .ti { font-size:.95rem; font-weight:700; letter-spacing:-.005em; margin:3px 0 3px;
+          text-transform:none; }
+.al .de { font-family:var(--mono); font-size:.69rem; color:var(--in-tinta-2); line-height:1.55; }
+.al .eu { font-family:var(--mono); font-size:.82rem; font-weight:600; color:var(--in-alta);
+          margin-top:5px; font-variant-numeric:tabular-nums; }
+.inst-pie { border-top:1px solid var(--in-raya); background:var(--in-fondo-2);
+  padding:11px 14px; display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:.63rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--in-tinta-2); }
+.inst-pie b { font-size:1.05rem; color:var(--in-alta); letter-spacing:-.01em;
+              font-variant-numeric:tabular-nums; }
+
+/* --- rejillas ------------------------------------------------------------- */
+.rej { display:grid; gap:2px; background:var(--raya); border:2px solid var(--raya);
+       margin-top:26px; }
+.rej.c2 { grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+.rej.c3 { grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); }
+.cel { background:var(--papel); padding:22px 24px; }
+section.papel .cel { background:var(--hormigon); }
+.cel h3 { font-size:1.12rem; font-weight:700; margin-bottom:6px; }
+.cel .q { font-family:var(--mono); font-size:.66rem; color:var(--ambar); letter-spacing:.06em;
+          margin-bottom:9px; }
+.cel p { font-size:.94rem; color:var(--tinta-2); margin:0; }
+
+/* --- cadena de datos ------------------------------------------------------ */
+.cadena { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+          gap:2px; background:var(--in-raya); border:2px solid var(--in-raya);
+          margin-top:30px; }
+.paso { background:var(--in-fondo); padding:18px 18px 20px; }
+.paso .n { font-family:var(--mono); font-size:.62rem; letter-spacing:.16em;
+           color:var(--in-tinta-2); }
+.paso h3 { font-size:1.05rem; font-weight:800; margin:7px 0 7px; color:var(--in-tinta); }
+.paso.hot h3 { color:var(--in-alta); }
+.paso p { font-family:var(--mono); font-size:.7rem; line-height:1.6; color:var(--in-tinta-2);
+          margin:0; }
+
+/* --- conectores ----------------------------------------------------------- */
+.conect { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+.conect span { font-family:var(--disp); font-weight:700; font-size:1rem; letter-spacing:.05em;
+  padding:9px 16px; border:2px solid var(--raya); color:var(--tinta-2); }
+.conect span.si { border-color:var(--ambar); color:var(--ambar); }
+
+/* --- tablas y precios ----------------------------------------------------- */
+.tw { overflow-x:auto; border:2px solid var(--raya); margin-top:24px; }
+table { border-collapse:collapse; width:100%; font-family:var(--disp); font-size:.98rem; }
+th,td { text-align:left; padding:11px 15px; border-bottom:1px solid var(--raya);
+        vertical-align:top; }
+thead th { font-family:var(--mono); font-size:.63rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--tinta-3); background:var(--hormigon-2); }
+section.papel thead th { background:var(--hormigon); }
+tbody tr:last-child td { border-bottom:0; }
+td.n { text-align:right; font-family:var(--mono); white-space:nowrap; }
+tbody td { background:var(--papel); }
+section.papel tbody td { background:var(--hormigon); }
+
+.precio { font-family:var(--disp); font-size:2.5rem; font-weight:800; letter-spacing:-.03em;
+          line-height:1; margin:10px 0 4px; }
+.precio small { font-size:.9rem; font-weight:600; color:var(--tinta-3); }
+.imp { font-family:var(--mono); font-size:.72rem; color:var(--tinta-2); }
+.cel ul { list-style:none; padding:0; margin:14px 0 0; font-family:var(--disp);
+          font-size:.92rem; color:var(--tinta-2); }
+.cel ul li { padding:5px 0; border-top:1px solid var(--raya); }
+.cel.destaca { background:var(--tinta); color:var(--papel); }
+.cel.destaca h3, .cel.destaca .precio { color:var(--ambar-viva); }
+.cel.destaca .q, .cel.destaca .imp, .cel.destaca p, .cel.destaca ul { color:#B9BFC6; }
+.cel.destaca ul li { border-color:#333A41; }
+
+/* --- copilot -------------------------------------------------------------- */
+.dialogo { max-width:640px; margin-top:28px; }
+.turno { border:1px solid var(--in-raya); background:var(--in-fondo-2); padding:14px 17px;
+         margin-bottom:10px; }
+.turno .quien { font-family:var(--mono); font-size:.6rem; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--in-tinta-2); margin-bottom:7px; }
+.turno p { font-family:var(--body); font-size:.98rem; color:var(--in-tinta); margin:0;
+           max-width:none; }
+.turno .fte { font-family:var(--mono); font-size:.64rem; color:var(--in-tinta-2);
+  margin-top:11px; padding-top:9px; border-top:1px solid var(--in-raya); }
+.turno .fte em { font-style:normal; color:var(--in-media); }
+
+/* --- cierre --------------------------------------------------------------- */
+.cierre { text-align:center; }
+.cierre h2, .cierre p { margin-left:auto; margin-right:auto; }
+.cierre .ctas { justify-content:center; }
+footer { background:var(--hormigon-2); padding:30px clamp(20px,5vw,40px);
+  font-family:var(--mono); font-size:.7rem; color:var(--tinta-3); line-height:1.9;
+  border-top:2px solid var(--raya); }
+footer b { color:var(--tinta-2); }
+
+.regla { font-family:var(--mono); font-size:.72rem; color:var(--tinta-3);
+  border-left:3px solid var(--ambar); padding:11px 15px; margin-top:24px;
+  background:var(--hormigon-2); max-width:72ch; }
+section.papel .regla { background:var(--papel); }
+
+@media (max-width:820px) {
+  body { font-size:16px; }
+  .hero-rej { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion:no-preference) {
+  .revela { opacity:0; transform:translateY(10px); transition:opacity .6s, transform .6s; }
+  .revela.on { opacity:1; transform:none; }
+}
+</style>
+
+<!-- 1 · HERO ------------------------------------------------------------- -->
+<section class="hero">
+  <div class="logo">FACTORY <i>RADAR</i></div>
+  <div class="hero-rej">
+    <div>
+      <h1>Tu fábrica ya genera los datos.<span>Nosotros te decimos qué significan.</span></h1>
+      <p>Conectamos producción, mantenimiento, energía y calidad para detectar pérdidas,
+      anomalías y riesgos antes de que se conviertan en problemas.</p>
+      <div class="ctas">
+        <a class="cta" href="#empezar">Solicitar análisis de planta</a>
+        <a class="cta sec" href="#como">Ver cómo funciona</a>
+      </div>
+      <div class="regla">Sin obra en la red. Sin cambiar de ERP. Sin tocar el PLC.<br>
+        Cuatro semanas hasta la primera alerta útil.</div>
+    </div>
+
+    <div class="inst">
+      <div class="inst-bar"><b>Estado de planta</b><span>martes · 07:41</span></div>
+      <div class="inst-cuerpo">
+        <div class="al critica"><span class="st"></span><div>
+          <div class="sv">■ Crítica</div>
+          <div class="ti">Estación P4 · el rendimiento cayó del 87% al 75%</div>
+          <div class="de">92 microparadas al día frente a 9 habituales, desde el cambio
+            de formato del martes.</div>
+          <div class="eu" data-a="129218">0 €/año</div>
+        </div></div>
+        <div class="al alta"><span class="st"></span><div>
+          <div class="sv">▲ Alta</div>
+          <div class="ti">Proveedor ZETA · 67% de los rechazos de la brida DN50</div>
+          <div class="de">Concentrados en el lote L-4471. Cuatro lotes distintos en la ventana.</div>
+          <div class="eu" data-a="23695">0 € ya incurridos</div>
+        </div></div>
+        <div class="al media"><span class="st"></span><div>
+          <div class="sv">● Media</div>
+          <div class="ti">Compresor 02 · 44 kW con la planta parada</div>
+          <div class="de">No se detiene al acabar el último turno. El compresor 01 sí.</div>
+          <div class="eu" data-a="14662">0 €/año</div>
+        </div></div>
+      </div>
+      <div class="inst-pie"><span>Impacto detectado este mes</span><b data-a="45669">0 €</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · QUÉ NECESITAS SABER HOY ------------------------------------------ -->
+<section class="papel">
+  <div class="centro">
+    <div class="eyebrow">Lo que ves cada mañana</div>
+    <h2>¿Qué necesitas <em>saber hoy</em>?</h2>
+    <p class="entradilla">Cinco líneas, no cincuenta gráficas. Cada una termina en un euro
+    y en un verbo. Y cada euro abre su cuenta hasta el dato del que sale.</p>
+
+    <div class="rej c3">
+      <div class="cel">
+        <div class="q">PRODUCCIÓN</div>
+        <h3>La pérdida que nadie mide</h3>
+        <p>Las microparadas —esas de 40 a 90 segundos que no llegan al registro— se llevan
+        entre tres y ocho puntos de OEE. Las deducimos del hueco en el contador, y le ponemos
+        precio.</p>
+      </div>
+      <div class="cel">
+        <div class="q">MANTENIMIENTO</div>
+        <h3>El aviso antes de la avería</h3>
+        <p>El compresor 02 bajó de 82 a 74 puntos de salud en treinta días: su consumo
+        específico sube un 14,6% y acumula tres alarmas. <strong>Sin una sola avería
+        todavía</strong>, así que no aparecería en ningún GMAO.</p>
+      </div>
+      <div class="cel">
+        <div class="q">CALIDAD</div>
+        <h3>La causa, no el porcentaje</h3>
+        <p>Tu sistema ya te dice que rechazas un 4%. Nosotros te decimos que dos de cada tres
+        de esos rechazos vienen de un lote concreto de un proveedor concreto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · NO CAMBIES TU FÁBRICA -------------------------------------------- -->
+<section>
+  <div class="centro">
+    <div class="eyebrow">La primera objeción, contestada la primera</div>
+    <h2>No cambies <em>tu fábrica</em></h2>
+    <p class="entradilla">Nos adaptamos nosotros. Si lo único que hay es un Excel que rellenan
+    a mano en el turno de noche, empezamos por ese Excel — y hay valor en tres días.</p>
+
+    <div class="conect">
+      <span class="si">Excel · CSV</span><span class="si">SQL del historiador</span>
+      <span class="si">API del ERP</span><span>SCADA</span><span>MES</span>
+      <span>OPC UA</span><span>MQTT</span><span>GMAO</span><span>Modbus</span>
+      <span>Analizadores de red</span><span>LIMS</span>
+    </div>
+    <div class="regla">En ámbar, lo que conectamos la primera semana. Lo demás llega después,
+      con el cliente ya convencido.</div>
+
+    <div class="tw"><table>
+      <thead><tr><th>Peldaño</th><th>De dónde sale el dato</th><th class="n">Valor en</th></tr></thead>
+      <tbody>
+        <tr><td class="n">0</td><td>El Excel que ya rellenan a mano</td><td class="n">3 días</td></tr>
+        <tr><td class="n">1</td><td>Consulta de solo lectura al historiador</td><td class="n">1 semana</td></tr>
+        <tr><td class="n">2</td><td>API del ERP o del GMAO</td><td class="n">2 semanas</td></tr>
+        <tr><td class="n">3</td><td>OPC UA o MQTT en tiempo real</td><td class="n">continuo</td></tr>
+        <tr><td class="n">4</td><td>Sensórica añadida donde falta</td><td class="n">proyecto aparte</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- 4 · DE DATOS A DECISIONES -------------------------------------------- -->
+<section class="oscuro" id="como">
+  <div class="centro">
+    <div class="eyebrow">Cómo funciona</div>
+    <h2>De datos <em>a decisiones</em></h2>
+    <p class="entradilla">La mayoría del mercado llega hasta el segundo eslabón —te pinta la
+    serie— o hasta el tercero —te dispara una alarma. El producto empieza a valer dinero en el
+    quinto.</p>
+
+    <div class="cadena">
+      <div class="paso revela"><div class="n">01</div><h3>Dato</h3>
+        <p>Contador de la línea 3, cada cinco minutos.</p></div>
+      <div class="paso revela"><div class="n">02</div><h3>Contexto</h3>
+        <p>Esa máquina, esa línea, ese producto, ese turno, ciclo nominal 13 s.</p></div>
+      <div class="paso revela"><div class="n">03</div><h3>Anomalía</h3>
+        <p>Rendimiento 11 puntos por debajo de su propia línea base.</p></div>
+      <div class="paso revela"><div class="n">04</div><h3>Diagnóstico</h3>
+        <p>92 microparadas al día en P4 desde el cambio a REF-2210.</p></div>
+      <div class="paso hot revela"><div class="n">05</div><h3>Impacto</h3>
+        <p>2.575 uds/semana × 1,25 € de margen × 48 semanas.</p></div>
+      <div class="paso hot revela"><div class="n">06</div><h3>Acción</h3>
+        <p>Orden de trabajo para revisar el alimentador de P4.</p></div>
+    </div>
+
+    <div class="regla" style="border-color:var(--in-alta);background:var(--in-fondo-2);
+      color:var(--in-tinta-2);margin-top:26px">
+      Si la pantalla no termina en un euro o en una acción, sobra.
+    </div>
+  </div>
+</section>
+
+<!-- 5 · LOS RADARES ------------------------------------------------------- -->
+<section class="papel">
+  <div class="centro">
+    <div class="eyebrow">Módulos</div>
+    <h2>Seis radares, <em>seis preguntas</em></h2>
+    <p class="entradilla">Cada uno existe porque contesta una pregunta de negocio, no porque
+    quede bien en un folleto.</p>
+
+    <div class="rej c3">
+      <div class="cel"><div class="q">PRODUCTION RADAR</div>
+        <h3>¿Dónde estoy perdiendo?</h3>
+        <p>OEE desglosado en sus tres factores, microparadas derivadas, paradas con causa y
+        comparativa entre turnos y líneas.</p></div>
+      <div class="cel"><div class="q">MAINTENANCE RADAR</div>
+        <h3>¿Qué reviso esta semana?</h3>
+        <p>Salud de 0 a 100 por activo, con sus cuatro componentes abiertos. Ordenado por
+        caída, no por nivel: la señal es la derivada.</p></div>
+      <div class="cel"><div class="q">ENERGY RADAR</div>
+        <h3>¿Qué puedo apagar?</h3>
+        <p>Consumo por unidad producida, no absoluto. Y lo que se gasta con la planta parada,
+        que suele ser entre el 8% y el 20% de la factura.</p></div>
+      <div class="cel"><div class="q">QUALITY RADAR</div>
+        <h3>¿A quién llamo?</h3>
+        <p>Cruce de cada rechazo con lote, materia prima, proveedor, máquina, turno y
+        operario. Correlación con su fuerza estadística, nunca causa.</p></div>
+      <div class="cel"><div class="q">SUPPLIER RADAR</div>
+        <h3>¿Con quién renegocio?</h3>
+        <p>Score de proveedor abierto en cinco componentes, y aviso cuando uno se deteriora
+        aunque siga siendo aceptable.</p></div>
+      <div class="cel"><div class="q">FACTORY BRAIN</div>
+        <h3>¿Qué compruebo ahora?</h3>
+        <p>Los manuales, los esquemas y los cuatro mil partes históricos, respondiendo en
+        castellano con la fuente citada. Y si no sabe, lo dice.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · COPILOT ----------------------------------------------------------- -->
+<section class="oscuro">
+  <div class="centro">
+    <div class="eyebrow">Industrial AI Copilot</div>
+    <h2>Pregunta <em>a tu fábrica</em></h2>
+    <p class="entradilla">Consulta el dato real. No estima nunca. Y cita siempre de dónde
+    sale, para que puedas comprobarlo.</p>
+
+    <div class="dialogo">
+      <div class="turno"><div class="quien">Tú</div>
+        <p>¿Qué máquina debería revisar mantenimiento?</p></div>
+      <div class="turno"><div class="quien">Factory Radar</div>
+        <p><strong>Compresor 02.</strong> Ha bajado de 82 a 74 puntos de salud en treinta
+        días. Su consumo específico sube un 14,6% y acumula tres alarmas de presión este mes.
+        No ha dado ninguna avería todavía, y por eso no aparecería en tu GMAO.</p>
+        <div class="fte">FUENTES · <em>salud del activo 9 sep y 10 ago</em> ·
+          <em>consumo diario</em> · <em>eventos de alarma del PLC</em></div></div>
+    </div>
+
+    <div class="regla" style="border-color:var(--in-alta);background:var(--in-fondo-2);
+      color:var(--in-tinta-2)">
+      No escribe consultas contra tu base: elige una plantilla del catálogo y se ejecuta con
+      los permisos de quien pregunta. La IA no es una puerta trasera a los permisos.
+    </div>
+  </div>
+</section>
+
+<!-- 7 · ROI --------------------------------------------------------------- -->
+<section>
+  <div class="centro">
+    <div class="eyebrow">Retorno</div>
+    <h2>Lo que se recupera, <em>con rangos honestos</em></h2>
+    <p class="entradilla">No decimos «hasta un 40%». Estas son las horquillas que se ven en
+    plantas del tamaño de la tuya, y en el piloto medimos las tuyas.</p>
+
+    <div class="tw"><table>
+      <thead><tr><th>Dónde</th><th>Por qué se recupera</th><th class="n">Horquilla</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Paradas no planificadas</strong></td>
+          <td>Se detecta la deriva antes del fallo. Una hora de parada en línea principal
+            cuesta entre 1.500 y 12.000 €</td><td class="n">2–6 evitadas/año</td></tr>
+        <tr><td><strong>Microparadas</strong></td>
+          <td>Se miden por primera vez, y lo que se mide se corrige</td>
+          <td class="n">3–8 puntos de OEE</td></tr>
+        <tr><td><strong>Scrap</strong></td>
+          <td>La causa aparece en el cruce lote–proveedor–turno, no en el Pareto</td>
+          <td class="n">0,5–2 puntos</td></tr>
+        <tr><td><strong>Energía fuera de horario</strong></td>
+          <td>Es una resta, no un modelo. Se corrige con un temporizador</td>
+          <td class="n">8–20% del consumo</td></tr>
+        <tr><td><strong>Tiempo de análisis</strong></td>
+          <td>El Excel del lunes por la mañana deja de existir</td>
+          <td class="n">4 h → menos de 1 h</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="regla">Y la que importa de verdad: <strong>si en el piloto no aparecen 30.000 €
+      de mejora identificada, el producto no vale para tu planta y te lo decimos.</strong></div>
+  </div>
+</section>
+
+<!-- 8 · SEGURIDAD --------------------------------------------------------- -->
+<section class="oscuro">
+  <div class="centro">
+    <div class="eyebrow">Para reenviar a tu responsable de IT</div>
+    <h2>El dato sube. <em>Nunca baja.</em></h2>
+    <p class="entradilla">Sabemos que quien decide esto no eres tú solo. Esta sección está
+    escrita para que la reenvíes.</p>
+
+    <div class="rej c2" style="background:var(--in-raya);border-color:var(--in-raya)">
+      <div class="cel" style="background:var(--in-fondo-2);color:var(--in-tinta)">
+        <h3 style="color:var(--in-tinta)">Ningún puerto abierto</h3>
+        <p style="color:var(--in-tinta-2)">El conector abre él la conexión, TLS mutuo por el
+        443 de salida. No escucha en ningún puerto: tu cortafuegos no necesita ninguna regla
+        de entrada. Sin VPN entrante, sin túnel inverso, sin escritorio remoto.</p></div>
+      <div class="cel" style="background:var(--in-fondo-2);color:var(--in-tinta)">
+        <h3 style="color:var(--in-tinta)">Solo lectura, y no es una opción</h3>
+        <p style="color:var(--in-tinta-2)">No hay código capaz de escribir en un PLC. No está
+        desactivado: no está implementado, y te enseñamos el repositorio. Nunca escribiremos
+        en un sistema OT: eso es otro producto, con otra certificación y otro seguro.</p></div>
+      <div class="cel" style="background:var(--in-fondo-2);color:var(--in-tinta)">
+        <h3 style="color:var(--in-tinta)">Aguanta sin línea</h3>
+        <p style="color:var(--in-tinta-2)">Siete días de memoria local. Si cae internet sigue
+        recogiendo, y al volver reenvía en orden, sin duplicar y sin perder. Tampoco insiste
+        contra un PLC antiguo: saturarlo puede afectar a su ciclo de scan.</p></div>
+      <div class="cel" style="background:var(--in-fondo-2);color:var(--in-tinta)">
+        <h3 style="color:var(--in-tinta)">Tu dato es solo tuyo</h3>
+        <p style="color:var(--in-tinta-2)">Aislamiento en el propio motor de base de datos, no
+        solo en el código. Servidores en la Unión Europea. Arquitectura conforme a IEC 62443 e
+        ISO 27001, y contrato de encargado del tratamiento desde el primer día.</p></div>
+    </div>
+
+    <div class="regla" style="border-color:var(--in-alta);background:var(--in-fondo-2);
+      color:var(--in-tinta-2)">
+      Los operarios van seudonimizados por defecto. Cruzar productividad con nombre y
+      apellidos es tratamiento de datos personales en contexto laboral, y de fábrica se
+      trabaja en modo agregado por turno.
+    </div>
+  </div>
+</section>
+
+<!-- 9 · CÓMO EMPEZAMOS ---------------------------------------------------- -->
+<section class="papel" id="empezar">
+  <div class="centro">
+    <div class="eyebrow">Cómo empezamos</div>
+    <h2>Seis semanas. <em>Una línea.</em> 4.900 €.</h2>
+    <p class="entradilla">No te pedimos que te comprometas con la planta entera ni con doce
+    meses. Empezamos por una línea, y en la semana seis presentamos a dirección lo que hemos
+    encontrado, en euros.</p>
+
+    <div class="tw"><table>
+      <thead><tr><th class="n">Sem</th><th>Qué hacemos</th><th>Qué te llevas</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td><strong>Auditoría de datos.</strong> Qué hay, qué falta y
+          qué calidad tiene</td><td>El mapa de tus fuentes, y en qué peldaño estás</td></tr>
+        <tr><td class="n">2</td><td>Conexión y validación contra un dato que ya conoces</td>
+          <td>Dato real entrando, y cuadrado con tu parte</td></tr>
+        <tr><td class="n">3</td><td>Jerarquía, turnos, productos, ciclos y márgenes</td>
+          <td>El panel con la producción real de la línea</td></tr>
+        <tr><td class="n">4</td><td>Línea base aprendida, umbrales y destinatarios</td>
+          <td>Las primeras alertas, con su impacto en euros</td></tr>
+        <tr><td class="n">5</td><td>Copilot y recalibración con tu feedback</td>
+          <td>Preguntar en castellano sobre tus propios datos</td></tr>
+        <tr><td class="n">6</td><td>Cuantificación y presentación a dirección</td>
+          <td><strong>Informe de oportunidades en euros</strong></td></tr>
+      </tbody>
+    </table></div>
+    <div class="regla">Los 4.900 € se descuentan de la implantación si sigues adelante.
+      La semana 1 casi siempre descubre algo que ya justifica el piloto: que tu MES no
+      registra causas de parada, o que un contador lleva meses mal.</div>
+
+    <div class="eyebrow" style="margin-top:44px">Después</div>
+    <h2 style="font-size:clamp(1.5rem,3vw,2.1rem)">Suscripción, <em>con la implantación aparte</em></h2>
+    <p class="entradilla">Separadas a propósito: meterlo todo en la cuota mensual obliga a un
+    compromiso de veinticuatro meses que nadie firma en la primera compra.</p>
+
+    <div class="rej c3">
+      <div class="cel"><div class="q">STARTER</div>
+        <div class="precio">390 €<small> /mes</small></div>
+        <div class="imp">implantación 2.500 €</div>
+        <ul><li>1 planta · hasta 20 activos</li><li>Producción</li>
+          <li>Excel, CSV y API</li><li>5 usuarios · panel y correo</li></ul></div>
+      <div class="cel destaca"><div class="q">PRO</div>
+        <div class="precio">890 €<small> /mes</small></div>
+        <div class="imp">implantación 6.500 €</div>
+        <ul><li>1 planta · hasta 100 activos</li><li>+ Mantenimiento y Energía</li>
+          <li>+ SQL, MQTT y OPC UA</li><li>20 usuarios · Teams y Slack</li>
+          <li>Conector Edge incluido</li></ul></div>
+      <div class="cel"><div class="q">ENTERPRISE</div>
+        <div class="precio">2.400 €<small> /mes desde</small></div>
+        <div class="imp">implantación desde 15.000 €</div>
+        <ul><li>Multi-planta · sin límite</li><li>Todos los radares</li>
+          <li>Integración a medida</li><li>SSO · SLA 99,5%</li>
+          <li>Factory Brain · modelo propio</li></ul></div>
+    </div>
+    <div class="regla">Un PRO son 17.180 € el primer año. Una sola parada no planificada
+      evitada en una línea principal ronda los 10.000 €.</div>
+  </div>
+</section>
+
+<!-- 10 · CIERRE ----------------------------------------------------------- -->
+<section class="cierre">
+  <div class="centro">
+    <h2>Abre tu fábrica cada mañana<br><em>y sabe qué mirar</em></h2>
+    <p class="entradilla">Treinta segundos, cinco líneas y un euro detrás de cada una.
+    Eso es todo lo que pedimos que pruebes.</p>
+    <div class="ctas">
+      <a class="cta" href="#empezar">Solicitar análisis de planta</a>
+      <a class="cta sec" href="https://claude.ai/code/artifact/ba21d819-3696-4900-b6c5-4a864f80d403">Entrar en la demo</a>
+    </div>
+    <p class="mono" style="font-size:.72rem;color:var(--tinta-3);margin-top:22px">
+      La demo es una planta ficticia con noventa días de datos y cuatro problemas escondidos.
+      A ver si los encuentras antes que el radar.</p>
+  </div>
+</section>
+
+<footer>
+  <b>FACTORY RADAR</b> · una capa de inteligencia industrial sobre los sistemas que tu fábrica
+  ya tiene<br>
+  Índole Data Technology · Torrelavega, Cantabria<br>
+  Nombre y cifras provisionales · las de esta página salen de la planta de demostración,
+  no de un cliente real
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Las cifras del panel del hero cuentan hacia arriba una sola vez. Es el
+  // unico momento con movimiento de la pagina: la cifra es el mensaje, asi que
+  // el movimiento sirve para mirarla, no para decorar.
+  document.querySelectorAll('[data-a]').forEach(function (el) {
+    var fin = parseFloat(el.dataset.a);
+    var suf = el.textContent.replace(/^[\d.,\s]*/, '');
+    var pinta = function (n) {
+      el.textContent = Math.round(n).toLocaleString('es-ES') + ' ' + suf;
+    };
+    if (quieto) { pinta(fin); return; }
+    var t0 = null;
+    var paso = function (t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min((t - t0) / 1100, 1);
+      pinta(fin * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  });
+
+  if (!quieto && 'IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (es) {
+      es.forEach(function (e, i) {
+        if (!e.isIntersecting) return;
+        e.target.style.transitionDelay = (i * 70) + 'ms';
+        e.target.classList.add('on');
+        obs.unobserve(e.target);
+      });
+    }, { threshold: .25 });
+    document.querySelectorAll('.revela').forEach(function (n) { obs.observe(n); });
+  } else {
+    document.querySelectorAll('.revela').forEach(function (n) { n.classList.add('on'); });
+  }
+})();
+</script>

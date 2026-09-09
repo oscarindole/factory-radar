@@ -1,0 +1,1545 @@
+<title>Factory Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+/* ---------------------------------------------------------------------------
+   Papel de ingenieria en claro, instrumento en oscuro.
+   Los paneles del producto (.panel) NO cambian con el tema: son maquetas de un
+   equipo que en la vida real siempre se ve oscuro, en una nave con poca luz.
+   Por eso llevan sus propios tokens fijos --pn-*.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* papel */
+  --paper:      #F1F3F2;
+  --paper-2:    #E7EAE9;
+  --card:       #FBFCFB;
+  --ink:        #141C1F;
+  --ink-2:      #56666C;
+  --ink-3:      #7E8D92;
+  --rule:       #D2D9D7;
+  --rule-2:     #BFC8C6;
+
+  /* acento: ambar de senal industrial. Uno solo, y se gasta con tiento */
+  --signal:     #B4560A;
+  --signal-soft:#F5EBDF;
+  /* estructural: teal de instrumento */
+  --teal:       #0E6560;
+  --teal-soft:  #E0EDEB;
+
+  /* severidad: nunca es el acento, es informacion */
+  --sev-crit:   #B0261C;
+  --sev-alta:   #A9660A;
+  --sev-media:  #1C6499;
+  --sev-ok:     #17714A;
+
+  /* paneles del producto: fijos en ambos temas */
+  --pn-bg:      #0E1316;
+  --pn-bg-2:    #161E22;
+  --pn-line:    #27333A;
+  --pn-ink:     #E6EDEB;
+  --pn-ink-2:   #8D9CA3;
+  --pn-crit:    #E5484D;
+  --pn-alta:    #F5A524;
+  --pn-media:   #3E9EFF;
+  --pn-ok:      #46C68A;
+
+  --measure: 67ch;
+  --rail: 236px;
+
+  --f-disp: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #10161A;
+    --paper-2:    #0B1013;
+    --card:       #161E22;
+    --ink:        #E6EDEB;
+    --ink-2:      #9AA9AF;
+    --ink-3:      #74848A;
+    --rule:       #26333A;
+    --rule-2:     #33434B;
+    --signal:     #F0A050;
+    --signal-soft:#2A1D10;
+    --teal:       #4FBDB2;
+    --teal-soft:  #0D2523;
+    --sev-crit:   #E5645F;
+    --sev-alta:   #E0A03C;
+    --sev-media:  #5AA8E0;
+    --sev-ok:     #4FBE86;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:      #10161A;
+  --paper-2:    #0B1013;
+  --card:       #161E22;
+  --ink:        #E6EDEB;
+  --ink-2:      #9AA9AF;
+  --ink-3:      #74848A;
+  --rule:       #26333A;
+  --rule-2:     #33434B;
+  --signal:     #F0A050;
+  --signal-soft:#2A1D10;
+  --teal:       #4FBDB2;
+  --teal-soft:  #0D2523;
+  --sev-crit:   #E5645F;
+  --sev-alta:   #E0A03C;
+  --sev-media:  #5AA8E0;
+  --sev-ok:     #4FBE86;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- estructura ---------------------------------------------------------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  align-items: start;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 34px 22px 34px 28px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+.rail-mark {
+  font-family: var(--f-disp);
+  font-weight: 800;
+  font-size: .82rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+.rail-mark span { color: var(--signal); display: block; }
+.rail-meta {
+  font-family: var(--f-mono);
+  font-size: .66rem;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+.rail nav { display: flex; flex-direction: column; gap: 1px; }
+.rail nav a {
+  font-family: var(--f-disp);
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 5px 8px 5px 0;
+  display: grid;
+  grid-template-columns: 2.1em 1fr;
+  gap: 4px;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+  transition: color .14s, border-color .14s;
+}
+.rail nav a b {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  color: var(--ink-3);
+  font-size: .7rem;
+}
+.rail nav a:hover, .rail nav a:focus-visible { color: var(--ink); border-left-color: var(--signal); }
+.rail nav a.on { color: var(--ink); border-left-color: var(--signal); font-weight: 600; }
+.rail nav a.on b { color: var(--signal); }
+
+main { padding: 0 0 120px; min-width: 0; }
+
+section { padding: 0 clamp(20px, 4vw, 56px); scroll-margin-top: 20px; }
+section + section { padding-top: 58px; }
+
+.wrap { max-width: var(--measure); }
+
+/* --- tipografia ---------------------------------------------------------- */
+
+h1, h2, h3, h4 { font-family: var(--f-disp); text-wrap: balance; margin: 0; }
+
+h2 {
+  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.12;
+  margin-bottom: 14px;
+}
+h3 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  margin: 34px 0 8px;
+}
+p { margin: 0 0 15px; }
+main p { max-width: var(--measure); }
+strong { font-weight: 600; }
+a { color: var(--signal); }
+
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+.eyebrow em { font-style: normal; color: var(--signal); }
+
+.lead { font-size: 1.18rem; line-height: 1.5; color: var(--ink-2); }
+.lead strong { color: var(--ink); font-weight: 600; }
+
+/* --- portada / instrumento ----------------------------------------------- */
+
+.cover { padding-top: 40px; }
+.cover h1 {
+  font-size: clamp(2.5rem, 6.2vw, 4.3rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: .96;
+  margin-bottom: 18px;
+  max-width: 15ch;
+}
+.cover h1 em { font-style: normal; color: var(--signal); }
+
+.chain {
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 4px;
+  align-items: center;
+  margin: 26px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.chain i { font-style: normal; color: var(--rule-2); }
+.chain b { font-weight: 600; color: var(--ink); }
+.chain b.hot { color: var(--signal); }
+
+/* --- panel del producto (oscuro en ambos temas) -------------------------- */
+
+.panel {
+  background: var(--pn-bg);
+  color: var(--pn-ink);
+  border: 1px solid var(--pn-line);
+  border-radius: 3px;
+  font-family: var(--f-disp);
+  overflow: hidden;
+  margin: 30px 0;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 18px 40px -30px rgba(0,0,0,.55);
+}
+.panel-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--pn-line);
+  background: var(--pn-bg-2);
+  font-family: var(--f-mono);
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--pn-ink-2);
+}
+.panel-bar b { color: var(--pn-ink); font-weight: 600; letter-spacing: .12em; }
+.panel-body { padding: 18px 16px; }
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 1px;
+  background: var(--pn-line);
+  border: 1px solid var(--pn-line);
+}
+.kpi { background: var(--pn-bg); padding: 13px 14px 12px; }
+.kpi .k {
+  font-family: var(--f-mono);
+  font-size: .58rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--pn-ink-2);
+  margin-bottom: 7px;
+}
+.kpi .v {
+  font-size: 1.72rem;
+  font-weight: 700;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.kpi .d {
+  font-family: var(--f-mono);
+  font-size: .64rem;
+  margin-top: 5px;
+  color: var(--pn-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.kpi .d.up { color: var(--pn-ok); }
+.kpi .d.dn { color: var(--pn-crit); }
+.kpi .d.wr { color: var(--pn-alta); }
+
+.attn-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--f-mono);
+  font-size: .62rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--pn-ink-2);
+  margin: 22px 0 9px;
+}
+.attn-h b { color: var(--pn-ink); font-weight: 600; }
+
+.row {
+  display: grid;
+  grid-template-columns: 3px 82px minmax(0,1fr) auto;
+  gap: 0 14px;
+  align-items: start;
+  padding: 12px 0 12px 0;
+  border-top: 1px solid var(--pn-line);
+}
+.row .stripe { align-self: stretch; border-radius: 2px; }
+.row.crit .stripe { background: var(--pn-crit); }
+.row.alta .stripe { background: var(--pn-alta); }
+.row.media .stripe { background: var(--pn-media); }
+.row .sev {
+  font-family: var(--f-mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+.row.crit .sev { color: var(--pn-crit); }
+.row.alta .sev { color: var(--pn-alta); }
+.row.media .sev { color: var(--pn-media); }
+.row .t { font-size: .88rem; font-weight: 600; letter-spacing: -.005em; }
+.row .s {
+  font-family: var(--f-mono);
+  font-size: .69rem;
+  color: var(--pn-ink-2);
+  line-height: 1.5;
+  margin-top: 3px;
+}
+.row .eur {
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--pn-alta);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+}
+.panel-foot {
+  border-top: 1px solid var(--pn-line);
+  background: var(--pn-bg-2);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--f-mono);
+  font-size: .64rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--pn-ink-2);
+}
+.panel-foot b {
+  font-size: 1.02rem;
+  color: var(--pn-alta);
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* animacion de entrada: una sola, orquestada */
+.anim .kpi, .anim .row { opacity: 0; transform: translateY(6px); }
+.anim.go .kpi, .anim.go .row {
+  animation: rise .5s cubic-bezier(.2,.7,.3,1) forwards;
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .anim .kpi, .anim .row { opacity: 1; transform: none; animation: none !important; }
+}
+
+/* --- bloques de documento ------------------------------------------------ */
+
+.note {
+  border-left: 3px solid var(--signal);
+  background: var(--signal-soft);
+  padding: 14px 18px;
+  margin: 22px 0;
+  max-width: var(--measure);
+}
+.note p { margin: 0; }
+.note p + p { margin-top: 10px; }
+.note .lbl {
+  font-family: var(--f-mono);
+  font-size: .62rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--signal);
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.tw { overflow-x: auto; margin: 20px 0; border: 1px solid var(--rule); border-radius: 2px; }
+table { border-collapse: collapse; width: 100%; font-family: var(--f-disp); font-size: .82rem; }
+th, td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+thead th {
+  font-family: var(--f-mono);
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+  background: var(--paper-2);
+  white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--f-mono); white-space: nowrap; }
+td b { font-weight: 700; }
+.tw table caption {
+  caption-side: bottom;
+  font-family: var(--f-mono);
+  font-size: .64rem;
+  color: var(--ink-3);
+  text-align: left;
+  padding: 9px 13px;
+  border-top: 1px solid var(--rule);
+}
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 22px 0; }
+.cell { background: var(--card); padding: 17px 18px; }
+.cell h4 {
+  font-size: .93rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+.cell h4 span {
+  font-family: var(--f-mono);
+  font-size: .6rem;
+  letter-spacing: .1em;
+  color: var(--signal);
+  font-weight: 600;
+}
+.cell p { font-size: .87rem; line-height: 1.55; color: var(--ink-2); margin: 0; }
+.cell p + p { margin-top: 9px; }
+.cell dl { margin: 10px 0 0; font-family: var(--f-disp); font-size: .78rem; }
+.cell dt {
+  font-family: var(--f-mono);
+  font-size: .58rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 8px;
+}
+.cell dd { margin: 1px 0 0; color: var(--ink); }
+.cell dd.eur { color: var(--signal); font-weight: 600; }
+
+pre {
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  line-height: 1.6;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--teal);
+  padding: 15px 17px;
+  overflow-x: auto;
+  margin: 20px 0;
+  color: var(--ink-2);
+  border-radius: 2px;
+}
+pre b { color: var(--ink); font-weight: 600; }
+pre i { color: var(--signal); font-style: normal; }
+pre u { color: var(--teal); text-decoration: none; }
+
+ul.tight { margin: 14px 0; padding-left: 0; list-style: none; max-width: var(--measure); }
+ul.tight li { padding-left: 20px; position: relative; margin-bottom: 9px; }
+ul.tight li::before {
+  content: "";
+  position: absolute;
+  left: 2px; top: .62em;
+  width: 7px; height: 1px;
+  background: var(--signal);
+}
+
+.stamp {
+  display: inline-block;
+  font-family: var(--f-mono);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  margin: 0 4px 4px 0;
+}
+.stamp.crit { color: var(--sev-crit); }
+.stamp.alta { color: var(--sev-alta); }
+.stamp.ok   { color: var(--sev-ok); }
+.stamp.wait { color: var(--ink-3); }
+.stamp.teal { color: var(--teal); }
+
+/* precios */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 22px 0; }
+.plan { background: var(--card); padding: 18px; }
+.plan.hot { background: var(--signal-soft); }
+.plan .n { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+.plan.hot .n { color: var(--signal); }
+.plan .p { font-family: var(--f-disp); font-size: 1.85rem; font-weight: 800; letter-spacing: -.03em; margin: 7px 0 0; font-variant-numeric: tabular-nums; }
+.plan .p small { font-size: .68rem; font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
+.plan .imp { font-family: var(--f-mono); font-size: .68rem; color: var(--ink-2); margin-top: 5px; font-variant-numeric: tabular-nums; }
+.plan ul { list-style: none; padding: 0; margin: 13px 0 0; font-family: var(--f-disp); font-size: .78rem; color: var(--ink-2); }
+.plan ul li { padding: 3px 0; border-top: 1px solid var(--rule); }
+
+/* decisiones */
+.dec { border-top: 1px solid var(--rule); display: grid; grid-template-columns: 2.4em minmax(0,1fr); gap: 0 14px; padding: 13px 0; }
+.dec:last-child { border-bottom: 1px solid var(--rule); }
+.dec > .n { font-family: var(--f-mono); font-size: .68rem; color: var(--signal); font-weight: 600; padding-top: .25em; }
+.dec h4 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+.dec p { font-size: .82rem; color: var(--ink-2); margin: 0; font-family: var(--f-disp); line-height: 1.5; }
+.dec p .x { color: var(--ink-3); }
+
+.foot { border-top: 1px solid var(--rule); margin-top: 60px; padding-top: 22px; font-family: var(--f-mono); font-size: .68rem; color: var(--ink-3); line-height: 1.7; }
+.foot b { color: var(--ink-2); font-weight: 600; }
+
+code {
+  font-family: var(--f-mono);
+  font-size: .86em;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: .05em .35em;
+  color: var(--ink);
+}
+td code, .cell code { font-size: .82em; }
+
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+@media (max-width: 860px) {
+  body { font-size: 16px; }
+  .shell { grid-template-columns: 1fr; }
+  .rail {
+    position: static; height: auto;
+    border-right: 0; border-bottom: 1px solid var(--rule);
+    padding: 20px clamp(20px,4vw,56px);
+  }
+  .rail nav { flex-direction: row; flex-wrap: wrap; gap: 2px 4px; }
+  .rail nav a { border-left: 0; border-bottom: 2px solid transparent; padding: 4px 8px; grid-template-columns: auto auto; }
+  .rail nav a.on, .rail nav a:hover { border-left: 0; border-bottom-color: var(--signal); }
+  .rail-meta { display: none; }
+  .row { grid-template-columns: 3px minmax(0,1fr); gap: 0 12px; }
+  .row .sev { grid-column: 2; margin-bottom: 3px; }
+  .row .eur { grid-column: 2; padding-top: 5px; }
+}
+</style>
+
+<div class="shell">
+
+<aside class="rail">
+  <div class="rail-mark">FACTORY<br><span>RADAR</span></div>
+  <nav id="nav">
+    <a href="#tesis"><b>00</b>La tesis</a>
+    <a href="#problema"><b>01</b>El problema</a>
+    <a href="#cliente"><b>02</b>A quién</a>
+    <a href="#rivales"><b>03</b>Contra quién</a>
+    <a href="#radares"><b>04</b>Los ocho radares</a>
+    <a href="#arquitectura"><b>05</b>Arquitectura</a>
+    <a href="#frontera"><b>06</b>La frontera OT/IT</a>
+    <a href="#datos"><b>07</b>Modelo de datos</a>
+    <a href="#pantallas"><b>08</b>Pantallas</a>
+    <a href="#ia"><b>09</b>Inteligencia</a>
+    <a href="#mvp"><b>10</b>MVP y roadmap</a>
+    <a href="#comercial"><b>11</b>Comercial</a>
+    <a href="#decisiones"><b>12</b>Decisiones</a>
+    <a href="#sigue"><b>13</b>Qué sigue</a>
+  </nav>
+  <div class="rail-meta">FASE A · DEFINICIÓN<br>Índole Data Technology<br>9 sep 2026</div>
+</aside>
+
+<main>
+
+<!-- 00 ------------------------------------------------------------------ -->
+<section id="tesis" class="cover">
+  <div class="eyebrow"><em>Fase A</em> Definición de producto</div>
+  <h1>Tu fábrica ya genera los datos. Nosotros te decimos <em>qué significan</em>.</h1>
+  <p class="lead wrap">Una capa de inteligencia que se conecta a lo que la planta ya tiene
+  —ERP, MES, SCADA, PLC, sensores, Excel— y devuelve <strong>cinco cosas que hacer hoy,
+  ordenadas por euros</strong>. No es un cuadro de mando: un cuadro de mando te da cincuenta
+  gráficas y te deja el trabajo de interpretarlas.</p>
+
+  <div class="chain">
+    <b>DATO</b><i>→</i><b>CONTEXTO</b><i>→</i><b>ANOMALÍA</b><i>→</i><b>DIAGNÓSTICO</b><i>→</i><b class="hot">IMPACTO EN €</b><i>→</i><b class="hot">ACCIÓN</b>
+  </div>
+  <p class="wrap" style="margin-top:14px;font-size:.95rem;color:var(--ink-2)">
+  La mayoría del mercado llega hasta <em>contexto</em> —te pinta la serie— o hasta
+  <em>anomalía</em> —te dispara una alarma. El producto empieza a valer dinero en el quinto
+  eslabón y se vuelve difícil de sustituir en el sexto, porque para entonces la orden de
+  trabajo ya nace dentro de la plataforma.</p>
+
+  <div class="panel anim" id="hero">
+    <div class="panel-bar"><b>Estado de planta</b><span>Torrelavega · martes 9 · 07:41 · turno mañana</span></div>
+    <div class="panel-body">
+      <div class="kpis">
+        <div class="kpi"><div class="k">Producción</div><div class="v" data-to="92" data-suf="%">0%</div><div class="d">del objetivo</div></div>
+        <div class="kpi"><div class="k">OEE</div><div class="v" data-to="78" data-suf="%">0%</div><div class="d dn">▼ −4 pts</div></div>
+        <div class="kpi"><div class="k">Calidad</div><div class="v" data-to="96.2" data-suf="%">0%</div><div class="d up">▲ +0,3</div></div>
+        <div class="kpi"><div class="k">Rechazos</div><div class="v" data-to="3.8" data-suf="%">0%</div><div class="d dn">▲ +0,9</div></div>
+        <div class="kpi"><div class="k">Energía/ud</div><div class="v" data-to="11" data-pre="+" data-suf="%">0%</div><div class="d wr">sobre media 30 d</div></div>
+        <div class="kpi"><div class="k">Críticas</div><div class="v" data-to="2">0</div><div class="d">máquinas</div></div>
+      </div>
+
+      <div class="attn-h"><b>Atención hoy</b><span>5 de 12</span></div>
+
+      <div class="row crit">
+        <div class="stripe"></div><div class="sev">Crítica</div>
+        <div><div class="t">Línea 3 · rendimiento −14%</div>
+          <div class="s">Microparadas recurrentes en la estación P4 desde el martes. 47 por turno frente a 6 habituales.</div></div>
+        <div class="eur">8.900 €/sem</div>
+      </div>
+      <div class="row alta">
+        <div class="stripe"></div><div class="sev">Alta</div>
+        <div><div class="t">Compresor 02 · consumo +18%</div>
+          <div class="s">Consume 38 kW con la planta parada, 62 h por semana.</div></div>
+        <div class="eur">16.055 €/año</div>
+      </div>
+      <div class="row alta">
+        <div class="stripe"></div><div class="sev">Alta</div>
+        <div><div class="t">Proveedor ZETA · 61% de los defectos</div>
+          <div class="s">Concentrados en el lote L-4471. n=284, p&lt;0,01.</div></div>
+        <div class="eur">11.400 €</div>
+      </div>
+      <div class="row media">
+        <div class="stripe"></div><div class="sev">Media</div>
+        <div><div class="t">Embotelladora 2 · salud 61/100</div>
+          <div class="s">−14 puntos en 30 días. Consumo específico y alarmas de presión al alza.</div></div>
+        <div class="eur">—</div>
+      </div>
+      <div class="row media">
+        <div class="stripe"></div><div class="sev">Media</div>
+        <div><div class="t">Turno de noche · −8% de rendimiento en PROD-X</div>
+          <div class="s">Mismo producto, misma máquina. Diferencia de método, no de equipo.</div></div>
+        <div class="eur">3.200 €/mes</div>
+      </div>
+    </div>
+    <div class="panel-foot"><span>Impacto acumulado detectado este mes</span><b>47.300 €</b></div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">La frase que decide los empates de diseño</span>
+    <p>Si la pantalla no termina en un euro o en una acción, sobra. Seis indicadores en la
+    portada, ni uno más. Máximo cinco elementos en «Atención hoy»: si hay quince problemas,
+    el trabajo del producto es decidir cuáles son los cinco que importan.</p>
+  </div>
+</section>
+
+<!-- 01 ------------------------------------------------------------------ -->
+<section id="problema">
+  <div class="eyebrow"><em>01</em> El problema</div>
+  <h2>Tres problemas distintos que se confunden entre sí</h2>
+  <p class="wrap">Una fábrica mediana española de 2026 no tiene un problema de falta de datos.</p>
+
+  <div class="grid2">
+    <div class="cell">
+      <h4><span>A</span>El dato existe pero está preso</h4>
+      <p>El SCADA sabe cuándo paró la línea. El ERP sabe cuánto costó el material. El parte
+      de mantenimiento sabe quién fue a arreglarlo. Los tres existen y ninguno se habla con
+      los otros, porque juntarlos nunca ha sido responsabilidad de nadie.</p>
+      <p>El director de planta hace la unión a mano, en un Excel, los lunes por la mañana.</p>
+    </div>
+    <div class="cell">
+      <h4><span>B</span>El dato que falta es la causa</h4>
+      <p>Casi todas las plantas registran <em>que</em> hubo una parada. Muy pocas registran
+      <em>por qué</em>. El campo de motivo, si existe, tiene tres valores en la práctica:
+      «avería», «otros» y en blanco.</p>
+      <p>Es el hecho más importante de todo el proyecto, y reaparece en el modelo de datos,
+      en el MVP y en la metodología del piloto.</p>
+    </div>
+    <div class="cell">
+      <h4><span>C</span>Nadie tiene tiempo de mirar</h4>
+      <p>El responsable de producción no abre un cuadro de mando de cincuenta gráficas. Lo
+      abrió las tres primeras semanas después de la implantación y luego dejó de hacerlo.</p>
+      <p>Ya le ha pasado con un producto anterior, y explica por qué recibe con frialdad la
+      palabra «dashboard».</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">Consecuencia de producto</span>
+    <p>No competimos por tener más gráficas. Competimos por ser lo único que el director de
+    planta abre a las 7:40 de la mañana, porque en treinta segundos le dice si tiene un
+    problema y cuánto le cuesta.</p>
+  </div>
+</section>
+
+<!-- 02 ------------------------------------------------------------------ -->
+<section id="cliente">
+  <div class="eyebrow"><em>02</em> A quién se lo vendemos</div>
+  <h2>Cabeza de playa, no producto horizontal</h2>
+  <p class="wrap">Un producto industrial horizontal es un producto que no convence a nadie en
+  la primera reunión. El perfil objetivo es estrecho a propósito.</p>
+
+  <pre><b>TAMAÑO</b>     50–300 empleados · 10–80 M€ de facturación
+<b>ACTIVOS</b>    20–150 máquinas relevantes · 1–3 plantas
+<b>SISTEMAS</b>   <i>tiene ERP · no tiene MES</i> · SCADA parcial · Excel por todas partes
+<b>EQUIPO IT</b>  0,5 a 2 personas. No hay data scientist y no lo va a haber
+<b>SECTORES</b>   transformación metálica · alimentación y bebidas · plástico · químico
+<b>RADIO</b>      Cantabria · País Vasco · Navarra · La Rioja · Castilla y León</pre>
+
+  <p class="wrap">Es el hueco real del mercado. Por debajo, la fábrica de 20 personas se apaña
+  con Excel y no paga suscripción. Por encima, la planta de 800 ya tiene MES y compra Siemens
+  o AVEVA porque necesita un SLA global. El cliente de 50–300 empleados
+  <strong>está demasiado creciente para el Excel y demasiado pequeño para el proyecto de
+  300.000 € a dieciocho meses</strong>. En España hay unas 12.000 plantas en esa franja.</p>
+
+  <p class="wrap">La geografía tampoco es un capricho: en industria la primera venta se cierra
+  pisando la planta. El radio de coche es una ventaja frente a un SaaS de Múnich, y deja de
+  serlo a partir del cliente treinta — para entonces el producto ya se vende solo o no se
+  venderá nunca.</p>
+
+  <h3>Quién firma y quién usa</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Rol</th><th>Qué le quita el sueño</th><th>Qué le damos</th></tr></thead>
+    <tbody>
+      <tr><td><b>Director de planta</b></td><td>El coste por unidad sube y no sabe por dónde</td><td>La pantalla de 30 segundos y el euro</td></tr>
+      <tr><td><b>Producción</b></td><td>La línea 3 va mal y solo lo nota al cierre de mes</td><td>La alerta el mismo día, con la estación señalada</td></tr>
+      <tr><td><b>Mantenimiento</b></td><td>Apaga fuegos, no previene</td><td>Salud del activo y aviso antes del fallo</td></tr>
+      <tr><td><b>Calidad</b></td><td>Sabe el % de rechazo, no la causa</td><td>Correlación lote · proveedor · turno</td></tr>
+      <tr><td><b>Energía</b></td><td>Le piden reportar y no tiene dato por máquina</td><td>kWh por unidad producida, auditable</td></tr>
+      <tr><td><b>IT</b></td><td>Que le abran un puerto a la red OT</td><td>Conector de solo salida, sin puertos entrantes</td></tr>
+    </tbody>
+    <caption>Firma el director de planta o el gerente. IT tiene derecho de veto, nunca derecho de compra.</caption>
+  </table></div>
+</section>
+
+<!-- 03 ------------------------------------------------------------------ -->
+<section id="rivales">
+  <div class="eyebrow"><em>03</em> Contra quién competimos</div>
+  <h2>El rival de verdad es el Excel del lunes</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Competidor</th><th>Qué hace bien</th><th>Dónde le ganamos</th></tr></thead>
+    <tbody>
+      <tr><td><b>Excel + el lunes por la mañana</b></td><td>Gratis, flexible, ya está</td><td>Es el rival real. Le ganamos en tiempo, no en potencia</td></tr>
+      <tr><td><b>Siemens, PTC, AVEVA</b></td><td>Potentes, certificados, globales</td><td>Nueve meses de ciclo de venta e implantación de seis cifras</td></tr>
+      <tr><td><b>Ignition, Node-RED, Grafana</b></td><td>Baratos y muy capaces</td><td>Son herramientas, no producto: alguien tiene que construirlo y mantenerlo</td></tr>
+      <tr><td><b>MES clásico</b></td><td>Control fino de planta</td><td>Exige cambiar cómo trabaja la planta. Nosotros no tocamos nada</td></tr>
+      <tr><td><b>Augury, Samotics, Falkonry</b></td><td>Predictivo real sobre vibración</td><td>Resuelven un activo, no la fábrica. Convivimos: son una fuente más</td></tr>
+      <tr><td><b>Integrador local</b></td><td>Confianza y cercanía</td><td>Es socio, no rival. Le damos producto en vez de horas</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lbl">Posicionamiento, en una frase</span>
+    <p>El 80% del valor de un MES, en seis semanas, sin tocar la planta y por suscripción.</p>
+    <p>Y la promesa que <strong>no</strong> hacemos: no sustituimos al MES ni controlamos la
+    máquina. Prometerlo hace que la primera reunión técnica se vuelva en contra.</p>
+  </div>
+</section>
+
+<!-- 04 ------------------------------------------------------------------ -->
+<section id="radares">
+  <div class="eyebrow"><em>04</em> Los ocho radares</div>
+  <h2>Cada módulo pasa la regla antes de existir</h2>
+  <p class="wrap">Qué problema industrial resuelve · cuánto dinero ahorra · quién lo usa ·
+  qué decisión facilita. Lo que no conteste las cuatro, no se construye.</p>
+
+  <div class="note">
+    <span class="lbl">Corrección de nombre</span>
+    <p>El planteamiento inicial llamaba <em>Factory Radar</em> a la vez a la plataforma y al
+    módulo de producción. Rompe en cuanto se dibuja el menú lateral. La plataforma es
+    <strong>FACTORY RADAR</strong>; el módulo pasa a <strong>PRODUCTION RADAR</strong>.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="cell">
+      <h4><span>MVP</span>Production Radar</h4>
+      <p>OEE desglosado en sus tres factores, tiempos de ciclo, paradas y las microparadas
+      que nadie mide. Un OEE del 78% no dice nada; un 78% que es 95 × 86 × 96 dice que el
+      problema es rendimiento y no averías.</p>
+      <dl><dt>Dinero</dt><dd class="eur">Un punto de OEE en una línea de 3 M€ = 30.000 €/año</dd>
+      <dt>Decide</dt><dd>Dónde meto hoy al técnico</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 2</span>Maintenance Radar</h4>
+      <p>Asset Health Score de 0 a 100 con sus cuatro componentes siempre abiertos:
+      fiabilidad, comportamiento, mantenimiento y criticidad. En el MVP no hay predictivo por
+      vibración: hay <em>detección de deriva</em>, que es el 70% del valor sin sensórica nueva.</p>
+      <dl><dt>Dinero</dt><dd class="eur">Una hora de parada no planificada: 1.500–12.000 €</dd>
+      <dt>Decide</dt><dd>Qué reviso esta semana</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 2</span>Energy Radar</h4>
+      <p>La métrica que manda es <strong>kWh por unidad producida</strong>: el consumo
+      absoluto sube y baja con la producción y no dice nada. El hallazgo más rentable y más
+      fácil es el consumo con la planta parada.</p>
+      <dl><dt>Dinero</dt><dd class="eur">8–20% del consumo total en plantas sin gestión</dd>
+      <dt>Decide</dt><dd>Qué apago y qué justifico en el informe CSRD</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 3</span>Quality Radar</h4>
+      <p>El corazón es la correlación, no el Pareto que ya tienen: cruzar cada rechazo con
+      producto, lote, materia prima, proveedor, máquina, turno y operario. Se presenta como
+      correlación, nunca como causa — quien decide que es causa es el responsable de calidad.</p>
+      <dl><dt>Dinero</dt><dd class="eur">Un punto de scrap en 20 M€ ≈ 80.000 €/año</dd>
+      <dt>Decide</dt><dd>Qué lote bloqueo y a quién llamo</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 3</span>Supplier Radar</h4>
+      <p>Score de proveedor abierto en cinco componentes. Lo que se vende es la tendencia, no
+      el nivel: un proveedor con 82 puntos que hace seis meses tenía 91 es una llamada esta
+      semana. Detecta también dependencia excesiva de proveedor único.</p>
+      <dl><dt>Dinero</dt><dd class="eur">El coste oculto suele ser 3–8× el ahorro por el que se le eligió</dd>
+      <dt>Decide</dt><dd>Con quién renegocio y a quién audito</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 2</span>Factory Brain</h4>
+      <p>El saber de la planta está en la cabeza de tres personas y en 4.000 PDF que nadie
+      abre. Responde primero con el histórico de <em>esta</em> planta y después con el manual
+      del fabricante. Sin fuente citada no hay respuesta; si no sabe, lo dice.</p>
+      <dl><dt>Dinero</dt><dd class="eur">Diagnóstico de 45 a 10 min, 20 veces al mes = 230 h/año</dd>
+      <dt>Decide</dt><dd>Qué compruebo ahora, con la máquina parada delante</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 4</span>Back Office AI</h4>
+      <p>Casa pedido, albarán y factura a tres bandas y sube lo que no cuadra. No es un OCR
+      genérico: seis tipos de documento y solo de proveedores ya dados de alta. Un extractor
+      universal es otro producto entero.</p>
+      <dl><dt>Dinero</dt><dd class="eur">1–3% del gasto en compras se pierde en descuadres</dd>
+      <dt>Decide</dt><dd>Qué factura no apruebo</dd></dl>
+    </div>
+    <div class="cell">
+      <h4><span>Fase 4</span>Operations Agent</h4>
+      <p>Cierra el bucle: crea la orden, avisa, pide el repuesto, redacta el correo. Cuatro
+      niveles de autorización, y el nivel 3 —escribir en un sistema OT— <strong>no
+      existe</strong>: está fuera del alcance del producto, hoy y siempre.</p>
+      <dl><dt>Dinero</dt><dd class="eur">Convierte la herramienta en el sitio donde se trabaja</dd>
+      <dt>Decide</dt><dd>Ninguna nueva: ejecuta la ya tomada</dd></dl>
+    </div>
+  </div>
+
+  <p class="wrap"><strong>Production Radar va primero</strong> porque es donde el dolor es más
+  caro, el dato más disponible y el resultado más fácil de defender ante el gerente en la
+  reunión de la semana 6. <strong>Operations Agent va el último</strong> a propósito: nadie
+  deja actuar a un sistema en el que aún no confía, y la confianza se gana acertando en las
+  alertas durante unos meses.</p>
+</section>
+
+<!-- 05 ------------------------------------------------------------------ -->
+<section id="arquitectura">
+  <div class="eyebrow"><em>05</em> Arquitectura</div>
+  <h2>Seis capas, y la tercera es el producto</h2>
+
+  <pre><u>6 · ACCIÓN</u>          Operations Agent · órdenes · avisos · informes
+<u>5 · PRESENTACIÓN</u>    Panel · Copilot · alertas · API pública
+<u>4 · INTELIGENCIA</u>    Motor de eventos · scoring · RAG · LLM
+<i>3 · CONTEXTO</i>        <b>Modelo unificado de planta · jerarquía · cálculo</b>
+<u>2 · NORMALIZACIÓN</u>   Mapeo · unidades · husos · calidad del dato
+<u>1 · INGESTA</u>         Edge Connector · APIs · SQL · ficheros</pre>
+
+  <p class="wrap">Ingerir sabe hacerlo cualquiera y un LLM lo compra cualquiera. Lo difícil y
+  lo defendible es <strong>el modelo de contexto</strong>: saber que este contador pertenece a
+  esta máquina, que está en esta línea, que ahora mismo fabrica este producto en este turno y
+  que su ciclo nominal es 4,2 s. Sin ese contexto, un dato de producción es un número sin
+  significado y ninguna inteligencia posterior puede rescatarlo.</p>
+
+  <h3>El stack, con el porqué</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Capa</th><th>Elección</th><th>Por qué esta y no otra</th></tr></thead>
+    <tbody>
+      <tr><td>Base de datos</td><td><b>PostgreSQL 16<br>+ TimescaleDB + pgvector</b></td><td>Una sola base cubre relacional, serie temporal y vectorial. La alternativa era Postgres + InfluxDB + Pinecone: tres sistemas que respaldar, asegurar y pagar</td></tr>
+      <tr><td>Backend</td><td><b>Node 22 · TypeScript · Fastify</b></td><td>Mismo lenguaje que el panel y que el conector: un solo equipo mantiene los tres. Es el stack ya asentado en la casa</td></tr>
+      <tr><td>Acceso a datos</td><td><b>SQL a pelo con <code>pg</code></b></td><td>Sin ORM. Las consultas son agregaciones temporales pesadas; un ORM las escribe mal y hay que reescribirlas igual</td></tr>
+      <tr><td>Colas</td><td><b>pg-boss</b></td><td>Evita meter Redis hasta que haga falta. Transaccional con los datos, que es lo que quieres en un cálculo de OEE</td></tr>
+      <tr><td>Panel</td><td><b>React · TypeScript · Vite</b></td><td>Es una aplicación de estado, no un sitio de contenido. SSR aquí solo añade complejidad</td></tr>
+      <tr><td>Gráficas</td><td><b>uPlot</b> + visx</td><td>Dibuja 100.000 puntos sin despeinarse. Las librerías cómodas se ahogan justo en el caso industrial</td></tr>
+      <tr><td>Edge</td><td><b>Node 22 empaquetado</b></td><td>Mini PC industrial o VM del cliente. Docker o binario</td></tr>
+      <tr><td>IA</td><td><b>Capa de abstracción propia</b></td><td>Ningún proveedor entra en el código de negocio. Precio y modelos se mueven cada trimestre</td></tr>
+      <tr><td>Infra</td><td><b>Hetzner</b></td><td>Dato en la UE, coste predecible, operativa ya montada</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lbl">Lo que deliberadamente no se mete todavía</span>
+    <p>Kubernetes, microservicios, Kafka, data lake, feature store, MLOps. Cada pieza resuelve
+    un problema de escala que aún no tenemos y añade superficie que hay que asegurar y
+    explicar en la auditoría del cliente. <strong>Un monolito modular bien separado por
+    dominios llega tranquilamente a cincuenta plantas</strong>, y el día que no llegue, el
+    corte ya está dibujado.</p>
+  </div>
+</section>
+
+<!-- 06 ------------------------------------------------------------------ -->
+<section id="frontera">
+  <div class="eyebrow"><em>06</em> La frontera OT/IT</div>
+  <h2>El dato sube. Nunca baja.</h2>
+  <p class="wrap">En un proyecto industrial el responsable de IT no compra: <strong>veta</strong>.
+  Y veta en la segunda reunión, cuando aparece la palabra «nube» junto a la palabra «PLC». Si
+  la respuesta a <em>«¿qué puertos hay que abrir?»</em> no es <em>«ninguno»</em>, el proyecto
+  muere ahí, por bueno que sea el producto.</p>
+
+  <pre>   <b>RED OT (planta)</b>          │        <b>DMZ</b>            │       <b>CLOUD</b>
+                            │                       │
+   PLC · SCADA · sensores   │  <i>FACTORY EDGE</i>         │   INGESTA
+                            │  <i>CONNECTOR</i>            │
+   ── lectura ─────────────▶│                       │
+                            │  ── TLS mutuo ───────▶│   443 <b>saliente</b>
+                            │                       │
+   ◀── <b>NADA</b> ────────────────│◀── <b>NADA</b> ──────────────│</pre>
+
+  <ul class="tight">
+    <li><strong>Solo lectura.</strong> No hay código capaz de escribir en un PLC. No es una
+    opción desactivada: no está implementado, y el repositorio se puede enseñar.</li>
+    <li><strong>Cero puertos entrantes.</strong> El conector abre él la conexión. Sin VPN
+    entrante, sin túnel inverso, sin escritorio remoto. El soporte se hace con una sesión que
+    abre el cliente y que caduca.</li>
+    <li><strong>Aguanta sin línea.</strong> Buffer local de 7 días. Al volver, reenvía en
+    orden, sin duplicar y sin perder.</li>
+    <li><strong>No decide nada.</strong> Lee, normaliza, comprime, firma y envía. Toda la
+    lógica está en el cloud, así que cambiar el algoritmo no obliga a tocar la planta.</li>
+    <li><strong>Se cae hacia el lado seguro.</strong> Ante la duda deja de leer, y nunca
+    reintenta de forma agresiva: saturar un PLC antiguo puede afectar a su ciclo de scan.</li>
+  </ul>
+
+  <h3>La escalera de ingesta</h3>
+  <p class="wrap">Es la herramienta de venta más eficaz del producto, porque elimina la excusa
+  de <em>«es que nosotros no tenemos datos»</em>. Se empieza siempre por el peldaño que la
+  planta ya tiene, aunque sea el cero.</p>
+
+  <pre><b>NIVEL 0</b>   Excel que ya rellenan a mano       <i>→  valor en 3 días</i>
+<b>NIVEL 1</b>   Consulta SQL al historiador        <i>→  valor en 1 semana</i>
+<b>NIVEL 2</b>   API del ERP / GMAO                 <i>→  valor en 2 semanas</i>
+<b>NIVEL 3</b>   OPC UA / MQTT en tiempo real       <i>→  valor continuo</i>
+<b>NIVEL 4</b>   Sensórica añadida donde falta      <i>→  proyecto aparte, se factura</i></pre>
+
+  <div class="note">
+    <span class="lbl">Por qué OPC UA no está en el MVP, aunque sea lo «correcto»</span>
+    <p>Un servidor OPC UA del cliente exige certificados, permisos, un espacio de nombres que
+    alguien tiene que mapear y a menudo una licencia del fabricante del SCADA: entre dos y
+    seis semanas de coordinación. Empezar por SQL y CSV da dato real en tres días y permite
+    enseñar valor mientras se tramita el OPC UA. <strong>Es una decisión comercial disfrazada
+    de decisión técnica, y es a propósito.</strong></p>
+  </div>
+
+  <h3>Normativa: conforme desde el día 1, certificado cuando lo pidan</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Marco</th><th>Qué exige de nosotros</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td><b>RGPD</b></td><td>Encargado del tratamiento, seudonimización de operarios, retención</td><td><span class="stamp ok">Día 1</span></td></tr>
+      <tr><td><b>NIS2</b></td><td>Que el cliente pueda evaluarnos como proveedor digital</td><td><span class="stamp ok">Preparado</span></td></tr>
+      <tr><td><b>IEC 62443</b></td><td>Zonas y conductos, componente seguro por diseño</td><td><span class="stamp teal">Arquitectura conforme</span></td></tr>
+      <tr><td><b>ISO 27001</b></td><td>SGSI, políticas, riesgos, auditoría</td><td><span class="stamp wait">Mes 12–18</span></td></tr>
+    </tbody>
+    <caption>Reformar arquitectura para certificar cuesta diez veces más que hacerla bien. Pero certificar antes de vender son 30.000 € y seis meses gastados en el orden equivocado.</caption>
+  </table></div>
+</section>
+
+<!-- 07 ------------------------------------------------------------------ -->
+<section id="datos">
+  <div class="eyebrow"><em>07</em> Modelo de datos</div>
+  <h2>Cuatro decisiones gobiernan todo el esquema</h2>
+
+  <div class="grid2">
+    <div class="cell">
+      <h4><span>1</span><code>tenant_id</code> y aislamiento por RLS</h4>
+      <p>El dato de una fábrica no puede tocar el de otra jamás: es dato de proceso, de coste
+      y de personal, y dos clientes pueden ser competidores directos en el mismo sector.
+      El aislamiento se hace con Row Level Security, no solo con un
+      <code>WHERE</code> — un <code>WHERE</code> olvidado es una fuga entre competidores del
+      mismo sector.</p>
+      <p><strong>Con una excepción, encontrada al construir:</strong> TimescaleDB no admite
+      RLS y compresión sobre la misma tabla. La tabla cruda va comprimida y sin RLS, y solo
+      se llega a ella por una función que aplica el filtro ella misma. Está probado, no
+      supuesto.</p>
+    </div>
+    <div class="cell">
+      <h4><span>2</span>La jerarquía es un árbol</h4>
+      <p>Ninguna fábrica encaja en <em>Planta → Área → Línea → Máquina</em>. Hay celdas, hay
+      naves, hay centros de trabajo, hay máquinas que son varias líneas a la vez. Forzar cinco
+      niveles fijos obliga a reformar el esquema en el tercer cliente, y es de los errores más
+      caros del sector.</p>
+    </div>
+    <div class="cell">
+      <h4><span>3</span>Medidas y eventos, separados</h4>
+      <p><code>measurement</code> es serie densa: hypertable, append-only, comprimida a los 7
+      días. <code>event</code> es discreto y escaso: parada, alarma, cambio de formato,
+      rechazo. Meterlos en la misma tabla arruina tanto las consultas de serie como las de
+      evento.</p>
+    </div>
+    <div class="cell">
+      <h4><span>4</span>Nada calculado sin su explicación</h4>
+      <p>Toda fila de OEE, score o impacto guarda con qué entradas y qué versión de fórmula se
+      calculó. Cuando el director de planta discuta un número —y lo hará, en la semana 3— hay
+      que poder abrirlo hasta el dato crudo.</p>
+    </div>
+  </div>
+
+  <h3>Las tablas del núcleo</h3>
+  <pre>company ──&lt; site ──&lt; <b>asset_node</b> ──&lt; signal ──&lt; <b>measurement</b>   <i>hypertable</i>
+                          │
+                          ├──&lt; <b>event</b> &gt;── reason_code
+                          ├──&lt; production_metric &gt;── product
+                          ├──&lt; asset_score · energy_reading
+                          └──&lt; maintenance_order
+
+product ──&lt; production_order ──&lt; batch ──&lt; quality_incident
+                                    │        <i>la cadena que permite la</i>
+supplier ──&lt; delivery ──&lt; material ─┘        <i>correlación defecto ↔ lote</i>
+   └──&lt; supplier_score                       <i>↔ proveedor</i>
+
+baseline ──▶ anomaly ──▶ <b>alert</b> ──▶ recommendation ──▶ action
+                            └──▶ ai_analysis  <i>prompt · fuentes · coste</i></pre>
+
+  <div class="note">
+    <span class="lbl">La columna que más dice de una planta</span>
+    <p><code>event.reason_code_id</code> nace nulo en casi todas las plantas, <strong>y eso es
+    información, no un fallo</strong>. El porcentaje de paradas sin causa es la primera métrica
+    que enseña la auditoría de la semana 1, y suele estar entre el 60% y el 90%. Bajarlo del
+    80% al 30% es, por sí solo, un resultado vendible del piloto: sin causa no hay diagnóstico
+    posible, ni con IA ni sin ella.</p>
+  </div>
+
+  <p class="wrap">Dos restricciones más que son de esquema, no de buena intención:
+  <code>alert.impact_basis</code> y <code>alert.evidence</code> son obligatorios y no aceptan
+  <code>{}</code> — <strong>una alerta sin la cuenta abierta y sin sus fuentes no se
+  inserta</strong>. Y <code>alert.feedback</code> existe desde el primer día porque sin ella no
+  hay forma de reducir los falsos positivos, que son la causa número uno de abandono de este
+  tipo de producto.</p>
+
+  <p class="wrap"><strong>Operarios y RGPD.</strong> Cruzar productividad con nombre y
+  apellidos es tratamiento de datos personales en contexto laboral. El rendimiento por operario
+  se guarda seudonimizado por defecto, la reidentificación es un permiso aparte y queda en
+  auditoría, y de fábrica se activa el modo agregado por turno o equipo.</p>
+</section>
+
+<style>
+/* piezas de la ficha de alerta: viven en el panel oscuro, tokens --pn-* */
+.adet-h { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:baseline; margin-bottom:14px; }
+.adet-h .ti { font-size:1.12rem; font-weight:700; letter-spacing:-.015em; }
+.adet-h .me { font-family:var(--f-mono); font-size:.64rem; color:var(--pn-ink-2); letter-spacing:.06em; }
+.blk { border-top:1px solid var(--pn-line); padding:14px 0 2px; }
+.blk .bl { font-family:var(--f-mono); font-size:.6rem; letter-spacing:.13em; text-transform:uppercase; color:var(--pn-ink-2); margin-bottom:7px; }
+.blk p { font-size:.83rem; line-height:1.55; margin:0 0 8px; color:var(--pn-ink); font-family:var(--f-disp); max-width:62ch; }
+.calc { font-family:var(--f-mono); font-size:.71rem; line-height:1.75; background:var(--pn-bg-2); border:1px solid var(--pn-line); border-left:2px solid var(--pn-alta); padding:11px 13px; color:var(--pn-ink-2); overflow-x:auto; }
+.calc b { color:var(--pn-ink); font-weight:600; }
+.calc i { color:var(--pn-alta); font-style:normal; font-weight:600; }
+.spark { display:block; width:100%; height:72px; }
+.acts { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.acts span { font-family:var(--f-mono); font-size:.65rem; letter-spacing:.06em; padding:6px 11px; border:1px solid var(--pn-line); border-radius:2px; color:var(--pn-ink); }
+.acts span.pri { border-color:var(--pn-alta); color:var(--pn-alta); }
+.srcs { font-family:var(--f-mono); font-size:.64rem; color:var(--pn-ink-2); line-height:1.7; margin-top:12px; padding-top:10px; border-top:1px solid var(--pn-line); }
+.srcs em { font-style:normal; color:var(--pn-media); }
+</style>
+
+<!-- 08 ------------------------------------------------------------------ -->
+<section id="pantallas">
+  <div class="eyebrow"><em>08</em> Pantallas</div>
+  <h2>La ficha de alerta es el producto entero en una pantalla</h2>
+  <p class="wrap">Es la que demuestra que no somos un cuadro de mando: qué cambió, por qué,
+  cuánto cuesta con la cuenta abierta, qué hacer, de dónde sale, y un botón que ejecuta.</p>
+
+  <div class="panel">
+    <div class="panel-bar"><b>Alerta #4471</b><span>Crítica · abierta · confianza 87%</span></div>
+    <div class="panel-body">
+      <div class="adet-h">
+        <div class="ti">Línea 3 · el rendimiento cayó del 88% al 74%</div>
+        <div class="me">detectado 9 sep 07:15</div>
+      </div>
+
+      <div class="blk">
+        <div class="bl">Qué ha cambiado</div>
+        <svg class="spark" viewBox="0 0 620 72" preserveAspectRatio="none" role="img" aria-label="Rendimiento diario: estable en torno al 88% hasta el 2 de septiembre, cuando cae a 74% y se mantiene.">
+          <line x1="0" y1="18" x2="620" y2="18" stroke="#8D9CA3" stroke-width="1" stroke-dasharray="3 4" opacity=".55"/>
+          <text x="4" y="14" fill="#8D9CA3" font-family="IBM Plex Mono, monospace" font-size="9">línea base 88%</text>
+          <path d="M0,20 L40,17 L80,21 L120,18 L160,19 L200,17 L240,20 L280,18 L320,19 L340,22
+                   L360,44 L400,47 L440,45 L480,48 L520,46 L560,47 L600,45 L620,46"
+                fill="none" stroke="#E5484D" stroke-width="2" stroke-linejoin="round"/>
+          <line x1="345" y1="0" x2="345" y2="62" stroke="#F5A524" stroke-width="1" stroke-dasharray="2 3"/>
+          <circle cx="620" cy="46" r="3" fill="#E5484D"/>
+          <text x="350" y="60" fill="#F5A524" font-family="IBM Plex Mono, monospace" font-size="9">2 sep · cambio a REF-2210</text>
+        </svg>
+      </div>
+
+      <div class="blk">
+        <div class="bl">Por qué · causa probable</div>
+        <p>47 microparadas por turno en la estación P4, frente a 6 de media. Duración de 40 a
+        90 s. Empiezan el 2 de septiembre, coincidiendo con el cambio a REF-2210. La misma
+        referencia no da problema en la línea 1.</p>
+      </div>
+
+      <div class="blk">
+        <div class="bl">Cuánto cuesta · 8.900 €/semana</div>
+        <div class="calc">1.240 uds/sem perdidas × <b>7,18 €</b> de margen unitario = <i>8.903 €</i>
+uds perdidas = (88% − 74%) × <b>4.430</b> uds de capacidad semanal
+margen unitario: ficha de PROD-X · actualizado 1 sep  <b>ver →</b></div>
+      </div>
+
+      <div class="blk">
+        <div class="bl">Qué hacer</div>
+        <p>1 · Revisar el ajuste del alimentador de P4 para el formato REF-2210.<br>
+        2 · Comparar parámetros con la línea 1, que fabrica lo mismo sin fallo.<br>
+        3 · Comprobar el parte 2025-0871, con un síntoma parecido.</p>
+        <div class="acts">
+          <span class="pri">Crear orden de mantenimiento</span>
+          <span>Avisar a producción</span>
+          <span>Descartar</span>
+        </div>
+        <div class="srcs">FUENTES · <em>contador L3-P4</em> · <em>eventos 2–9 sep</em> · <em>ficha PROD-X</em> · <em>parte 2025-0871</em><br>
+        ¿HA SIDO ÚTIL? &nbsp; Sí · No era nada · Ya lo sabía</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="wrap">Los tres botones de feedback del pie parecen un detalle y no lo son: son el
+  único mecanismo que tiene el sistema para dejar de equivocarse. Cada alerta cerrada como
+  «no era nada» ajusta el umbral de esa señal en esa planta.</p>
+
+  <h3>Estados vacíos, de error y de dato insuficiente</h3>
+  <p class="wrap">Es la parte que casi siempre se deja para el final, y la que decide la
+  confianza en las dos primeras semanas — que son justo las semanas en que el cliente decide
+  si esto va a funcionar.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Situación</th><th>Qué se muestra</th></tr></thead>
+    <tbody>
+      <tr><td>Sin dato todavía</td><td>«Aún no hay lecturas. El conector se dio de alta hace 2 h.» Con el estado del conector, no un gráfico vacío</td></tr>
+      <tr><td><b>Dato con huecos</b></td><td>El gráfico dibuja el hueco <b>como hueco</b>, con franja gris. Jamás se une la línea por encima de un vacío</td></tr>
+      <tr><td>Cobertura insuficiente</td><td>«OEE calculado sobre el 62% del turno. Faltan datos de 06:00 a 09:10.» El número se muestra atenuado</td></tr>
+      <tr><td>Sin causas de parada</td><td>«El 84% de las paradas no tienen causa registrada. Sin causa no podemos diagnosticar.»</td></tr>
+      <tr><td>Muestra pequeña</td><td>La correlación se marca como «señal débil» y no genera alerta</td></tr>
+      <tr><td>La IA no sabe</td><td>«No tengo información suficiente para responder.» Nunca se rellena el hueco con verosimilitud</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Sistema visual</h3>
+  <p class="wrap">Esto se mira en una oficina de planta con luz de nave, a veces en una tablet
+  con guantes, a veces en una pantalla de 55" colgada en el taller y vista a tres metros. Nada
+  de gris claro sobre blanco. Oscuro por defecto, números tabulares obligatorios en tablas, la
+  línea base siempre presente y discontinua, máximo cuatro series por gráfica, y
+  <strong>el color nunca es el único portador de significado</strong>: la severidad lleva
+  color, forma e icono, porque el 8% de la población masculina es daltónica y en una plantilla
+  de planta eso es mucha gente.</p>
+</section>
+
+<!-- 09 ------------------------------------------------------------------ -->
+<section id="ia">
+  <div class="eyebrow"><em>09</em> Inteligencia</div>
+  <h2>Tres capas, y solo la tercera es un LLM</h2>
+  <p class="wrap">La confusión más cara de este mercado es llamar «IA» a todo. Aquí son tres
+  cosas distintas, con costes y fiabilidades distintas.</p>
+
+  <pre><b>CAPA 1 · REGLAS Y ESTADÍSTICA</b>   el 70% del valor. Barata, explicable, instantánea
+<b>CAPA 2 · MODELOS</b>                deriva, correlación, previsión. Cara en dato, no en cómputo
+<b>CAPA 3 · LENGUAJE (LLM)</b>         explicar, redactar, conversar, leer documentos</pre>
+
+  <div class="note">
+    <span class="lbl">La decisión de arquitectura de IA más importante del producto</span>
+    <p><strong>La capa 3 nunca detecta.</strong> El LLM no decide que hay una anomalía: la
+    encuentran las capas 1 y 2 sobre el dato, y el LLM la explica en castellano. Al revés
+    —pedirle a un modelo de lenguaje que vigile una serie temporal— es caro, lento y produce
+    alucinaciones sobre datos numéricos.</p>
+  </div>
+
+  <h3>Dos guardarraíles que evitan el abandono</h3>
+  <ul class="tight">
+    <li><strong>La línea base es por contexto, no global.</strong> El consumo de la Línea 3
+    fabricando PROD-X de mañana no es comparable con esa misma línea fabricando PROD-Y de
+    noche. Una línea base global dispara falsos positivos en cada cambio de formato, y a las
+    dos semanas nadie mira las alertas. La clave es <code>(señal, producto, turno, ventana)</code>.</li>
+    <li><strong>Tope duro: cinco críticas por planta y semana.</strong> Si el motor genera más,
+    es que el umbral está mal calibrado, y el sistema lo señala como problema de configuración
+    en vez de inundar al usuario. Una bandeja con cuarenta críticas es una bandeja cerrada.</li>
+  </ul>
+
+  <h3>El Copilot no escribe SQL</h3>
+  <p class="wrap">Se interpreta la pregunta, se traduce a <strong>consultas parametrizadas de
+  catálogo</strong> —unas cuarenta plantillas cubren casi todo lo que se pregunta—, se ejecutan
+  <strong>con el rol del usuario que pregunta</strong>, y se compone la respuesta con los
+  resultados reales citando fuente. Dejar que un LLM escriba SQL libre contra la base de un
+  cliente industrial es inaceptable: por inyección, por fuga entre inquilinos y por consultas
+  que tumban la base. Lo que no encaja en ninguna plantilla se responde con «no sé contestar a
+  eso todavía» y queda registrado: <strong>ese registro es el backlog del Copilot, escrito por
+  los propios usuarios</strong>.</p>
+
+  <h3>Factory Brain: prioridad de fuentes</h3>
+  <pre><b>1</b>  Partes históricos de ESTA máquina en ESTA planta   <i>lo que ya funcionó aquí</i>
+<b>2</b>  Procedimientos propios de la planta                <i>cómo se hace aquí</i>
+<b>3</b>  Manual del fabricante de ESTE modelo               <i>la referencia</i>
+<b>4</b>  Partes de máquinas equivalentes del mismo cliente
+<b>5</b>  Conocimiento general del modelo                    <i>siempre marcado como tal</i></pre>
+
+  <p class="wrap">Recuperación híbrida, y hacen falta las dos mitades: semántica con pgvector
+  para el lenguaje del técnico, y léxica exacta para los códigos —<code>E42</code>,
+  <code>S3</code>, <code>REF-2210</code>— que un embedding tiende a difuminar. Si el manual
+  tiene tres revisiones, responder con la vigente y no con la de 2011 puede ser la diferencia
+  entre una reparación y un accidente.</p>
+
+  <p class="wrap"><strong>Coste.</strong> Cada llamada se registra con su coste: sin eso no hay
+  negocio, porque un cliente que usa el Copilot cien veces al día puede costar más de lo que
+  paga. Presupuesto por inquilino con aviso al 80% y degradación a un modelo más barato antes
+  que corte seco; caché para las preguntas que media planta repite cada lunes; y los
+  diagnósticos se generan <em>una vez por alerta</em>, no cada vez que alguien la abre.</p>
+</section>
+
+<!-- 10 ------------------------------------------------------------------ -->
+<section id="mvp">
+  <div class="eyebrow"><em>10</em> MVP y roadmap</div>
+  <h2>Siete piezas y media, no nueve</h2>
+  <p class="wrap">El planteamiento inicial proponía nueve. Recortamos, y decimos qué se cae.
+  Un MVP que tarda ocho meses no es un MVP: es un producto sin clientes.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Entra</th><th>Por qué es imprescindible</th></tr></thead>
+    <tbody>
+      <tr><td><b>Empresa, planta, usuarios, roles</b></td><td>Sin multiinquilino no hay segundo cliente, y meterlo después obliga a tocar todas las consultas</td></tr>
+      <tr><td><b>Jerarquía de planta y señales</b></td><td>Es la capa de contexto: sin ella el dato no significa nada</td></tr>
+      <tr><td><b>Ingesta CSV, SQL y API</b></td><td>Las tres formas que cubren el 95% de las plantas el primer día</td></tr>
+      <tr><td><b>Production Radar</b></td><td>OEE desglosado, paradas, microparadas derivadas, comparativas</td></tr>
+      <tr><td><b>Motor de eventos, capa 1</b></td><td>Umbral, desviación, tendencia y repetición. Sin modelos todavía</td></tr>
+      <tr><td><b>Alertas con impacto en €</b></td><td>Es el producto. Lo demás es el andamio</td></tr>
+      <tr><td><b>Copilot con plantillas</b></td><td>Es lo que hace que la demo se recuerde, y lo que separa de un Grafana</td></tr>
+      <tr><td><b>Demo Factory</b></td><td>No es funcionalidad, es la herramienta de venta. Va primero</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Se cae</th><th>Motivo</th><th class="num">Vuelve</th></tr></thead>
+    <tbody>
+      <tr><td>Anomalías «avanzadas»</td><td>Los modelos necesitan meses de historial que el cliente nuevo no tiene. La capa 1 sobre línea base propia acierta lo suficiente</td><td class="num">Fase 2</td></tr>
+      <tr><td>Maintenance y Energy</td><td>Cada uno duplica el alcance de ingesta. Production valida el modelo entero con un solo dominio de dato</td><td class="num">Fase 2</td></tr>
+      <tr><td>Factory Brain</td><td>Es el que más impresiona en demo y <b>el más peligroso de lanzar pronto</b>: una respuesta inventada sobre un procedimiento de seguridad quema la confianza para siempre</td><td class="num">Fase 2</td></tr>
+      <tr><td>WhatsApp y SMS</td><td>Coste y trámite sin valor diferencial. Correo y Teams cubren el MVP</td><td class="num">Fase 2</td></tr>
+    </tbody>
+    <caption>Criterio del recorte: el MVP tiene que poder defender un euro ahorrado en la reunión de la semana 6 del piloto. Lo que no contribuya a ese momento, espera.</caption>
+  </table></div>
+
+  <h3>Demo Factory</h3>
+  <p class="wrap">Sin clientes, la demo <em>es</em> el producto. Tres líneas, quince máquinas,
+  tres turnos, cinco productos y noventa días de histórico, con cuatro problemas plantados que
+  el usuario tiene que poder descubrir navegando:</p>
+  <div class="tw"><table>
+    <thead><tr><th>Problema plantado</th><th>Lo que encuentra el motor</th><th class="num">Impacto</th></tr></thead>
+    <tbody>
+      <tr><td><b>Compresor 02</b> · deriva de consumo durante 6 semanas y alarmas de presión</td><td>Salud <b>74</b>, era 82 hace 30 días · consumo específico +14,6%. <b>Sin una sola avería</b>: no aparecería en un GMAO</td><td class="num">—</td></tr>
+      <tr><td><b>Estación P4</b> · microparadas desde el cambio a REF-2210</td><td>Crítica: rendimiento del 87% al 75% · 92 microparadas/día frente a 9 habituales</td><td class="num">129.218 €/año</td></tr>
+      <tr><td><b>Proveedor ZETA</b> · el lote L-4471 en los rechazos de REF-1140</td><td><b>67% de los rechazos</b> sobre 4 lotes distintos en la ventana</td><td class="num">23.695 € incurridos</td></tr>
+      <tr><td><b>Consumo nocturno</b> con la planta parada</td><td>44 kW fuera de horario. COMP-01 sí para: ese contraste es lo que lo hace evidente</td><td class="num">14.662 €/año</td></tr>
+    </tbody>
+    <caption>Cifras reales de la demo construida, no ilustrativas. Los cuatro problemas <b>no están marcados en la base</b>: el motor los encuentra solo, y por eso la demo es también su prueba. Los datos se derivan todos del mismo turno simulado, así que cuadran entre módulos — un director de planta detecta un dato falso en veinte segundos.</caption>
+  </table></div>
+
+  <pre><b>DEMO FACTORY · Torrelavega</b>   3 líneas · 15 máquinas · 3 turnos · 5 productos
+                             342.528 medidas · 10.322 eventos · 90 días
+
+OEE <i>71,0%</i>  =  91% disponibilidad × 82% rendimiento × 95,3% calidad
+Paradas sin causa registrada .... <i>72,9%</i>   <u>la cifra que abre el piloto</u></pre>
+
+  <h3>Roadmap</h3>
+  <div class="grid2">
+    <div class="cell"><h4><span>0–3 m</span>Que exista y se pueda enseñar</h4>
+      <p>Fases B y C. Demo Factory navegable y pública, web comercial, documento de seguridad
+      listo para IT.</p>
+      <dl><dt>Objetivo</dt><dd>10 reuniones y 2 cartas de intención de piloto</dd></dl></div>
+    <div class="cell"><h4><span>3–6 m</span>Que funcione con dato real</h4>
+      <p>MVP funcional. Conector con SQL, CSV y API. Primer piloto pagado de seis semanas.
+      Bucle de feedback cerrado.</p>
+      <dl><dt>Objetivo</dt><dd>2 pilotos terminados y un ahorro que el cliente cuente a un tercero</dd></dl></div>
+    <div class="cell"><h4><span>6–12 m</span>Que se pueda vender repetido</h4>
+      <p>Maintenance y Energy. Factory Brain. OPC UA y MQTT. Superadmin y facturación. Alta
+      guiada sin que estemos delante.</p>
+      <dl><dt>Objetivo</dt><dd>8–12 clientes de pago · implantación reproducible en 2 semanas</dd></dl></div>
+    <div class="cell"><h4><span>12–24 m</span>Que aguante el crecimiento</h4>
+      <p>Quality y Supplier. Back Office AI. Operations Agent. Predictivo donde haya historial.
+      ISO 27001. Canal de integradores.</p>
+      <dl><dt>Objetivo</dt><dd>Segundo mercado: Portugal y sur de Francia</dd></dl></div>
+  </div>
+
+  <h3>Los cuatro riesgos que pueden matar esto</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Riesgo</th><th>Cómo se mitiga</th></tr></thead>
+    <tbody>
+      <tr><td>El dato del cliente es peor de lo que dijo</td><td>La semana 1 del piloto es auditoría de datos y el contrato lo contempla. Si no hay dato, se dice y se cobra igual el diagnóstico</td></tr>
+      <tr><td>Falsos positivos y abandono</td><td>Tope de 5 críticas, línea base por contexto, botón de feedback y recalibración en la semana 4</td></tr>
+      <tr><td>La venta industrial es lenta</td><td>Piloto pagado y corto como producto de entrada, en vez de suscripción anual a puerta fría</td></tr>
+      <tr><td>Dependencia de un LLM</td><td>Capa de abstracción desde la primera línea, y todo lo que detecta funciona sin LLM</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 11 ------------------------------------------------------------------ -->
+<section id="comercial">
+  <div class="eyebrow"><em>11</em> Comercial</div>
+  <h2>Implantación y suscripción, separadas</h2>
+  <p class="wrap">Meterlo todo en la cuota mensual obliga a un compromiso de veinticuatro meses
+  que un director de planta no firma en la primera compra. Cobrar la implantación aparte
+  permite empezar pequeño y cubre los 2–5 días reales de mapeo que cada cliente trae.</p>
+
+  <div class="plans">
+    <div class="plan">
+      <div class="n">Starter</div>
+      <div class="p">390 €<small> /mes</small></div>
+      <div class="imp">implantación 2.500 €</div>
+      <ul><li>1 planta · hasta 20 activos</li><li>Production Radar</li><li>CSV, Excel, API</li><li>5 usuarios · panel y correo</li></ul>
+    </div>
+    <div class="plan hot">
+      <div class="n">Pro</div>
+      <div class="p">890 €<small> /mes</small></div>
+      <div class="imp">implantación 6.500 €</div>
+      <ul><li>1 planta · hasta 100 activos</li><li>+ Maintenance y Energy</li><li>+ SQL, MQTT, OPC UA</li><li>20 usuarios · Teams y Slack</li><li>1 Edge Connector</li></ul>
+    </div>
+    <div class="plan">
+      <div class="n">Enterprise</div>
+      <div class="p">2.400 €<small> /mes desde</small></div>
+      <div class="imp">implantación desde 15.000 €</div>
+      <ul><li>Multi-planta · sin límite</li><li>Todos los módulos</li><li>Integración a medida</li><li>SSO SAML/OIDC · SLA 99,5%</li><li>Factory Brain · modelo propio</li></ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">Cómo se defiende el precio</span>
+    <p>No por funcionalidades: por retorno. Un PRO cuesta 17.180 € el primer año. Una sola
+    parada no planificada evitada en una línea principal ronda los 10.000 €.
+    <strong>Si en el piloto no aparecen 30.000 € de mejora identificada, el producto no vale
+    para esa planta y hay que decírselo.</strong></p>
+  </div>
+
+  <h3>El piloto: el producto de entrada</h3>
+  <p class="wrap">Convierte una decisión de 17.000 € y doce meses en una de 4.900 € y seis
+  semanas, que un director de planta puede aprobar solo. Y cobrarlo filtra al curioso: un
+  piloto gratis no lo mira nadie.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th class="num">Sem</th><th>Qué se hace</th><th>Entregable</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td><b>Auditoría de datos.</b> Qué hay, qué falta, qué calidad tiene</td><td>Mapa de fuentes y su nivel en la escalera</td></tr>
+      <tr><td class="num">2</td><td>Conexión, mapeo y validación contra dato conocido</td><td>Dato real entrando y cuadrado</td></tr>
+      <tr><td class="num">3</td><td>Contexto: jerarquía, turnos, productos, ciclos, márgenes</td><td>Panel con la producción real de la línea</td></tr>
+      <tr><td class="num">4</td><td>Alertas: línea base aprendida, umbrales, destinatarios</td><td>Primeras alertas con impacto en euros</td></tr>
+      <tr><td class="num">5</td><td>Copilot y recalibración con el feedback de la semana 4</td><td>Copilot contestando sobre sus datos</td></tr>
+      <tr><td class="num">6</td><td>Cuantificación y presentación <b>a dirección</b></td><td><b>Informe de oportunidades en euros</b></td></tr>
+    </tbody>
+    <caption>DIAGNÓSTICO DE PLANTA · 6 semanas · 4.900 €, descontables de la implantación. La semana 1 es la que más sorprende al cliente: casi siempre descubre que su MES no registra causas de parada, o que un contador lleva meses mal.</caption>
+  </table></div>
+
+  <h3>La web comercial</h3>
+  <p class="wrap">El hero es la promesa del producto —<em>«Tu fábrica ya genera los datos.
+  Nosotros te decimos qué significan»</em>— y la segunda sección, no la sexta, es
+  <strong>«No cambies tu fábrica»</strong>, porque es la primera objeción real de todo el que
+  entra. La sección de seguridad —<em>«ningún puerto abierto, solo lectura, el dato sube nunca
+  baja»</em>— está escrita para que el director se la reenvíe a IT, y convierte más de lo que
+  parece. El precio del piloto va a la vista: filtra y acelera.</p>
+
+  <p class="wrap"><strong>Lo que no va en la web:</strong> nada de «transformamos la industria
+  con IA», ni «Industria 4.0», ni «revolución digital». Un director de planta lleva diez años
+  oyendo eso y su efecto medible ya es negativo. Tampoco fotos de archivo de robots azules
+  brillantes: su planta no se parece a eso y lo nota. Se habla de paradas, de scrap, de
+  kilovatios y de euros.</p>
+
+  <p class="wrap"><strong>Y una palanca que conviene tener resuelta antes de la primera
+  reunión:</strong> Kit Digital, Kit Consulting y los programas autonómicos de digitalización
+  industrial cubren buena parte de la implantación. Saber tramitarlo es en sí mismo un
+  argumento de venta.</p>
+</section>
+
+<!-- 12 ------------------------------------------------------------------ -->
+<section id="decisiones">
+  <div class="eyebrow"><em>12</em> Registro de decisiones</div>
+  <h2>Veintidós decisiones, con la alternativa descartada</h2>
+  <p class="wrap">Para no volver a discutirlas cada tres meses, y para que quien entre nuevo
+  entienda el porqué antes de proponer el cambio.</p>
+
+  <div style="margin-top:22px">
+    <div class="dec"><div class="n">01</div><div><h4>La plataforma es Factory Radar; el módulo pasa a Production Radar</h4><p>Frente a que ambos se llamaran igual. <span class="x">Colisiona en el menú lateral; se ve en cuanto se dibuja la pantalla.</span></p></div></div>
+    <div class="dec"><div class="n">02</div><div><h4>Una sola Postgres con TimescaleDB y pgvector</h4><p>Frente a Postgres + InfluxDB + Pinecone. <span class="x">Tres sistemas que respaldar, asegurar y pagar para un volumen que Timescale aguanta de sobra.</span></p></div></div>
+    <div class="dec"><div class="n">03</div><div><h4>Monolito modular, sin Kubernetes</h4><p>Frente a microservicios desde el principio. <span class="x">Resuelve una escala que no tenemos y añade superficie que auditar.</span></p></div></div>
+    <div class="dec"><div class="n">04</div><div><h4>RLS de Postgres para el aislamiento</h4><p>Frente a solo <code>WHERE tenant_id</code> en el código. <span class="x">Un WHERE olvidado es una fuga entre competidores del mismo sector.</span></p></div></div>
+    <div class="dec"><div class="n">05</div><div><h4>Árbol de activos, no cinco niveles fijos</h4><p>Frente a Planta → Área → Línea → Máquina. <span class="x">Ninguna fábrica encaja; se rompe en el tercer cliente y obliga a migrar.</span></p></div></div>
+    <div class="dec"><div class="n">06</div><div><h4>CSV y SQL antes que OPC UA</h4><p>Frente a empezar por el protocolo «correcto». <span class="x">OPC UA son de 2 a 6 semanas de trámite; CSV da dato real en 3 días.</span></p></div></div>
+    <div class="dec"><div class="n">07</div><div><h4>El LLM explica, no detecta</h4><p>Frente a pasarle series temporales al modelo. <span class="x">Caro, lento y alucina con números.</span></p></div></div>
+    <div class="dec"><div class="n">08</div><div><h4>Consultas parametrizadas en el Copilot, nunca SQL libre</h4><p>Frente a texto a SQL. <span class="x">Inyección, fuga entre inquilinos y consultas que tumban la base.</span></p></div></div>
+    <div class="dec"><div class="n">09</div><div><h4>Línea base por contexto: señal × producto × turno</h4><p>Frente a línea base global por señal. <span class="x">Una global dispara falsos positivos en cada cambio de formato.</span></p></div></div>
+    <div class="dec"><div class="n">10</div><div><h4>Tope de cinco alertas críticas por planta y semana</h4><p>Frente a alertar de todo lo detectado. <span class="x">Una bandeja con cuarenta críticas es una bandeja cerrada.</span></p></div></div>
+    <div class="dec"><div class="n">11</div><div><h4>Ningún score sin su fórmula abierta</h4><p>Frente a mostrar el número y ya. <span class="x">Un número indefendible destruye la confianza en toda la plataforma.</span></p></div></div>
+    <div class="dec"><div class="n">12</div><div><h4>Solo lectura, cero puertos entrantes</h4><p>Frente a una VPN para mantenimiento cómodo. <span class="x">IT veta el proyecto en la segunda reunión. Es la decisión que permite vender.</span></p></div></div>
+    <div class="dec"><div class="n">13</div><div><h4>Operarios seudonimizados por defecto</h4><p>Frente a rendimiento con nombre y apellidos. <span class="x">Tratamiento de datos personales en contexto laboral: riesgo legal y sindical real.</span></p></div></div>
+    <div class="dec"><div class="n">14</div><div><h4>El hueco de dato se pinta como hueco</h4><p>Frente a interpolar para que el gráfico quede bonito. <span class="x">Un dato inventado en industria es un diagnóstico equivocado.</span></p></div></div>
+    <div class="dec"><div class="n">15</div><div><h4>Implantación y suscripción separadas</h4><p>Frente a todo en la cuota mensual. <span class="x">Obliga a un compromiso de 24 meses que no se firma en la primera compra.</span></p></div></div>
+    <div class="dec"><div class="n">16</div><div><h4>Piloto pagado, no gratuito</h4><p>Frente a piloto gratis para entrar. <span class="x">El piloto gratis no lo mira nadie. Cobrarlo filtra y compromete.</span></p></div></div>
+    <div class="dec"><div class="n">17</div><div><h4>Factory Brain en fase 2, pese a ser el que más impresiona</h4><p>Frente a meterlo en el MVP para la demo. <span class="x">Una respuesta inventada sobre un procedimiento de seguridad quema la confianza para siempre.</span></p></div></div>
+    <div class="dec"><div class="n">18</div><div><h4>Predictivo por vibración fuera del MVP</h4><p>Frente a prometer predictivo desde el día 1. <span class="x">Exige sensórica, muestreo alto y fallos etiquetados. La deriva da el 70% del valor sin nada de eso.</span></p></div></div>
+    <div class="dec"><div class="n">19</div><div><h4>Nunca se escribe en OT. Ni ahora ni después</h4><p>Frente a dejar la puerta abierta «para más adelante». <span class="x">Otro producto, otra certificación y otro seguro. Decirlo pronto tranquiliza a IT.</span></p></div></div>
+    <div class="dec"><div class="n">20</div><div><h4>Cabeza de playa geográfica y sectorial</h4><p>Frente a producto horizontal para toda la industria. <span class="x">Un producto industrial horizontal no convence a nadie en la primera reunión.</span></p></div></div>
+    <div class="dec"><div class="n">21</div><div><h4>Conforme desde el día 1, certificado cuando lo pidan</h4><p>Frente a certificar ISO 27001 antes de vender. <span class="x">30.000 € y seis meses gastados en el orden equivocado.</span></p></div></div>
+    <div class="dec"><div class="n">22</div><div><h4>Feedback de alerta en el esquema, no en el backlog</h4><p>Frente a añadirlo cuando haya quejas. <span class="x">Sin él no bajan los falsos positivos, y son la causa nº 1 de abandono.</span></p></div></div>
+  </div>
+
+  <h3>Y seis más, que salieron de construir</h3>
+  <p class="wrap">Estas no aparecieron diseñando. Aparecieron al ejecutar el esquema contra
+  el motor real, que es donde salen las restricciones que de otro modo se descubren seis
+  meses tarde y con datos de tres clientes dentro.</p>
+
+  <div style="margin-top:14px">
+    <div class="dec"><div class="n">23</div><div><h4>La tabla cruda va comprimida y sin RLS; la de agregados, con RLS y sin comprimir</h4><p>Frente a aplicar la decisión 04 también a la tabla cruda. <span class="x">TimescaleDB no admite las dos cosas a la vez — comprobado en ambas direcciones. El volumen está en la cruda (39 GB por planta y 90 días, o 4 con compresión); las lecturas están en el agregado.</span></p></div></div>
+    <div class="dec"><div class="n">24</div><div><h4>Las políticas RLS se aplican en bucle, no a mano</h4><p>Frente a escribirlas tabla por tabla. <span class="x">El fallo real de este patrón nunca es una política mal escrita: es una tabla nueva a la que se olvidaron de ponérsela.</span></p></div></div>
+    <div class="dec"><div class="n">25</div><div><h4><code>FORCE ROW LEVEL SECURITY</code> en todas</h4><p>Frente a solo <code>ENABLE</code>. <span class="x">Sin FORCE, el propietario de la tabla salta las políticas — y algún script de mantenimiento acabará conectándose como propietario.</span></p></div></div>
+    <div class="dec"><div class="n">26</div><div><h4>Dos conexiones distintas: la de la API y la de los trabajos</h4><p>Frente a una sola cadena de conexión. <span class="x">La API no debe poder llamar a la función que lee todos los inquilinos. Es lo que evita que una inyección alcance el dato crudo de todas las fábricas.</span></p></div></div>
+    <div class="dec"><div class="n">27</div><div><h4>El rendimiento se acota a 1 y se avisa</h4><p>Frente a dejar salir un 118%. <span class="x">Un OEE del 112% en pantalla destruye la credibilidad de la herramienta entera en la primera reunión: no es que la máquina supere su física, es que el ciclo nominal está mal dado de alta.</span></p></div></div>
+    <div class="dec"><div class="n">28</div><div><h4>El umbral de microparada se deriva del ciclo, no es fijo</h4><p>Frente a 30 s para todo. <span class="x">En una línea de 4 s de ciclo, 30 s son siete piezas perdidas; en una de 90 s es un ciclo que aún no ha terminado. Un umbral fijo inunda de falsos positivos las líneas lentas.</span></p></div></div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">El hallazgo del RLS, con la comprobación</span>
+    <p>No se dedujo del manual: se ejecutó. <code>enable row level security</code> sobre la
+    hypertable comprimida devuelve <em>«operation not supported on hypertables that have
+    columnstore enabled»</em>, y activar la compresión con RLS ya puesto devuelve
+    <em>«columnstore cannot be used on table with row security»</em>. El aislamiento sigue
+    probado: once pruebas que corren como el rol de la API —no como superusuario, que
+    saltaría RLS— comprueban que la tabla cruda no es legible y que la puerta controlada
+    devuelve cero filas para una señal ajena.</p>
+  </div>
+</section>
+
+<!-- 13 ------------------------------------------------------------------ -->
+<section id="sigue">
+  <div class="eyebrow"><em>13</em> Qué sigue</div>
+  <h2>Fases A, B y C cerradas. Queda el dato real.</h2>
+
+  <div class="grid2">
+    <div class="cell"><h4><span>Fase A ✓</span>La definición</h4>
+      <p>Once documentos: producto, módulos, arquitectura, modelo de datos, pantallas,
+      integraciones, inteligencia, seguridad, MVP, comercial y el registro de decisiones.</p></div>
+    <div class="cell"><h4><span>Fase B ✓</span>La estructura real</h4>
+      <p>Diez ficheros de esquema que aplican limpios contra PostgreSQL 16 con TimescaleDB y
+      pgvector. Once pruebas de fuga entre inquilinos, superadas. Diecisiete pruebas de la
+      lógica de producto —OEE, microparadas, impacto, severidad—, superadas. API con contexto
+      de inquilino y permisos, contrato de ingesta, esqueleto del conector y del panel.</p></div>
+    <div class="cell"><h4><span>Fase C ✓</span>Demo Factory navegable</h4>
+      <p>Generador determinista de 90 días de planta, motor de cálculo y detección completo, y
+      un panel de nueve pantallas que se lleva a una reunión en un portátil y funciona sin
+      cobertura. Los cuatro problemas plantados salen solos.</p>
+      <p>Ocho de las once decisiones nuevas salieron de aquí: construir la demo fue lo que
+      destapó que las microparadas estaban mal imputadas y que un cambio de formato dejaba
+      ciego al motor.</p></div>
+    <div class="cell"><h4><span>Fase D</span>MVP sobre dato real</h4>
+      <p>Conector Edge leyendo el SQL o el Excel de un cliente. Copilot conectado a un
+      proveedor de verdad. Alta guiada, notificaciones y superadmin. Y las pantallas que
+      todavía son contrato: energía, calidad, proveedores y Factory Brain.</p></div>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Qué está comprobado</th><th class="num">Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Esquema aplicado contra PostgreSQL 16 con TimescaleDB y pgvector</td><td class="num">10/10</td></tr>
+      <tr><td>Fugas entre inquilinos, ejecutadas como el rol de la API</td><td class="num">11/11</td></tr>
+      <tr><td>Lógica de producto: OEE, microparadas, impacto, severidad</td><td class="num">17/17</td></tr>
+      <tr><td>API contra base real, con permisos y aislamiento</td><td class="num">11/11</td></tr>
+      <tr><td>Problemas de la demo detectados sin estar marcados</td><td class="num">4/4</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lbl">La regla de avance</span>
+    <p>Ninguna fase avanza hasta que la anterior tiene coherencia funcional, datos, estados
+    vacíos, estados de error, permisos aplicados, responsive, seguridad básica y su
+    documentación. Es lo que evita el producto de cuarenta pantallas a medias, que es el estado
+    natural al que tiende este tipo de proyecto.</p>
+  </div>
+
+  <div class="foot">
+    <b>FACTORY RADAR · FASE A</b> — definición de producto · 9 de septiembre de 2026<br>
+    Índole Data Technology · Torrelavega<br>
+    El documento completo vive en <b>~/Developer/factory-radar/doc/</b>, once ficheros numerados.<br>
+    Nombre provisional: comprobar marca y dominio antes de imprimir nada.
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Entrada del panel: una sola secuencia, escalonada. Si el usuario pide menos
+  // movimiento, el CSS ya deja todo visible y aqui no se toca nada.
+  var hero = document.getElementById("hero");
+  if (hero && !reduce) {
+    var bits = hero.querySelectorAll(".kpi, .row");
+    for (var i = 0; i < bits.length; i++) {
+      bits[i].style.animationDelay = (i * 55) + "ms";
+    }
+    requestAnimationFrame(function () { hero.classList.add("go"); });
+  }
+
+  // Cuenta atras de los KPI. Se formatea en es-ES para que el decimal sea coma:
+  // un panel industrial espanol con punto decimal se lee como error.
+  var vals = document.querySelectorAll("#hero .v[data-to]");
+  vals.forEach(function (el) {
+    var to = parseFloat(el.dataset.to);
+    var dec = (el.dataset.to.indexOf(".") > -1) ? 1 : 0;
+    var pre = el.dataset.pre || "";
+    var suf = el.dataset.suf || "";
+    var fmt = function (n) {
+      return pre + n.toLocaleString("es-ES", {
+        minimumFractionDigits: dec, maximumFractionDigits: dec
+      }) + suf;
+    };
+    if (reduce) { el.textContent = fmt(to); return; }
+    var t0 = null, dur = 850;
+    function step(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min((t - t0) / dur, 1);
+      el.textContent = fmt(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+
+  // Marcado de la seccion activa en el indice lateral.
+  var links = Array.prototype.slice.call(document.querySelectorAll("#nav a"));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove("on"); });
+      var a = byId[e.target.id];
+      if (a) a.classList.add("on");
+    });
+  }, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
+  document.querySelectorAll("main section").forEach(function (s) { obs.observe(s); });
+})();
+</script>
