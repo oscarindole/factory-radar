@@ -38,18 +38,22 @@
    nave falsa se reconoce al instante.
 --------------------------------------------------------------------------- */
 :root {
-  /* superficies */
-  --crema:   #F8F6F2;
+  /* Superficies calidas. El fondo no es blanco ni gris: es un crema con algo
+     de verde, que es lo que hace que una pagina se sienta serena en vez de
+     clinica. Las bandas alternan entre ese crema, blanco puro y un lavado
+     salvia muy bajo. */
+  --crema:   #F7F5F0;
   --blanco:  #FFFFFF;
-  --tinte:   #ECEFEE;
-  --carbon:  #17191D;
+  --tinte:   #E9EDE7;
+  --arena:   #F1EDE4;
+  --carbon:  #1E2422;
 
-  /* tinta */
-  --tinta:   #1B1D22;
-  --tinta-2: #5C636E;
-  --tinta-3: #9097A1;
-  --raya:    #E3DFD7;
-  --raya-2:  #D3CEC4;
+  /* tinta calida, no negro puro */
+  --tinta:   #23282B;
+  --tinta-2: #5E6660;
+  --tinta-3: #949B95;
+  --raya:    #E6E1D6;
+  --raya-2:  #D6D0C2;
 
   /* marca */
   --rosa:    #E0115F;
@@ -97,11 +101,12 @@ h3 { font-size:1.28rem; font-weight:700; line-height:1.28; letter-spacing:-.018e
      margin-bottom:10px; font-variation-settings:"opsz" 18; }
 .enorme { font-family:var(--disp); font-size:clamp(2.6rem,7.4vw,5.6rem); font-weight:800;
           line-height:.96; letter-spacing:-.042em; }
-.sobre { font-family:var(--mono); font-size:.71rem; font-weight:600; letter-spacing:.24em;
-         text-transform:uppercase; color:var(--rosa); margin-bottom:22px;
-         display:flex; align-items:center; gap:11px; }
-.sobre::before { content:""; width:22px; height:2px; background:var(--rosa); flex:0 0 auto; }
-.centrado .sobre { justify-content:center; }
+.sobre { font-family:var(--body); font-size:.86rem; font-weight:600; letter-spacing:.02em;
+         color:var(--rosa); margin-bottom:18px; display:inline-flex; align-items:center;
+         gap:9px; background:var(--rosa-luz); padding:7px 16px; border-radius:999px; }
+.sobre::before { content:""; width:6px; height:6px; border-radius:50%;
+                 background:var(--rosa); flex:0 0 auto; }
+
 .entradilla { font-size:1.16rem; color:var(--tinta-2); line-height:1.62; }
 
 /* --- retícula ------------------------------------------------------------- */
@@ -110,6 +115,7 @@ h3 { font-size:1.28rem; font-weight:700; line-height:1.28; letter-spacing:-.018e
 section { padding:clamp(88px,10.5vw,150px) 0; position:relative; }
 section.blanca { background:var(--blanco); }
 section.tinte  { background:var(--tinte); }
+section.arena  { background:var(--arena); }
 section.carbon { background:var(--carbon); color:#F0EFEC; }
 .centrado { text-align:center; }
 .centrado .entradilla, .centrado p { margin-left:auto; margin-right:auto; }
@@ -123,7 +129,7 @@ section.carbon { background:var(--carbon); color:#F0EFEC; }
                gap:20px; height:74px; transition:height .3s var(--e); }
 .nav.pegada .centro { height:62px; }
 .marca { display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit; }
-.marca .simbolo { width:29px; height:29px; border-radius:6px; flex:0 0 auto; }
+.marca .simbolo { width:29px; height:29px; border-radius:8px; flex:0 0 auto; }
 .marca span { font-family:var(--disp); font-weight:800; font-size:1.02rem;
               letter-spacing:.01em; }
 .nav-links { display:flex; align-items:center; gap:32px; }
@@ -135,7 +141,7 @@ section.carbon { background:var(--carbon); color:#F0EFEC; }
 .nav-links a:hover::after { right:0; }
 
 .btn { display:inline-flex; align-items:center; gap:9px; font-family:var(--body);
-  font-size:1rem; font-weight:600; line-height:1; padding:18px 30px; border-radius:11px;
+  font-size:1rem; font-weight:600; line-height:1; padding:18px 32px; border-radius:14px;
   background:var(--rosa); color:#fff; text-decoration:none; border:1px solid var(--rosa);
   transition:transform .25s var(--e), background .25s var(--e), box-shadow .25s var(--e);
   box-shadow:0 1px 0 rgba(0,0,0,.04); }
@@ -147,15 +153,15 @@ section.carbon { background:var(--carbon); color:#F0EFEC; }
            box-shadow:none; }
 .btn.sec:hover { border-color:var(--tinta); background:var(--blanco);
                  box-shadow:0 12px 24px -18px rgba(27,29,34,.6); }
-.btn.peq { padding:12px 20px; font-size:.92rem; border-radius:9px; }
+.btn.peq { padding:12px 22px; font-size:.92rem; border-radius:12px; }
 .ctas { display:flex; gap:12px; flex-wrap:wrap; margin-top:36px; }
 .centrado .ctas { justify-content:center; }
 
 /* --- imágenes ------------------------------------------------------------- */
-.foto { border-radius:20px; overflow:hidden; display:block; background:var(--tinte);
+.foto { border-radius:28px; overflow:hidden; display:block; background:var(--tinte);
         line-height:0; position:relative; }
 .foto svg { display:block; width:100%; height:auto; }
-.foto.sombra { box-shadow:0 46px 90px -58px rgba(27,29,34,.55); }
+.foto.sombra { box-shadow:0 40px 90px -50px rgba(35,40,43,.32); }
 
 /* --- hero ----------------------------------------------------------------- */
 .hero { padding:clamp(66px,8vw,116px) 0 clamp(74px,8vw,116px); text-align:center; }
@@ -164,12 +170,16 @@ section.carbon { background:var(--carbon); color:#F0EFEC; }
 .hero .entradilla { max-width:55ch; font-size:1.22rem; }
 .hero-nota { font-family:var(--mono); font-size:.75rem; color:var(--tinta-3);
              margin-top:28px; letter-spacing:.03em; }
+/* La imagen es el elemento dominante, no un adorno al pie del texto: se sale
+   del ancho del texto y ocupa toda la reticula. */
 .hero .foto { margin-top:clamp(52px,6vw,86px); }
+.ancha { max-width:1320px; margin-left:auto; margin-right:auto;
+         padding:0 clamp(16px,3vw,32px); }
 
 /* --- dúo asimétrico ------------------------------------------------------- */
-.duo { display:grid; grid-template-columns:7fr 5fr; gap:clamp(36px,5vw,86px);
+.duo { display:grid; grid-template-columns:5.5fr 6.5fr; gap:clamp(36px,5vw,86px);
        align-items:center; }
-.duo.izq { grid-template-columns:5fr 7fr; }
+.duo.izq { grid-template-columns:6.5fr 5.5fr; }
 .duo.izq .txt { order:2; }
 @media (max-width:880px) { .duo, .duo.izq { grid-template-columns:1fr; }
   .duo.izq .txt { order:0; } }
@@ -199,7 +209,7 @@ section.carbon .cifra .t { color:#A9AEB6; }
 /* --- proceso -------------------------------------------------------------- */
 .pasos { display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
          gap:clamp(26px,3.4vw,44px); margin-top:clamp(50px,6vw,76px); }
-.paso .n { width:40px; height:40px; border-radius:12px; background:var(--blanco);
+.paso .n { width:44px; height:44px; border-radius:50%; background:var(--blanco);
   border:1px solid var(--raya); color:var(--tinta-3); font-family:var(--mono);
   font-size:.8rem; font-weight:600; display:flex; align-items:center;
   justify-content:center; margin-bottom:18px; transition:all .4s var(--e); }
@@ -208,7 +218,7 @@ section.carbon .cifra .t { color:#A9AEB6; }
 .paso p { font-size:.94rem; color:var(--tinta-2); margin:0; line-height:1.6; }
 
 /* --- gráfica -------------------------------------------------------------- */
-.gr { background:var(--blanco); border-radius:20px; padding:clamp(24px,3vw,38px);
+.gr { background:var(--blanco); border-radius:26px; padding:clamp(24px,3vw,38px);
       box-shadow:0 40px 80px -62px rgba(27,29,34,.5); }
 section.blanca .gr { background:var(--crema); }
 .gr-cab { display:flex; justify-content:space-between; align-items:flex-start; gap:18px;
@@ -228,8 +238,8 @@ section.blanca .gr { background:var(--crema); }
 .gr.on .aparece { opacity:1; }
 
 /* --- el producto ---------------------------------------------------------- */
-.pantalla { border-radius:20px; overflow:hidden; background:var(--in-fondo);
-  box-shadow:0 46px 92px -58px rgba(27,29,34,.6); text-align:left; }
+.pantalla { border-radius:26px; overflow:hidden; background:var(--in-fondo);
+  box-shadow:0 40px 90px -52px rgba(35,40,43,.4); text-align:left; }
 .chrome { display:flex; align-items:center; gap:8px; padding:13px 18px; background:#1B2228;
           border-bottom:1px solid var(--in-raya); }
 .chrome i { width:10px; height:10px; border-radius:50%; background:#39434B; display:block; }
@@ -271,7 +281,7 @@ section.blanca .gr { background:var(--crema); }
 
 /* --- tablas y precio ------------------------------------------------------ */
 .tw { overflow-x:auto; margin-top:clamp(38px,4.5vw,58px); background:var(--blanco);
-      border-radius:18px; padding:10px clamp(20px,3vw,34px); }
+      border-radius:24px; padding:10px clamp(22px,3vw,36px); }
 section.blanca .tw { background:var(--crema); }
 table { border-collapse:collapse; width:100%; font-size:1rem; }
 th,td { text-align:left; padding:18px 0; border-bottom:1px solid var(--raya);
@@ -285,7 +295,7 @@ td.n { text-align:right; font-family:var(--mono); white-space:nowrap; color:var(
 
 .planes { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
           gap:clamp(18px,2.4vw,28px); margin-top:clamp(50px,5vw,70px); }
-.plan { background:var(--blanco); border-radius:20px; padding:34px 30px 36px;
+.plan { background:var(--blanco); border-radius:24px; padding:34px 30px 36px;
         transition:transform .35s var(--e), box-shadow .35s var(--e); }
 section.blanca .plan { background:var(--crema); }
 .plan:hover { transform:translateY(-4px); box-shadow:0 30px 60px -44px rgba(27,29,34,.5); }
@@ -373,148 +383,157 @@ footer .mono { font-size:.76rem; color:var(--tinta-3); line-height:2.05; }
          oscuras al acercarse, y la figura delante en el tono mas contrastado.
          Es lo que da sensacion de espacio sin usar perspectiva forzada. -->
     <div class="foto sombra revela">
-      <svg viewBox="0 0 1200 600" role="img"
-           aria-label="Interior de una nave industrial con tres líneas de máquinas y una encargada revisando una tablet en primer plano.">
+      <svg viewBox="0 0 1200 620" role="img"
+           aria-label="Interior de una nave industrial iluminada por ventanales, con líneas de máquinas y una encargada revisando una tablet en primer plano.">
         <defs>
-          <linearGradient id="pared" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#F1F4F3"/><stop offset="1" stop-color="#E2E8E7"/>
+          <linearGradient id="aire" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#F4F2EC"/><stop offset=".55" stop-color="#E9EBE4"/>
+            <stop offset="1" stop-color="#DFE3DB"/>
           </linearGradient>
-          <linearGradient id="luzvent" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FDF3DE"/><stop offset="1" stop-color="#F6E9D0"/>
+          <radialGradient id="halo" cx=".5" cy=".2" r=".9">
+            <stop offset="0" stop-color="#FFF7E4" stop-opacity=".95"/>
+            <stop offset="1" stop-color="#FFF7E4" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="vidrio" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FFFAEC"/><stop offset="1" stop-color="#F4E7C9"/>
           </linearGradient>
-          <linearGradient id="suelo" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#DFE4E3"/><stop offset="1" stop-color="#D2D8D7"/>
+          <linearGradient id="pisoG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#E1E4DC"/><stop offset="1" stop-color="#CFD4CB"/>
           </linearGradient>
-          <linearGradient id="charco" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FBEFD6" stop-opacity=".85"/>
-            <stop offset="1" stop-color="#FBEFD6" stop-opacity="0"/>
+          <linearGradient id="mLejos" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#CBD2CC"/><stop offset="1" stop-color="#B9C2BC"/>
           </linearGradient>
-          <linearGradient id="maqCerca" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#7E8B94"/><stop offset="1" stop-color="#66727B"/>
+          <linearGradient id="mMedio" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#9AA6A2"/><stop offset="1" stop-color="#7C8A87"/>
           </linearGradient>
+          <linearGradient id="mCerca" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#6E7C79"/><stop offset="1" stop-color="#586662"/>
+          </linearGradient>
+          <linearGradient id="chaleco" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#FFB63A"/><stop offset=".5" stop-color="#F59B00"/>
+            <stop offset="1" stop-color="#D98600"/>
+          </linearGradient>
+          <linearGradient id="piel" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#EBBB92"/><stop offset="1" stop-color="#D19A6D"/>
+          </linearGradient>
+          <filter id="difusa" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="13"/></filter>
+          <filter id="suave" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="5"/></filter>
         </defs>
 
-        <rect width="1200" height="600" fill="url(#pared)"/>
+        <rect width="1200" height="620" fill="url(#aire)"/>
+        <ellipse cx="600" cy="150" rx="640" ry="300" fill="url(#halo)"/>
 
-        <!-- estructura: cerchas y celosia -->
-        <g stroke="#D6DCDB" stroke-width="3" fill="none">
-          <path d="M0 86 H1200 M0 118 H1200"/>
-          <path d="M0 86 L90 44 L180 86 M240 86 L330 44 L420 86 M480 86 L570 44 L660 86
-                   M720 86 L810 44 L900 86 M960 86 L1050 44 L1140 86"/>
-          <path d="M90 86 V118 M330 86 V118 M570 86 V118 M810 86 V118 M1050 86 V118"/>
+        <!-- estructura del techo -->
+        <g stroke="#D9DDD4" stroke-width="3" fill="none" opacity=".9">
+          <path d="M0 84 H1200 M0 116 H1200"/>
+          <path d="M0 84 L92 42 L184 84 M246 84 L338 42 L430 84 M492 84 L584 42 L676 84
+                   M738 84 L830 42 L922 84 M984 84 L1076 42 L1168 84"/>
+          <path d="M92 84 V116 M338 84 V116 M584 84 V116 M830 84 V116 M1076 84 V116"/>
         </g>
-        <!-- carril de puente grua -->
-        <g><rect y="140" width="1200" height="10" fill="#CFD6D5"/>
-          <rect x="430" y="150" width="200" height="26" rx="5" fill="#C3CBCA"/>
-          <rect x="516" y="176" width="10" height="62" fill="#C3CBCA"/>
-          <rect x="498" y="238" width="46" height="16" rx="4" fill="#B6BFBE"/></g>
-        <!-- luminarias -->
-        <g fill="#FBF6EA"><rect x="150" y="118" width="110" height="12" rx="6"/>
-          <rect x="545" y="118" width="110" height="12" rx="6"/>
-          <rect x="940" y="118" width="110" height="12" rx="6"/></g>
+        <g><rect y="140" width="1200" height="9" fill="#D2D7CE"/>
+          <rect x="430" y="149" width="204" height="26" rx="7" fill="#C6CCC3"/>
+          <rect x="518" y="175" width="10" height="66" fill="#C6CCC3"/>
+          <rect x="498" y="241" width="48" height="17" rx="5" fill="#B8BFB6"/></g>
+        <g fill="#FFFBEF"><rect x="150" y="116" width="116" height="11" rx="5.5"/>
+          <rect x="542" y="116" width="116" height="11" rx="5.5"/>
+          <rect x="934" y="116" width="116" height="11" rx="5.5"/></g>
+        <g fill="#FFF6DC" opacity=".5" filter="url(#difusa)">
+          <ellipse cx="208" cy="132" rx="86" ry="22"/><ellipse cx="600" cy="132" rx="86" ry="22"/>
+          <ellipse cx="992" cy="132" rx="86" ry="22"/></g>
 
-        <!-- ventanales con luz calida -->
-        <g><rect x="34" y="182" width="152" height="96" rx="7" fill="url(#luzvent)"/>
-          <path d="M110 182 V278 M34 230 H186" stroke="#EADCBE" stroke-width="4"/>
-          <rect x="1014" y="182" width="152" height="96" rx="7" fill="url(#luzvent)"/>
-          <path d="M1090 182 V278 M1014 230 H1166" stroke="#EADCBE" stroke-width="4"/></g>
-        <!-- charcos de luz en el suelo -->
-        <path d="M40 460 h150 l40 120 h-230 z" fill="url(#charco)"/>
-        <path d="M1010 460 h150 l40 120 h-230 z" fill="url(#charco)"/>
-
-        <!-- CAPA LEJANA · maquinas claras (perspectiva atmosferica) -->
-        <g fill="#C4CDD1">
-          <rect x="196" y="286" width="150" height="152" rx="8"/>
-          <rect x="700" y="300" width="132" height="138" rx="8"/>
-          <rect x="880" y="284" width="112" height="154" rx="8"/>
-        </g>
-        <g fill="#B4BEC3">
-          <rect x="216" y="306" width="66" height="46" rx="5"/>
-          <rect x="720" y="320" width="58" height="40" rx="5"/>
-          <rect x="900" y="304" width="54" height="42" rx="5"/>
-        </g>
-        <!-- conductos y tuberia aerea -->
-        <g stroke="#CAD2D1" stroke-width="12" fill="none" stroke-linecap="round">
-          <path d="M0 254 H420 q26 0 26 26 V300"/>
-          <path d="M1200 244 H820"/></g>
+        <!-- ventanales -->
+        <g><rect x="30" y="180" width="158" height="102" rx="10" fill="url(#vidrio)"/>
+          <path d="M109 180 V282 M30 231 H188" stroke="#EBDCB6" stroke-width="4"/>
+          <rect x="1012" y="180" width="158" height="102" rx="10" fill="url(#vidrio)"/>
+          <path d="M1091 180 V282 M1012 231 H1170" stroke="#EBDCB6" stroke-width="4"/></g>
 
         <!-- suelo -->
-        <rect y="438" width="1200" height="162" fill="url(#suelo)"/>
-        <path d="M0 438 H1200" stroke="#C3CBCA" stroke-width="3"/>
-        <g stroke="#F0C97A" stroke-width="6" stroke-linecap="round" opacity=".9">
-          <path d="M40 512 H250 M300 512 H510 M560 512 H770"/></g>
+        <rect y="444" width="1200" height="176" fill="url(#pisoG)"/>
+        <path d="M0 444 H1200" stroke="#C4CAC1" stroke-width="3"/>
+        <g fill="#FFF3D6" opacity=".55" filter="url(#difusa)">
+          <ellipse cx="118" cy="520" rx="140" ry="48"/><ellipse cx="1094" cy="520" rx="140" ry="48"/></g>
+        <g stroke="#EFC97F" stroke-width="6" stroke-linecap="round" opacity=".85">
+          <path d="M42 528 H252 M304 528 H514 M566 528 H776"/></g>
 
-        <!-- CAPA MEDIA · la estacion que se esta mirando -->
+        <!-- plano lejano -->
+        <g fill="url(#mLejos)">
+          <rect x="196" y="284" width="152" height="158" rx="9"/>
+          <rect x="700" y="298" width="134" height="144" rx="9"/>
+          <rect x="884" y="282" width="114" height="160" rx="9"/></g>
+        <g fill="#AAB4AE"><rect x="216" y="304" width="68" height="48" rx="6"/>
+          <rect x="720" y="318" width="60" height="42" rx="6"/>
+          <rect x="904" y="302" width="56" height="44" rx="6"/></g>
+        <g stroke="#CDD3CA" stroke-width="13" fill="none" stroke-linecap="round" opacity=".9">
+          <path d="M0 252 H418 q28 0 28 28 V300"/><path d="M1200 242 H822"/></g>
+
+        <!-- plano medio: la estacion -->
+        <g><ellipse cx="562" cy="452" rx="196" ry="16" fill="#B9C0B7" opacity=".5" filter="url(#suave)"/>
+          <rect x="392" y="226" width="340" height="218" rx="14" fill="url(#mMedio)"/>
+          <rect x="392" y="226" width="340" height="16" rx="8" fill="#8B9995" opacity=".8"/>
+          <rect x="418" y="264" width="152" height="114" rx="9" fill="#4F5C58"/>
+          <rect x="432" y="278" width="124" height="86" rx="6" fill="#11161A"/>
+          <path d="M442 346 L470 324 L498 350 L526 308 L546 330" stroke="#E0115F"
+                stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+          <rect x="442" y="292" width="48" height="8" rx="4" fill="#3D4A47"/>
+          <rect x="442" y="306" width="68" height="8" rx="4" fill="#2C3634"/>
+          <circle cx="618" cy="284" r="18" fill="#C7362F"/><circle cx="618" cy="284" r="10" fill="#DE564E"/>
+          <circle cx="618" cy="332" r="18" fill="#2E9E6B"/>
+          <rect x="648" y="272" width="62" height="120" rx="8" fill="#84918D"/>
+          <g fill="#BCC5C0"><rect x="662" y="290" width="34" height="9" rx="4.5"/>
+            <rect x="662" y="311" width="34" height="9" rx="4.5"/>
+            <rect x="662" y="332" width="34" height="9" rx="4.5"/></g>
+          <rect x="418" y="394" width="294" height="40" rx="8" fill="#84918D"/>
+          <rect x="746" y="284" width="26" height="160" rx="7" fill="#8B9995"/>
+          <ellipse cx="759" cy="270" rx="26" ry="26" fill="#F5A524" opacity=".28" filter="url(#suave)"/>
+          <circle cx="759" cy="270" r="16" fill="#F5A524"/><circle cx="759" cy="270" r="7" fill="#FFE7B8"/></g>
+
+        <!-- cinta -->
+        <g><rect x="764" y="378" width="368" height="21" rx="10.5" fill="#84918D"/>
+          <g fill="#AFB9B4"><rect x="796" y="342" width="54" height="36" rx="5"/>
+            <rect x="886" y="342" width="54" height="36" rx="5"/>
+            <rect x="976" y="342" width="54" height="36" rx="5"/>
+            <rect x="1066" y="342" width="54" height="36" rx="5"/></g>
+          <g fill="#6E7C79"><rect x="790" y="399" width="16" height="46" rx="6"/>
+            <rect x="1084" y="399" width="16" height="46" rx="6"/></g></g>
+
+        <!-- plano cercano recortado -->
+        <g><rect x="-24" y="298" width="156" height="322" rx="12" fill="url(#mCerca)"/>
+          <rect x="8" y="330" width="94" height="70" rx="7" fill="#46534F"/>
+          <rect x="8" y="420" width="94" height="13" rx="6.5" fill="#4F5D59"/>
+          <rect x="8" y="446" width="62" height="13" rx="6.5" fill="#4F5D59"/></g>
+
+        <!-- la encargada -->
         <g>
-          <ellipse cx="560" cy="444" rx="180" ry="12" fill="#C6CDCC" opacity=".7"/>
-          <rect x="392" y="228" width="336" height="212" rx="12" fill="#98A4AB"/>
-          <rect x="392" y="228" width="336" height="16" rx="8" fill="#8A969D"/>
-          <!-- carcasa acristalada -->
-          <rect x="418" y="264" width="150" height="112" rx="8" fill="#5E6A72"/>
-          <rect x="432" y="278" width="122" height="84" rx="5" fill="#0E1116"/>
-          <path d="M442 344 L470 322 L498 348 L526 306 L546 328" stroke="#E0115F"
-                stroke-width="5" fill="none" stroke-linejoin="round"/>
-          <rect x="442" y="292" width="46" height="8" rx="4" fill="#3E4A52"/>
-          <rect x="442" y="306" width="66" height="8" rx="4" fill="#2C363D"/>
-          <!-- botonera -->
-          <g><circle cx="616" cy="284" r="17" fill="#C7362F"/>
-            <circle cx="616" cy="330" r="17" fill="#2E9E6B"/>
-            <rect x="646" y="272" width="60" height="118" rx="7" fill="#7F8B93"/>
-            <g fill="#C0C9CE"><rect x="660" y="290" width="32" height="9" rx="4"/>
-              <rect x="660" y="310" width="32" height="9" rx="4"/>
-              <rect x="660" y="330" width="32" height="9" rx="4"/></g></g>
-          <rect x="418" y="392" width="290" height="38" rx="7" fill="#7F8B93"/>
-          <!-- torre de aviso -->
-          <rect x="742" y="286" width="26" height="154" rx="6" fill="#8A969D"/>
-          <circle cx="755" cy="272" r="16" fill="#F5A524"/>
-          <circle cx="755" cy="272" r="7" fill="#FDE2B0"/>
-        </g>
-        <!-- cinta transportadora, plano medio -->
-        <g><rect x="760" y="378" width="360" height="20" rx="10" fill="#7F8B93"/>
-          <g fill="#AEB9BF"><rect x="792" y="344" width="52" height="34" rx="4"/>
-            <rect x="880" y="344" width="52" height="34" rx="4"/>
-            <rect x="968" y="344" width="52" height="34" rx="4"/>
-            <rect x="1056" y="344" width="52" height="34" rx="4"/></g>
-          <g fill="#6B7880"><rect x="786" y="398" width="15" height="44" rx="6"/>
-            <rect x="1078" y="398" width="15" height="44" rx="6"/></g></g>
-
-        <!-- CAPA CERCANA · bastidor recortado a la izquierda, da profundidad -->
-        <g><rect x="-20" y="300" width="150" height="300" rx="10" fill="url(#maqCerca)"/>
-          <rect x="10" y="330" width="90" height="66" rx="6" fill="#4E5A62"/>
-          <rect x="10" y="416" width="90" height="12" rx="6" fill="#57636B"/>
-          <rect x="10" y="440" width="60" height="12" rx="6" fill="#57636B"/></g>
-
-        <!-- LA ENCARGADA · primer plano, tono mas contrastado -->
-        <g>
-          <ellipse cx="286" cy="566" rx="72" ry="11" fill="#C0C8C7" opacity=".8"/>
-          <path d="M258 560 V464 h22 v96 z" fill="#39444C"/>
-          <path d="M290 560 V464 h22 v96 z" fill="#2F3941"/>
-          <rect x="248" y="554" width="40" height="16" rx="7" fill="#1B1D22"/>
-          <rect x="284" y="554" width="40" height="16" rx="7" fill="#1B1D22"/>
-          <!-- chaleco de alta visibilidad -->
-          <path d="M250 356 q36 -18 74 0 l11 112 q-48 15 -96 0 z" fill="#F59B00"/>
-          <path d="M250 356 q36 -18 74 0 l4 40 q-40 -14 -80 0 z" fill="#FFB22E"/>
-          <path d="M268 354 v122 M308 354 v122" stroke="#FBF7EF" stroke-width="7" opacity=".92"/>
-          <path d="M254 424 q34 12 68 0" stroke="#FBF7EF" stroke-width="7" fill="none" opacity=".92"/>
-          <!-- brazos sujetando la tablet -->
-          <path d="M250 372 q-26 28 -8 62 l26 -9 q-12 -28 4 -45 z" fill="#DE8B00"/>
-          <path d="M328 372 q26 28 8 62 l-26 -9 q12 -28 -4 -45 z" fill="#DE8B00"/>
-          <rect x="238" y="426" width="26" height="19" rx="9" fill="#DBA97F"/>
-          <rect x="316" y="426" width="26" height="19" rx="9" fill="#DBA97F"/>
-          <g transform="rotate(-9 290 428)">
-            <rect x="238" y="394" width="104" height="70" rx="8" fill="#1B1D22"/>
-            <rect x="246" y="402" width="88" height="54" rx="5" fill="#0E1116"/>
-            <path d="M254 442 L278 430 L300 444 L322 416" stroke="#E0115F" stroke-width="4.5"
-                  fill="none" stroke-linejoin="round"/>
-            <rect x="254" y="412" width="34" height="7" rx="3.5" fill="#4E5A62"/>
-            <rect x="254" y="424" width="22" height="6" rx="3" fill="#3E4A52"/></g>
-          <!-- cabeza, coleta, casco -->
-          <circle cx="292" cy="320" r="27" fill="#E2AE84"/>
-          <path d="M266 314 q6 -32 36 -30 q24 2 26 26 q-9 -13 -32 -13 q-22 0 -30 17 z" fill="#4A3729"/>
-          <path d="M324 320 q24 5 22 28 q-2 18 -20 15 q11 -19 -2 -43 z" fill="#4A3729"/>
-          <path d="M262 308 a31 31 0 0 1 62 0 z" fill="#F59B00"/>
-          <path d="M262 308 a31 31 0 0 1 62 0 l-8 0 a23 23 0 0 0 -46 0 z" fill="#FFB22E"/>
-          <rect x="255" y="304" width="76" height="11" rx="5.5" fill="#DE8B00"/>
+          <ellipse cx="288" cy="574" rx="82" ry="14" fill="#AEB6AD" opacity=".55" filter="url(#suave)"/>
+          <path d="M258 566 V468 h23 v98 z" fill="#39433F"/>
+          <path d="M291 566 V468 h23 v98 z" fill="#2E3835"/>
+          <rect x="248" y="560" width="42" height="17" rx="8" fill="#20262B"/>
+          <rect x="286" y="560" width="42" height="17" rx="8" fill="#20262B"/>
+          <path d="M250 358 q37 -19 76 0 l11 114 q-49 16 -98 0 z" fill="url(#chaleco)"/>
+          <path d="M250 358 q37 -19 76 0 l4 34 q-41 -14 -82 0 z" fill="#FFC55C" opacity=".75"/>
+          <path d="M300 360 l26 -2 l11 114 q-24 8 -49 10 z" fill="#20262B" opacity=".08"/>
+          <path d="M269 356 v124 M309 356 v124" stroke="#FDFAF2" stroke-width="7" opacity=".95"/>
+          <path d="M254 428 q34 12 70 0" stroke="#FDFAF2" stroke-width="7" fill="none" opacity=".95"/>
+          <path d="M250 374 q-27 29 -8 64 l27 -10 q-12 -28 4 -46 z" fill="#DB8A00"/>
+          <path d="M330 374 q27 29 8 64 l-27 -10 q12 -28 -4 -46 z" fill="#C87E00"/>
+          <rect x="238" y="430" width="27" height="20" rx="9.5" fill="url(#piel)"/>
+          <rect x="318" y="430" width="27" height="20" rx="9.5" fill="url(#piel)"/>
+          <g transform="rotate(-9 292 430)">
+            <rect x="236" y="394" width="110" height="74" rx="10" fill="#20262B"/>
+            <rect x="245" y="403" width="92" height="56" rx="6" fill="#11161A"/>
+            <path d="M254 444 L280 431 L302 446 L326 416" stroke="#E0115F" stroke-width="4.5"
+                  fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+            <rect x="254" y="412" width="36" height="7" rx="3.5" fill="#4F5C58"/>
+            <rect x="254" y="424" width="24" height="6" rx="3" fill="#3D4A47"/></g>
+          <circle cx="294" cy="320" r="28" fill="url(#piel)"/>
+          <path d="M294 292 a28 28 0 0 1 28 28 q-14 -10 -28 -10 z" fill="#D19A6D" opacity=".5"/>
+          <path d="M266 314 q6 -33 37 -31 q25 2 27 27 q-9 -14 -33 -14 q-23 0 -31 18 z" fill="#4B392A"/>
+          <path d="M326 320 q25 5 23 29 q-2 19 -21 16 q11 -20 -2 -45 z" fill="#4B392A"/>
+          <path d="M263 308 a32 32 0 0 1 64 0 z" fill="#E08F00"/>
+          <path d="M263 308 a32 32 0 0 1 64 0 l-9 0 a24 24 0 0 0 -47 0 z" fill="#FFC55C"/>
+          <rect x="256" y="303" width="78" height="12" rx="6" fill="#D98600"/>
         </g>
       </svg>
     </div>
