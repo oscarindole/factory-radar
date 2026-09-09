@@ -72,6 +72,25 @@ ${cuerpo}
   }
 }
 
+// ---------------------------------------------------------------------------
+// Dominio propio.
+//
+// Si existe web/CNAME, se copia al sitio y GitHub Pages sirve el sitio en ese
+// dominio. IMPORTA EL ORDEN: en cuanto Pages ve un CNAME, deja de servir en
+// oscarindole.github.io y redirige al dominio propio. Si el DNS todavia no
+// resuelve, el resultado es que se cae la unica URL que funcionaba.
+//
+// Asi que primero el registro DNS, se comprueba que resuelve, y despues este
+// fichero. Nunca al reves.
+// ---------------------------------------------------------------------------
+{
+  const cn = join(raiz, 'web', 'CNAME');
+  if (existsSync(cn)) {
+    copyFileSync(cn, join(salida, 'CNAME'));
+    console.log(`  dominio propio: ${readFileSync(cn, 'utf8').trim()}`);
+  }
+}
+
 // Sin .nojekyll, Pages pasa todo por Jekyll y se salta lo que empieza por _
 writeFileSync(join(salida, '.nojekyll'), '');
 
