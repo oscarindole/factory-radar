@@ -53,7 +53,7 @@ en el logotipo**.
 ## El símbolo
 
 Cuadro naranja con el monograma en rosa. En las páginas va como SVG en línea
-—`marca.svg` en este mismo directorio— para que escale, cambie de tamaño sin
+—[`marca.svg`](marca.svg)— para que escale, cambie de tamaño sin
 pixelarse y no dependa de ninguna descarga.
 
 > **También pendiente.** El símbolo que hay en las páginas es un **redibujo

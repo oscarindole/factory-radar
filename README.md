@@ -48,6 +48,7 @@ Por orden. Cada documento depende del anterior.
 | [`doc/10-decisiones.md`](doc/10-decisiones.md) | Registro de decisiones: qué se eligió, contra qué, y por qué |
 | [`doc/11-api.md`](doc/11-api.md) | Contrato de la API: endpoints, autenticación, ingesta |
 | [`doc/12-demo.md`](doc/12-demo.md) | La DEMO FACTORY: qué simula, qué problemas planta y cómo se regenera |
+| [`doc/13-marca.md`](doc/13-marca.md) | El nombre, los colores, el símbolo y la regla que separa marca de estado |
 | [`web/index.html`](web/index.html) | La web comercial, con las cifras reales de la demo |
 
 ---

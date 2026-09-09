@@ -32,6 +32,7 @@ const GRUPOS = [
   { nombre: 'Fase B · panel', dir: 'panel' },
   { nombre: 'Fase B · conector edge', dir: 'edge' },
   { nombre: 'Fase C · web comercial', dir: 'web' },
+  { nombre: 'Marca', rutas: ['doc/13-marca.md', 'doc/marca.svg'] },
   { nombre: 'Herramientas', dir: 'scripts' },
   { nombre: 'Configuración', rutas: ['package.json', '.env.example', '.gitignore'] },
 ];
@@ -87,6 +88,10 @@ const PARA = {
   'scripts/exportar-demo.mjs': 'Congela la demo en un JSON de 71 KB para el panel que se lleva a una reunión.',
   'scripts/construir-demo.mjs': 'Inyecta la instantánea en la plantilla del panel de demo.',
   'scripts/demo.plantilla.html': 'El panel navegable: nueve pantallas, gráficas con hover y la paleta validada.',
+  'doc/13-marca.md': 'El nombre, los colores y la regla que impide que el rosa de marca se confunda con una alarma.',
+  'doc/marca.svg': 'El símbolo, en vectorial. Redibujo aproximado hasta que llegue el original.',
+  'scripts/construir-sitio.mjs': 'Arma docs/, que es lo que sirve GitHub Pages, y reescribe el enlace de la demo a relativo.',
+  'scripts/publicar-sitio.sh': 'npm run publicar: arma el sitio y lo empuja a gh-pages desde un árbol de trabajo aparte.',
   'web/index.html': 'La web comercial: diez secciones, cifras reales de la demo y la sección de seguridad escrita para reenviar a IT.',
   'src/ia/consultas.ts': 'El catálogo de consultas del Copilot. El modelo elige plantilla; nunca escribe SQL.',
   'tests/dominio.test.ts': '17 pruebas de la lógica de producto. No necesitan base de datos.',
@@ -123,7 +128,8 @@ for (const f of ['01-extensiones','02-organizacion','03-planta','04-contexto','0
 }
 
 const LENG = { '.sql':'sql', '.ts':'typescript', '.tsx':'typescript', '.mjs':'javascript',
-               '.js':'javascript', '.css':'css', '.json':'json', '.html':'xml' };
+               '.js':'javascript', '.css':'css', '.json':'json', '.html':'xml',
+               '.svg':'xml', '.sh':'bash' };
 
 const GENERADOS = new Set(['dossier.html', 'explorador.html', 'demo.html']);
 
