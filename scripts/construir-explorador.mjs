@@ -96,7 +96,7 @@ const PARA = {
   'doc/marca.svg': 'El símbolo, en vectorial. Redibujo aproximado hasta que llegue el original.',
   'scripts/construir-sitio.mjs': 'Arma docs/, que es lo que sirve GitHub Pages, y reescribe el enlace de la demo a relativo.',
   'scripts/publicar-sitio.sh': 'npm run publicar: arma el sitio y lo empuja a gh-pages desde un árbol de trabajo aparte.',
-  'web/index.html': 'La web comercial: diez secciones, cifras reales de la demo y la sección de seguridad escrita para reenviar a IT.',
+  'web/index.html': 'La web comercial (el vídeo y su póster viven en web/media, que no se lista aquí por ser binario): diez secciones, cifras reales de la demo y la sección de seguridad escrita para reenviar a IT.',
   'src/ia/consultas.ts': 'El catálogo de consultas del Copilot. El modelo elige plantilla; nunca escribe SQL.',
   'tests/dominio.test.ts': '17 pruebas de la lógica de producto. No necesitan base de datos.',
   'tests/api.test.ts': '11 pruebas contra base real. Comprueban el efecto, no la respuesta.',
@@ -139,6 +139,23 @@ const LENG = { '.sql':'sql', '.ts':'typescript', '.tsx':'typescript', '.mjs':'ja
 
 const GENERADOS = new Set(['dossier.html', 'explorador.html', 'demo.html']);
 
+// Solo texto. Esto es un visor de codigo: un binario no se puede enseñar aqui
+// y ademas rompe la publicacion.
+//
+// El fallo que lo trajo: al entrar web/media con el video, el webm y el jpeg,
+// `listar()` no filtraba por extension y los leia como UTF-8. Resultado: 1,4 MB
+// de binario convertidos en 572.000 caracteres de reemplazo, y la publicacion
+// rechazada. El fichero se generaba sin quejarse; el error salia al desplegar.
+const TEXTO = new Set([
+  '.md', '.ts', '.tsx', '.mjs', '.js', '.sql', '.css', '.json',
+  '.sh', '.yml', '.html', '.svg', '.txt',
+]);
+
+function esTexto(nombre) {
+  const i = nombre.lastIndexOf('.');
+  return i > 0 && TEXTO.has(nombre.slice(i));
+}
+
 function listar(dir) {
   const salida = [];
   for (const e of readdirSync(join(raiz, dir), { withFileTypes: true })) {
@@ -146,7 +163,7 @@ function listar(dir) {
     if (e.isDirectory()) salida.push(...listar(r));
     // Las paginas generadas no se embeben a si mismas: doc/demo.html son 118 KB
     // de datos ya congelados y doblarian el peso de este explorador.
-    else if (!e.name.startsWith('.') && !GENERADOS.has(e.name)) {
+    else if (!e.name.startsWith('.') && !GENERADOS.has(e.name) && esTexto(e.name)) {
       salida.push(r);
     }
   }
@@ -163,6 +180,11 @@ for (const g of GRUPOS) {
     if (r === '@resumen') { dentro.push(r); continue; }
     let texto;
     try { texto = readFileSync(join(raiz, r), 'utf8'); } catch { continue; }
+    // Red de seguridad: el caracter de reemplazo solo aparece si se ha leido
+    // un binario como texto. Mejor reventar aqui que al desplegar.
+    if (texto.includes('\uFFFD')) {
+      throw new Error(`${r} no es texto: se ha leido como UTF-8 y trae bytes invalidos.`);
+    }
     const c = CHIPS[r] ?? {};
     ficheros[r] = {
       texto,
