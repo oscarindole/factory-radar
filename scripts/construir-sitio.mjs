@@ -61,6 +61,26 @@ ${cuerpo}
 `);
 }
 
+// El video viaja INCRUSTADO en web/index.html porque el visor de artifacts
+// bloquea todo medio externo y ahi no hay otra forma de que se reproduzca.
+// Para Pages eso seria un desperdicio: 780 KB dentro del HTML que el navegador
+// no puede cachear aparte ni servir por partes. Aqui se cambia por los
+// ficheros de media/, que si se cachean y se pueden ir descargando.
+{
+  const f = join(salida, 'index.html');
+  if (existsSync(f)) {
+    const antes = readFileSync(f, 'utf8');
+    const despues = antes.replace(
+      /<source src="data:video\/webm;base64,[^"]*" type="video\/webm">/,
+      '<source src="media/planta.webm" type="video/webm">\n' +
+      '        <source src="media/planta.mp4" type="video/mp4">');
+    if (despues !== antes) {
+      writeFileSync(f, despues);
+      console.log(`  video: incrustado -> media/ (${((antes.length - despues.length) / 1024).toFixed(0)} KB menos)`);
+    }
+  }
+}
+
 // En Pages, la web enlaza a la demo del propio sitio, no al artifact privado.
 // El origen guarda la URL del artifact porque es donde vive mientras no haya
 // dominio; aqui se reescribe al publicar.
