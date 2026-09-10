@@ -114,9 +114,11 @@ h3 { font-family:var(--sans); font-weight:600;
 /* --- retícula ----------------------------------------------------------- */
 .page { max-width:var(--page); margin-inline:auto; }
 .wrap { max-width:var(--content); margin-inline:auto; padding-inline:var(--pad); }
-.text { max-width:var(--text); }
-section { padding-block:clamp(var(--s-9), 8vw, var(--s-11)); }
-section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
+.text { max-width:var(--text); margin-inline:auto; text-align:center; }
+.text .label { justify-content:center; }
+.text .acciones { justify-content:center; }
+section { padding-block:clamp(var(--s-8), 6.5vw, var(--s-10)); }
+section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .bg-soft  { background:var(--bg-secondary); }
 .bg-white { background:var(--bg-white); --mark-cut:var(--bg-white); }
 .bg-dark  { background:var(--bg-dark); color:var(--text-inverse); }
@@ -170,6 +172,8 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .btn.inv:hover { background:var(--brand); color:#fff; }
 .acciones { display:flex; gap:var(--s-3); flex-wrap:wrap;
             margin-top:var(--s-7); }
+.hero .acciones { justify-content:center; }
+.hero .label { justify-content:center; }
 
 /* --- video del heroe -----------------------------------------------------
    El poster va incrustado como data URI a proposito: el visor de artifacts
@@ -194,19 +198,24 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 
 /* --- hero: un mensaje, aire, y una imagen con peso ---------------------- */
 .hero { padding-block:clamp(var(--s-9), 8vw, 150px) 0; }
-.hero h1 { max-width:15ch; }
-.hero .lead { max-width:46ch; margin-top:var(--s-6); }
+.hero { text-align:center; }
+.hero h1 { max-width:15ch; margin-inline:auto; }
+.hero .lead { max-width:46ch; margin:var(--s-6) auto 0; }
 /* la imagen se sale del contenedor de texto y ocupa mas ancho que el */
 .hero-img { max-width:var(--page); margin-inline:auto;
             padding-inline:clamp(12px, 2.4vw, 36px); margin-top:clamp(56px,6vw,104px); }
 
-/* --- bloques de texto e imagen, asimetricos ----------------------------- */
-.split { display:grid; grid-template-columns:41fr 59fr; gap:clamp(32px,5vw,88px);
-         align-items:center; }
-.split.flip { grid-template-columns:59fr 41fr; }
-.split.flip .col-txt { order:2; }
-@media (max-width:900px){ .split, .split.flip { grid-template-columns:1fr; }
-  .split.flip .col-txt { order:0; } }
+/* --- texto e imagen: una columna centrada, la imagen debajo -------------
+   Se sustituyen las columnas asimetricas por la misma pauta del heroe: el
+   mensaje arriba, centrado y estrecho, y la pieza visual debajo a todo el
+   ancho del contenedor. Es lo que hace que la pagina se lea de un tiron en
+   vez de en zigzag. */
+.split { display:block; }
+.split > .col-txt { max-width:var(--text); margin:0 auto clamp(40px,5vw,64px);
+                    text-align:center; }
+.split > .col-txt .label { justify-content:center; }
+.split > .col-txt .acciones { justify-content:center; }
+.split > .col-txt .nota { text-align:left; margin-left:auto; margin-right:auto; }
 
 /* --- secuencia editorial numerada --------------------------------------- */
 .seq { margin-top:clamp(var(--s-8), 6vw, var(--s-10)); }
@@ -347,6 +356,13 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .nota strong { color:var(--text-primary); }
 .bg-dark .nota { border-color:var(--border-dark); }
 .bg-dark .nota strong { color:var(--text-inverse); }
+
+/* --- cierre: sin banda oscura, el peso lo lleva el titular --------------- */
+.cierre { text-align:center; padding-block:clamp(var(--s-9),8vw,var(--s-11)); }
+.cierre .wrap > * { margin-inline:auto; }
+.cierre .label { justify-content:center; }
+.cierre .lead { max-width:48ch; }
+.cierre .acciones { justify-content:center; }
 
 /* --- pie ---------------------------------------------------------------- */
 .footer { --mark-cut:var(--bg-dark); background:var(--bg-dark); color:var(--text-inverse);
@@ -904,16 +920,16 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 </section>
 
 <!-- CTA FINAL =============================================================== -->
-<section class="bg-dark">
+<section class="cierre">
   <div class="wrap">
     <p class="label">Empieza por una línea</p>
-    <p class="frase" style="max-width:15ch;color:var(--text-inverse)">Abre tu fábrica cada mañana
+    <p class="frase" style="max-width:15ch">Abre tu fábrica cada mañana
       y sabe qué mirar.</p>
     <p class="lead" style="max-width:48ch">Treinta segundos, cinco líneas y un euro detrás de
     cada una. Eso es todo lo que pedimos que pruebes.</p>
     <div class="acciones">
-      <a class="btn inv" href="#empezar">Solicitar análisis de planta <span class="arrow">→</span></a>
-      <a class="btn ghost" href="demo.html" style="color:var(--text-inverse);border-color:var(--border-dark)">Entrar en la demo</a>
+      <a class="btn" href="#empezar">Solicitar análisis de planta <span class="arrow">→</span></a>
+      <a class="btn ghost" href="demo.html">Entrar en la demo</a>
     </div>
   </div>
 </section>
