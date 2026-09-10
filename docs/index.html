@@ -39,6 +39,13 @@
      un unico bloque larguisimo. La diferencia es minima a proposito. */
   --bg-primary:   #FFFFFF;
   --bg-secondary: #F5F5F5;
+  /* Banda de seccion. Mas marcada que el gris de tarjeta: a 1,16:1 el
+     #F5F5F5 se distingue en una pieza pequeña, pero extendido a una franja
+     de pantalla completa el ojo lo lee como blanco sucio, no como banda.
+     Cuanto puede bajar no lo decide la banda: lo decide el texto mas claro
+     que va encima. Con el terciario en #6B6B6B el suelo estaba en #EEEEEE;
+     bajandolo a #666666 la banda puede llegar a #E8E8E8 y ya se ve. */
+  --bg-band:      #E8E8E8;
   --bg-white:     #FAFAFA;
   --bg-dark:      #171A18;
 
@@ -50,7 +57,7 @@
   --text-secondary: #525252;
   /* 4,5:1 sobre las tres superficies. #7C837C daba 3,33 sobre el fondo suave
      y lo usan las etiquetas, los ejes de la grafica y el pie: texto pequeño. */
-  --text-tertiary:  #6B6B6B;
+  --text-tertiary:  #666666;
   --text-inverse:   #F2F1EC;
   --text-inverse-2: #9EA49C;
 
@@ -143,10 +150,15 @@ h3 { font-family:var(--sans); font-weight:500;
 .text .acciones { justify-content:center; }
 section { padding-block:clamp(var(--s-8), 6.5vw, var(--s-10)); }
 section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
-/* Blanco de arriba abajo, sin bandas alternas. El ritmo lo marcan el espacio
-   y el tamaño del titular, no un cambio de color de fondo. Lo unico oscuro de
-   la pagina es el pie. */
-.bg-soft, .bg-white { background:var(--bg-primary); --mark-cut:var(--bg-primary); }
+/* Bandas alternas. Se habia probado la pagina en blanco de arriba abajo,
+   confiando el ritmo al espacio y al tamaño del titular; sobre fondo blanco
+   los apartados no se separaban y la pagina se leia como un bloque unico. */
+.bg-white { background:var(--bg-primary); --mark-cut:var(--bg-primary); }
+.bg-soft  { background:var(--bg-band);    --mark-cut:var(--bg-band); }
+/* Dentro de una banda gris la tarjeta se invierte a blanco: si se queda en
+   su gris, desaparece contra la banda y deja de ser tarjeta. */
+.bg-soft .bloque, .bg-soft .plan { background:var(--bg-primary); }
+.bg-soft .bloque { border-color:var(--border-mid); }
 .bg-dark  { background:var(--bg-dark); color:var(--text-inverse); }
 .bg-dark .lead, .bg-dark p { color:var(--text-inverse-2); }
 .bg-dark .label { color:var(--text-inverse-2); }
@@ -312,7 +324,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
            margin-top:clamp(var(--s-8),6vw,var(--s-10)); }
 .bloques.c2 { grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); }
 .bloques.c3 { grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); }
-.bloque { background:var(--bg-secondary); border:1px solid var(--border-light);
+.bloque { background:var(--bg-band); border:1px solid var(--border-mid);
           border-radius:var(--radius-lg); padding:clamp(22px,2.6vw,30px);
           transition:border-color .3s var(--ease); }
 .bloque:hover { border-color:var(--border-mid); }
