@@ -33,10 +33,13 @@
    Forma        radios coherentes por familia, bordes finos, sombra casi nula
    =========================================================================== */
 :root {
-  /* --- superficie ------------------------------------------------------- */
-  --bg-primary:   #F5F4EF;
-  --bg-secondary: #ECEEE8;
-  --bg-white:     #FFFFFF;
+  /* --- superficie -------------------------------------------------------
+     Blanco de base. Las bandas alternas no son blancas del todo: con dos
+     blancos iguales el ritmo de secciones desaparece y la pagina se lee como
+     un unico bloque larguisimo. La diferencia es minima a proposito. */
+  --bg-primary:   #FFFFFF;
+  --bg-secondary: #F3F5F2;
+  --bg-white:     #FAFAF9;
   --bg-dark:      #171A18;
 
   /* --- tinta ------------------------------------------------------------- */
@@ -136,11 +139,11 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 
 /* --- cabecera: ligera, translucida, borde casi imperceptible ------------ */
 .header { position:sticky; top:0; z-index:80; height:84px;
-  background:rgba(245,244,239,.84); backdrop-filter:blur(14px) saturate(1.3);
+  background:rgba(255,255,255,.82); backdrop-filter:blur(14px) saturate(1.3);
   border-bottom:1px solid transparent; transition:height .4s var(--ease),
   border-color .4s var(--ease), background .4s var(--ease); }
 .header.scrolled { height:70px; border-bottom-color:var(--border-light);
-                   background:rgba(245,244,239,.94); }
+                   background:rgba(255,255,255,.93); }
 .header .wrap { display:flex; align-items:center; justify-content:space-between;
                 gap:var(--s-5); height:100%; }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none;
@@ -517,7 +520,7 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
               fill="none" stroke="#C7362F" stroke-width="2.5" stroke-linejoin="round"
               stroke-linecap="round"/>
         <g class="fade">
-          <circle cx="600" cy="206" r="5" fill="#C7362F" stroke="#F5F4EF" stroke-width="2.5"/>
+          <circle cx="600" cy="206" r="5" fill="#C7362F" stroke="#FFFFFF" stroke-width="2.5"/>
           <text x="574" y="244" text-anchor="end" font-family="IBM Plex Mono, monospace"
                 font-size="12" fill="#C7362F">75%</text></g>
         <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#636A63">
