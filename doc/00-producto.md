@@ -29,7 +29,7 @@ frialdad la palabra "dashboard".
 
 ---
 
-## 2. Qué es RADACTORY
+## 2. Qué es RACTORY
 
 Una capa de inteligencia industrial, en la nube, que se conecta a lo que la
 fábrica ya tiene y produce **una lista corta de decisiones**, no un repositorio
@@ -157,15 +157,15 @@ fronteras son de diseño, no de falta de tiempo:
 
 ## 7. Nombre: hay una colisión que arreglar ahora
 
-El planteamiento inicial llama **RADACTORY** a la vez a la plataforma
+El planteamiento inicial llama **RACTORY** a la vez a la plataforma
 completa y al primer módulo (el de producción). Eso rompe en cuanto se dibuja el
-menú lateral: no puede haber un "Radactory" dentro de "Radactory".
+menú lateral: no puede haber un "Ractory" dentro de "Ractory".
 
-**Decisión.** La plataforma es **RADACTORY**. El módulo de producción pasa a
+**Decisión.** La plataforma es **RACTORY**. El módulo de producción pasa a
 llamarse **PRODUCTION RADAR**. La familia queda:
 
 ```
-RADACTORY  (la plataforma)
+RACTORY  (la plataforma)
 ├── PRODUCTION RADAR    producción y OEE
 ├── MAINTENANCE RADAR   activos y salud
 ├── ENERGY RADAR        consumo y coste energético

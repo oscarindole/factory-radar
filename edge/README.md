@@ -1,4 +1,4 @@
-# RADACTORY EDGE
+# RACTORY EDGE
 
 Se instala dentro de la red del cliente, en la **DMZ industrial** — nunca en la
 red OT plana, y nunca con doble tarjeta hacia OT e internet a la vez sin
@@ -48,7 +48,7 @@ fichero de configuración**.
 ```yaml
 conector:
   id: 00000000-0000-0000-0000-000000000000
-  destino: https://ingest.radactory.example
+  destino: https://ingest.ractory.example
   lote_s: 30            # cada cuanto se envia
   buffer_dias: 7
 

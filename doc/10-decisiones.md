@@ -6,7 +6,7 @@ el porqué antes de proponer el cambio.
 
 | # | Decisión | Alternativa descartada | Por qué |
 |---|---|---|---|
-| 1 | La plataforma es RADACTORY; el módulo 1 pasa a **PRODUCTION RADAR** | Que ambos se llamaran igual | Colisiona en el menú lateral. Se ve en cuanto se dibuja la pantalla |
+| 1 | La plataforma es RACTORY; el módulo 1 pasa a **PRODUCTION RADAR** | Que ambos se llamaran igual | Colisiona en el menú lateral. Se ve en cuanto se dibuja la pantalla |
 | 2 | **Una sola Postgres** con TimescaleDB y pgvector | Postgres + InfluxDB + Pinecone | Tres sistemas que respaldar, asegurar y pagar para un volumen que Timescale aguanta de sobra |
 | 3 | **Monolito modular**, sin Kubernetes | Microservicios desde el principio | Resuelve una escala que no tenemos y añade superficie que auditar. Los módulos ya están separados por dominio |
 | 4 | **RLS de Postgres** para el aislamiento | Solo `WHERE tenant_id` en el código | Un `WHERE` olvidado es una fuga entre competidores del mismo sector |

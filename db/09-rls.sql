@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 09 · aislamiento multiempresa
+-- RACTORY :: 09 · aislamiento multiempresa
 --
 -- Barrera 1 de 3 (las otras dos son el repositorio de la aplicacion y la
 -- bateria de fugas en CI). Esta es la que sigue funcionando el dia que alguien

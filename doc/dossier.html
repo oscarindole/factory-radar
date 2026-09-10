@@ -1,4 +1,4 @@
-<title>Radactory</title>
+<title>Ractory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap">
@@ -141,7 +141,8 @@ body {
    el rojo es severidad, y mezclar los tres los vuelve indistinguibles. */
 .rail-mark svg { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 8px; }
 .rail-mark { --mark-cut: var(--paper); }
-.rail-mark span { color: var(--ink); }
+.rail-mark span { color: var(--ink); text-transform: lowercase;
+                  font-size: 1.02rem; letter-spacing: -.03em; font-weight: 600; }
 .rail-meta {
   font-family: var(--f-mono);
   font-size: .66rem;
@@ -580,12 +581,12 @@ td code, .cell code { font-size: .82em; }
 
 <aside class="rail">
   <div class="rail-mark">
-    <svg viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
+    <svg viewBox="0 0 100 100" role="img" aria-label="RACTORY">
       <rect width="100" height="100" fill="currentColor"/>
       <path fill="var(--mark-cut,#FFFFFF)" d="M9 21 H85 V37 H24 V68 H9 Z"/>
       <path fill="var(--mark-cut,#FFFFFF)" d="M35 48 H68 L97 77 H76 L55 64 H35 Z"/>
     </svg>
-    <span>RADACTORY</span>
+    <span>ractory</span>
   </div>
   <nav id="nav">
     <a href="#tesis"><b>00</b>La tesis</a>
@@ -794,9 +795,9 @@ td code, .cell code { font-size: .82em; }
 
   <div class="note">
     <span class="lbl">Corrección de nombre</span>
-    <p>El planteamiento inicial llamaba <em>Radactory</em> a la vez a la plataforma y al
+    <p>El planteamiento inicial llamaba <em>Ractory</em> a la vez a la plataforma y al
     módulo de producción. Rompe en cuanto se dibuja el menú lateral. La plataforma es
-    <strong>RADACTORY</strong>; el módulo pasa a <strong>PRODUCTION RADAR</strong>.</p>
+    <strong>RACTORY</strong>; el módulo pasa a <strong>PRODUCTION RADAR</strong>.</p>
   </div>
 
   <div class="grid2">
@@ -928,7 +929,7 @@ td code, .cell code { font-size: .82em; }
 
   <pre>   <b>RED OT (planta)</b>          │        <b>DMZ</b>            │       <b>CLOUD</b>
                             │                       │
-   PLC · SCADA · sensores   │  <i>RADACTORY EDGE</i>         │   INGESTA
+   PLC · SCADA · sensores   │  <i>RACTORY EDGE</i>         │   INGESTA
                             │  <i>CONNECTOR</i>            │
    ── lectura ─────────────▶│                       │
                             │  ── TLS mutuo ───────▶│   443 <b>saliente</b>
@@ -1396,7 +1397,7 @@ Paradas sin causa registrada .... <i>72,9%</i>   <u>la cifra que abre el piloto<
   entienda el porqué antes de proponer el cambio.</p>
 
   <div style="margin-top:22px">
-    <div class="dec"><div class="n">01</div><div><h4>La plataforma es Radactory; el módulo pasa a Production Radar</h4><p>Frente a que ambos se llamaran igual. <span class="x">Colisiona en el menú lateral; se ve en cuanto se dibuja la pantalla.</span></p></div></div>
+    <div class="dec"><div class="n">01</div><div><h4>La plataforma es Ractory; el módulo pasa a Production Radar</h4><p>Frente a que ambos se llamaran igual. <span class="x">Colisiona en el menú lateral; se ve en cuanto se dibuja la pantalla.</span></p></div></div>
     <div class="dec"><div class="n">02</div><div><h4>Una sola Postgres con TimescaleDB y pgvector</h4><p>Frente a Postgres + InfluxDB + Pinecone. <span class="x">Tres sistemas que respaldar, asegurar y pagar para un volumen que Timescale aguanta de sobra.</span></p></div></div>
     <div class="dec"><div class="n">03</div><div><h4>Monolito modular, sin Kubernetes</h4><p>Frente a microservicios desde el principio. <span class="x">Resuelve una escala que no tenemos y añade superficie que auditar.</span></p></div></div>
     <div class="dec"><div class="n">04</div><div><h4>RLS de Postgres para el aislamiento</h4><p>Frente a solo <code>WHERE tenant_id</code> en el código. <span class="x">Un WHERE olvidado es una fuga entre competidores del mismo sector.</span></p></div></div>
@@ -1493,7 +1494,7 @@ Paradas sin causa registrada .... <i>72,9%</i>   <u>la cifra que abre el piloto<
   </div>
 
   <div class="foot">
-    <b>RADACTORY · FASE A</b> — definición de producto · 9 de septiembre de 2026<br>
+    <b>RACTORY · FASE A</b> — definición de producto · 9 de septiembre de 2026<br>
     Índole Data Technology · Torrelavega<br>
     El documento completo vive en <b>~/Developer/factory-radar/doc/</b>, once ficheros numerados.<br>
     Nombre provisional: comprobar marca y dominio antes de imprimir nada.

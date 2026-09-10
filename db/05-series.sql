@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 05 · serie temporal
+-- RACTORY :: 05 · serie temporal
 -- ---------------------------------------------------------------------------
 
 -- Serie densa. Append-only: nunca se corrige una lectura, se inserta la

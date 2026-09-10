@@ -191,7 +191,7 @@ ficheros['@resumen'] = {
 const resumen = `
 <div class="resumen">
   <div class="md">
-    <h1>Radactory, de un vistazo</h1>
+    <h1>Ractory, de un vistazo</h1>
     <p>Capa de inteligencia industrial sobre los sistemas que la fábrica ya tiene.
     Este explorador contiene el proyecto entero: la definición (fase A) y la
     estructura real (fase B), fichero a fichero.</p>

@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 01 · extensiones y rol de aplicacion
+-- RACTORY :: 01 · extensiones y rol de aplicacion
 --
 -- Una sola base cubre relacional, serie temporal y vectorial (decision 02).
 -- Si algun dia hay que separar, el corte esta en las tablas de 05-series.sql.

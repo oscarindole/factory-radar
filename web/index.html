@@ -1,11 +1,11 @@
-<title>RADACTORY</title>
+<title>RACTORY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <style>
 /* ===========================================================================
-   RADACTORY · sistema visual
+   RACTORY · sistema visual
    ---------------------------------------------------------------------------
    Editorial antes que SaaS. Ante la duda: espacio vacio antes que adorno, un
    elemento grande antes que cinco pequeños, solucion editorial antes que la
@@ -145,8 +145,10 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none;
         color:inherit; }
 .logo .mark { width:28px; height:28px; border-radius:7px; }
-.logo b { font-family:var(--sans); font-weight:700; font-size:1.02rem;
-          letter-spacing:-.01em; }
+/* Minuscula y sin versales: el simbolo hace de R, asi que en mayusculas el
+   bloque se leeria «RRACTORY». */
+.logo b { font-family:var(--sans); font-weight:600; font-size:1.24rem;
+          letter-spacing:-.03em; text-transform:lowercase; }
 .menu { display:flex; align-items:center; justify-content:center;
         gap:var(--s-6); }
 .menu a { font-size:.95rem; color:var(--text-secondary); text-decoration:none;
@@ -426,12 +428,12 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 <header class="header" id="header">
   <div class="wrap">
     <a class="logo" href="#">
-      <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
+      <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RACTORY">
         <rect width="100" height="100" fill="currentColor"/>
         <path fill="var(--mark-cut,#FFFFFF)" d="M9 21 H85 V37 H24 V68 H9 Z"/>
         <path fill="var(--mark-cut,#FFFFFF)" d="M35 48 H68 L97 77 H76 L55 64 H35 Z"/>
       </svg>
-      <b>RADACTORY</b>
+      <b>ractory</b>
     </a>
     <nav class="menu">
       <a href="#como">Cómo funciona</a>
@@ -449,7 +451,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
   <div class="wrap">
     <p class="label marca rise">Inteligencia industrial</p>
     <h1 class="rise">Tu fábrica ya genera los datos. Nosotros te decimos qué significan.</h1>
-    <p class="lead rise">RADACTORY conecta producción, mantenimiento, energía y calidad para
+    <p class="lead rise">RACTORY conecta producción, mantenimiento, energía y calidad para
     detectar pérdidas, anomalías y riesgos antes de que se conviertan en problemas.</p>
     <div class="acciones rise">
       <a class="btn" href="#empezar">Solicitar análisis de planta <span class="arrow">→</span></a>
@@ -479,7 +481,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
       cuesta y qué hacer — y cada euro abre su cuenta hasta el dato del que sale.</p>
     </div>
     <div class="screen rise" id="screen" style="margin-top:clamp(48px,5vw,80px)">
-      <div class="screen-bar"><i></i><i></i><i></i><span class="u">radactory.com/planta/torrelavega</span></div>
+      <div class="screen-bar"><i></i><i></i><i></i><span class="u">ractory.com/planta/torrelavega</span></div>
       <div class="screen-h"><b>Estado de planta</b><span>martes · 07:41 · turno de mañana</span></div>
       <div class="screen-b">
         <div class="al c1"><span class="bar"></span>
@@ -699,7 +701,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
       <p class="label marca">Cómo funciona</p>
       <h2>De datos a decisiones</h2>
       <p class="lead">La mayoría del mercado llega hasta el segundo eslabón —te pinta la serie—
-      o hasta el tercero —te dispara una alarma. RADACTORY empieza a valer dinero en el quinto.</p>
+      o hasta el tercero —te dispara una alarma. RACTORY empieza a valer dinero en el quinto.</p>
     </div>
     <div class="seq" id="seq">
       <div class="seq-item rise"><div class="seq-num">01</div>
@@ -943,11 +945,11 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
     <div class="footer-top">
       <div>
         <a class="logo" href="#">
-          <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RADACTORY">
+          <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="RACTORY">
             <rect width="100" height="100" fill="currentColor"/>
             <path fill="var(--mark-cut,#FFFFFF)" d="M9 21 H85 V37 H24 V68 H9 Z"/>
             <path fill="var(--mark-cut,#FFFFFF)" d="M35 48 H68 L97 77 H76 L55 64 H35 Z"/>
-          </svg><b>RADACTORY</b></a>
+          </svg><b>ractory</b></a>
         <p class="frase" style="font-size:clamp(1.7rem,3.4vw,2.6rem);max-width:16ch">Una capa de
           inteligencia sobre lo que tu fábrica ya tiene.</p>
       </div>

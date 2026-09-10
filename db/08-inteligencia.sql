@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 08 · linea base, alertas, IA y documentos
+-- RACTORY :: 08 · linea base, alertas, IA y documentos
 -- ---------------------------------------------------------------------------
 
 -- LA LINEA BASE ES POR CONTEXTO, NO GLOBAL (decision 09).

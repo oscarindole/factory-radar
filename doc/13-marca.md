@@ -2,12 +2,18 @@
 
 ## El nombre
 
-**RADACTORY** — RADAR + FACTORY. Dice lo que hace sin tener que explicarlo, y
-resuelve de paso la colisión que arrastrábamos: la plataforma ya no comparte
+**RACTORY**. El logotipo lo escribe con el símbolo haciendo de inicial:
+**[símbolo] + ractory**. El símbolo *es* la R, así que en el bloque de marca la
+palabra va en minúscula — en versales se leería «RRACTORY», con la letra dos
+veces.
+
+En texto corrido sí va en versales: RACTORY.
+
+Resuelve de paso la colisión que arrastrábamos: la plataforma ya no comparte
 nombre con su primer módulo.
 
 ```
-RADACTORY               la plataforma
+RACTORY               la plataforma
 ├── PRODUCTION RADAR    producción y OEE
 ├── MAINTENANCE RADAR   activos y salud
 ├── ENERGY RADAR        consumo y coste
@@ -16,11 +22,11 @@ RADACTORY               la plataforma
 ├── FACTORY BRAIN       conocimiento de la planta
 ├── BACK OFFICE AI      documentos y descuadres
 ├── OPERATIONS AGENT    acciones con autorización
-└── RADACTORY EDGE      el conector que va dentro de la planta
+└── RACTORY EDGE        el conector que va dentro de la planta
 ```
 
 Los módulos conservan «RADAR» porque el patrón sigue siendo el mismo: **un
-motor, muchos radares**. Bajo RADACTORY no hay ambigüedad posible.
+motor, muchos radares**. Bajo RACTORY no hay ambigüedad posible.
 
 ## El símbolo va en monocromo
 
@@ -50,9 +56,10 @@ interfaz.
 
 | | | |
 |---|---|---|
-| **Rosa RADACTORY** | `#E0115F` | Acento de marca: botones, cifras grandes, marcadores |
+| **Rosa RACTORY** | `#E0115F` | Acento de marca: botones, cifras grandes, marcadores |
 | Rosa de texto | `#A80B47` | Para texto pequeño, donde el de marca no llega a 4,5:1 |
-| **Naranja RADACTORY** | `#F59B00` | Secundario. Sobre fondo oscuro y en las ilustraciones |
+| **Naranja RACTORY** | `#F59B00` | Secundario. Sobre fondo oscuro y en las ilustraciones |
+| **Negro de marca** | `#1D1D1B` | El del logotipo. No es negro puro: gris muy oscuro y algo cálido |
 | Tinta | `#151815` | Texto principal |
 | Papel | `#F5F4EF` | Fondo claro |
 
@@ -81,9 +88,11 @@ Cuadro naranja con el monograma en rosa. En las páginas va como SVG en línea
 —[`marca.svg`](marca.svg)— para que escale, cambie de tamaño sin
 pixelarse y no dependa de ninguna descarga.
 
-> **También pendiente.** El símbolo que hay en las páginas es un **redibujo
-> aproximado** hecho a partir de la imagen. Hay que sustituirlo por el vectorial
-> original antes de enseñárselo a un cliente.
+> **Pendiente.** El símbolo de las páginas está redibujado a partir del PNG del
+> logotipo, y ya reproduce la construcción correcta: brazo superior, montante y
+> brazo inferior que sale en diagonal hasta rematar en punta. Aun así conviene
+> sustituirlo por el vectorial original, que además fijará el negro exacto —el
+> `#1D1D1B` de ahora está sacado a ojo.
 
 ## Tipografía
 

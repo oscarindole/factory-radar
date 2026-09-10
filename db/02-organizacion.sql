@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 02 · organizacion, acceso y auditoria
+-- RACTORY :: 02 · organizacion, acceso y auditoria
 -- ---------------------------------------------------------------------------
 
 -- La empresa cliente. Es la raiz del aislamiento: todo lo demas cuelga de aqui

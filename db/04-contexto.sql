@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 04 · contexto productivo
+-- RACTORY :: 04 · contexto productivo
 --
 -- Esta es la capa 3 de la arquitectura y es EL producto. Sin ella, un contador
 -- es un numero sin significado y ninguna inteligencia posterior lo rescata.

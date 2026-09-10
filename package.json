@@ -1,9 +1,9 @@
 {
-  "name": "radactory",
+  "name": "ractory",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "RADACTORY · capa de inteligencia industrial sobre los sistemas que la fabrica ya tiene.",
+  "description": "RACTORY · capa de inteligencia industrial sobre los sistemas que la fabrica ya tiene.",
   "engines": { "node": ">=22.6.0" },
   "scripts": {
     "migrar": "node scripts/migrar.mjs",

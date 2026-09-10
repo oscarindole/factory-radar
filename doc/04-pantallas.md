@@ -65,7 +65,7 @@ De ahí tres reglas de diseño que no se negocian pantalla a pantalla:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  RADACTORY      Planta Torrelavega ▾        [Pregunta a tu fábrica]  │
+│  RACTORY      Planta Torrelavega ▾        [Pregunta a tu fábrica]  │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ESTADO DE PLANTA                        martes 9 · 07:41 · turno mañana │
@@ -179,7 +179,7 @@ detalle. Compartir solo el titular obliga al que lo recibe a abrir el panel para
 enterarse de algo, y en un turno de noche eso significa que no lo abre.
 
 ```
-RADACTORY · Planta de Torrelavega
+RACTORY · Planta de Torrelavega
 ■ CRÍTICA — Estación P4 · el rendimiento cayó del 87% al 75%
 
 Qué ha cambiado: media de 75,0% en 4 turnos de los últimos 7 días…

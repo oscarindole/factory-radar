@@ -36,7 +36,7 @@ inteligencia posterior puede rescatarlo.
                                            │
   PLC ──┐                                  │      ┌──────────────────────┐
   SCADA ─┤                                 │      │   INGRESS / WAF      │
-  MES ───┼──► RADACTORY EDGE ──────┼─────►│   mTLS + token       │
+  MES ───┼──► RACTORY EDGE ──────┼─────►│   mTLS + token       │
   Sensor ┤    · lee (solo lectura)         │      └──────────┬───────────┘
   SQL ───┘    · normaliza                  │                 │
               · almacena 7 días (buffer)   │      ┌──────────▼───────────┐
@@ -92,7 +92,7 @@ es mecánico.
 
 ---
 
-## 4. RADACTORY EDGE
+## 4. RACTORY EDGE
 
 El componente que decide si IT aprueba el proyecto. Todo su diseño obedece a una
 sola frase: **el dato sube, nunca baja**.

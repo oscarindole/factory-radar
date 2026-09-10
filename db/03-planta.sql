@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: 03 · jerarquia de planta, señales y conectores
+-- RACTORY :: 03 · jerarquia de planta, señales y conectores
 -- ---------------------------------------------------------------------------
 
 -- ARBOL, no cinco niveles fijos (decision 05).

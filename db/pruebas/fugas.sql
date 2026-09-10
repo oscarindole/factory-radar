@@ -1,5 +1,5 @@
 -- ---------------------------------------------------------------------------
--- RADACTORY :: bateria de fugas entre inquilinos
+-- RACTORY :: bateria de fugas entre inquilinos
 --
 -- Se ejecuta COMO fr_app, que es el rol con el que se conecta la API. Ejecutarla
 -- como postgres no prueba nada: el superusuario salta RLS.

@@ -1,4 +1,4 @@
-# RADACTORY
+# RACTORY
 
 **Tu fábrica ya genera los datos. Nosotros te decimos qué significan.**
 
@@ -7,7 +7,7 @@ Una capa de inteligencia que se conecta a los sistemas que la fábrica ya tiene
 disperso en una lista corta de cosas que hacer hoy, ordenadas por euros.
 
 No es otro cuadro de mando. Un cuadro de mando te da 50 gráficas y te deja el
-trabajo de interpretar. RADACTORY te da cinco líneas y el dinero que hay
+trabajo de interpretar. RACTORY te da cinco líneas y el dinero que hay
 detrás de cada una.
 
 ---
