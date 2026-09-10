@@ -301,16 +301,16 @@ veces en una tablet con guantes, a veces en una pantalla de 55" colgada en el
 taller y vista a tres metros. Nada de gris claro sobre blanco.
 
 ```
-FONDO         #0E1116  oscuro por defecto — pantalla de taller, turno de noche
+FONDO         #070707  oscuro por defecto — pantalla de taller, turno de noche
               claro disponible, mismo contraste
-TEXTO         #E8EDF2 principal · #93A1B0 secundario
+TEXTO         #FFFFFF principal · #9E9E9E secundario
 
 CRÍTICA       #E5484D    ALTA      #F5A524
 MEDIA         #3E9EFF    BAJA      #7C8794
-BIEN          #46C68A    NEUTRO    #93A1B0
+BIEN          #46C68A    NEUTRO    #9E9E9E
 
 DATO          #FFFFFF sobre fondo oscuro, siempre el elemento de más contraste
-LÍNEA BASE    #93A1B0 discontinua
+LÍNEA BASE    #9E9E9E discontinua
 HUECO         franja rayada, nunca interpolada
 ```
 

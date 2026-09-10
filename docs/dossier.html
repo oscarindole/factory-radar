@@ -17,7 +17,7 @@
 <title>Ractory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,200;6..72,300;6..72,400;6..72,500&display=swap">
 
 <style>
 /* ---------------------------------------------------------------------------
@@ -34,11 +34,11 @@
   --paper:      #FFFFFF;
   --paper-2:    #F5F5F5;
   --card:       #FAFAFA;
-  --ink:        #151815;
-  --ink-2:      #555B55;
-  --ink-3:      #636A63;
-  --rule:       rgba(21,24,21,.10);
-  --rule-2:     rgba(21,24,21,.18);
+  --ink:        #141414;
+  --ink-2:      #525252;
+  --ink-3:      #6B6B6B;
+  --rule:       #E5E5E5;
+  --rule-2:     #D4D4D4;
 
   /* acento de marca. El rosa de texto pequeño es el oscurecido: el de marca
      sobre blanco no llega a 4,5:1 */
@@ -54,11 +54,11 @@
   --sev-ok:     #17714A;
 
   /* paneles del producto: fijos en ambos temas */
-  --pn-bg:      #0E1316;
-  --pn-bg-2:    #161E22;
-  --pn-line:    #27333A;
-  --pn-ink:     #E6EDEB;
-  --pn-ink-2:   #8D9CA3;
+  --pn-bg:      #070707;
+  --pn-bg-2:    #121212;
+  --pn-line:    #242424;
+  --pn-ink:     #FFFFFF;
+  --pn-ink-2:   #9E9E9E;
   --pn-crit:    #E5484D;
   --pn-alta:    #F5A524;
   --pn-media:   #3E9EFF;
@@ -68,7 +68,8 @@
   --rail: 236px;
 
   --f-disp: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --f-body: "Newsreader", Georgia, "Times New Roman", serif;
+  --f-titular: "Newsreader", Georgia, "Times New Roman", serif;
+  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
@@ -155,7 +156,7 @@ body {
 }
 /* Rosa de marca. Solo aqui: en el resto del documento el ambar es el acento y
    el rojo es severidad, y mezclar los tres los vuelve indistinguibles. */
-.rail-mark svg { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 8px; }
+.rail-mark svg { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 12px; }
 .rail-mark { --mark-cut: var(--paper); }
 .rail-mark span { color: var(--ink); text-transform: lowercase;
                   font-size: 1.02rem; letter-spacing: -.03em; font-weight: 600; }
@@ -201,18 +202,19 @@ section + section { padding-top: 58px; }
 
 /* --- tipografia ---------------------------------------------------------- */
 
-h1, h2, h3, h4 { font-family: var(--f-disp); text-wrap: balance; margin: 0; }
+h1, h2 { font-family: var(--f-titular); text-wrap: balance; margin: 0; }
+h3, h4 { font-family: var(--f-disp); text-wrap: balance; margin: 0; }
 
 h2 {
-  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
-  font-weight: 700;
-  letter-spacing: -.02em;
-  line-height: 1.12;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 300;
+  letter-spacing: -.022em;
+  line-height: 1.1;
   margin-bottom: 14px;
 }
 h3 {
   font-size: 1.02rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -.005em;
   margin: 34px 0 8px;
 }
@@ -276,7 +278,7 @@ a { color: var(--signal); }
   background: var(--pn-bg);
   color: var(--pn-ink);
   border: 1px solid var(--pn-line);
-  border-radius: 8px;
+  border-radius: 12px;
   font-family: var(--f-disp);
   overflow: hidden;
   margin: 30px 0;
@@ -437,7 +439,7 @@ a { color: var(--signal); }
   font-weight: 600;
 }
 
-.tw { overflow-x: auto; margin: 20px 0; border: 1px solid var(--rule); border-radius: 8px; }
+.tw { overflow-x: auto; margin: 20px 0; border: 1px solid var(--rule); border-radius: 12px; }
 table { border-collapse: collapse; width: 100%; font-family: var(--f-disp); font-size: .82rem; }
 th, td { text-align: left; padding: 9px 13px; border-bottom: 1px solid var(--rule); vertical-align: top; }
 thead th {
@@ -505,7 +507,7 @@ pre {
   overflow-x: auto;
   margin: 20px 0;
   color: var(--ink-2);
-  border-radius: 8px;
+  border-radius: 12px;
 }
 pre b { color: var(--ink); font-weight: 600; }
 pre i { color: var(--signal); font-style: normal; }
@@ -530,7 +532,7 @@ ul.tight li::before {
   text-transform: uppercase;
   padding: 3px 8px;
   border: 1px solid currentColor;
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 0 4px 4px 0;
 }
 .stamp.crit { color: var(--sev-crit); }
@@ -545,7 +547,7 @@ ul.tight li::before {
 .plan.hot { background: var(--signal-soft); }
 .plan .n { font-family: var(--f-mono); font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
 .plan.hot .n { color: var(--signal); }
-.plan .p { font-family: var(--f-disp); font-size: 1.85rem; font-weight: 800; letter-spacing: -.03em; margin: 7px 0 0; font-variant-numeric: tabular-nums; }
+.plan .p { font-family: var(--f-titular); font-size: 2rem; font-weight: 300; letter-spacing: -.03em; margin: 7px 0 0; font-variant-numeric: tabular-nums; }
 .plan .p small { font-size: .68rem; font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
 .plan .imp { font-family: var(--f-mono); font-size: .68rem; color: var(--ink-2); margin-top: 5px; font-variant-numeric: tabular-nums; }
 .plan ul { list-style: none; padding: 0; margin: 13px 0 0; font-family: var(--f-disp); font-size: .78rem; color: var(--ink-2); }
@@ -567,7 +569,7 @@ code {
   font-size: .86em;
   background: var(--paper-2);
   border: 1px solid var(--rule);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: .05em .35em;
   color: var(--ink);
 }
@@ -1090,7 +1092,7 @@ baseline ──▶ anomaly ──▶ <b>alert</b> ──▶ recommendation ─�
 .calc i { color:var(--pn-alta); font-style:normal; font-weight:600; }
 .spark { display:block; width:100%; height:72px; }
 .acts { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-.acts span { font-family:var(--f-mono); font-size:.65rem; letter-spacing:.06em; padding:6px 11px; border:1px solid var(--pn-line); border-radius:8px; color:var(--pn-ink); }
+.acts span { font-family:var(--f-mono); font-size:.65rem; letter-spacing:.06em; padding:6px 11px; border:1px solid var(--pn-line); border-radius:12px; color:var(--pn-ink); }
 .acts span.pri { border-color:var(--pn-alta); color:var(--pn-alta); }
 .srcs { font-family:var(--f-mono); font-size:.64rem; color:var(--pn-ink-2); line-height:1.7; margin-top:12px; padding-top:10px; border-top:1px solid var(--pn-line); }
 .srcs em { font-style:normal; color:var(--pn-media); }

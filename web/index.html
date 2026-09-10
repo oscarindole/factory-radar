@@ -331,20 +331,20 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .plan.destacado li { border-color:var(--border-dark); }
 
 /* --- pantalla del producto ---------------------------------------------- */
-.screen { border-radius:var(--radius-lg); overflow:hidden; background:#0E1116;
+.screen { border-radius:var(--radius-lg); overflow:hidden; background:#070707;
           border:1px solid rgba(0,0,0,.08); }
 .screen-bar { display:flex; align-items:center; gap:8px; padding:14px 20px;
-  background:#1A2126; border-bottom:1px solid #27333A; }
+  background:#1A2126; border-bottom:1px solid #242424; }
 .screen-bar i { width:9px; height:9px; border-radius:50%; background:#39434B; }
 .screen-bar .u { flex:1; text-align:center; font-family:var(--mono); font-size:.7rem;
-                 color:#93A1B0; }
+                 color:#9E9E9E; }
 .screen-h { display:flex; justify-content:space-between; gap:12px; padding:16px 24px;
-  background:#161D22; border-bottom:1px solid #27333A; font-family:var(--mono);
-  font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:#93A1B0; }
-.screen-h b { color:#E8EDF2; font-weight:500; }
+  background:#121212; border-bottom:1px solid #242424; font-family:var(--mono);
+  font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:#9E9E9E; }
+.screen-h b { color:#FFFFFF; font-weight:500; }
 .screen-b { padding:var(--s-5) 24px; }
 .al { display:grid; grid-template-columns:3px minmax(0,1fr) auto; gap:0 20px;
-      align-items:start; padding-block:18px; border-top:1px solid #27333A;
+      align-items:start; padding-block:18px; border-top:1px solid #242424;
       opacity:0; transform:translateY(16px); }
 .al:first-child { border-top:0; padding-top:4px; }
 .screen.on .al { animation:reveal .8s var(--ease) forwards; }
@@ -360,16 +360,16 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .al .sev { font-family:var(--mono); font-size:.62rem; letter-spacing:.1em;
            text-transform:uppercase; margin-bottom:7px; }
 .al.c1 .sev{color:#E5484D} .al.c2 .sev{color:#F5A524} .al.c3 .sev{color:#3E9EFF}
-.al .t { font-size:1.06rem; font-weight:600; color:#E8EDF2; letter-spacing:-.015em; }
-.al .d { font-family:var(--mono); font-size:.75rem; color:#93A1B0; line-height:1.6;
+.al .t { font-size:1.06rem; font-weight:600; color:#FFFFFF; letter-spacing:-.015em; }
+.al .d { font-family:var(--mono); font-size:.75rem; color:#9E9E9E; line-height:1.6;
          margin-top:7px; }
 .al .e { font-family:var(--mono); font-size:.95rem; font-weight:500; color:#F5A524;
          white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
-.al .e span { display:block; font-size:.64rem; color:#93A1B0; margin-top:4px; }
-.screen-f { border-top:1px solid #27333A; background:#161D22; padding:17px 24px;
+.al .e span { display:block; font-size:.64rem; color:#9E9E9E; margin-top:4px; }
+.screen-f { border-top:1px solid #242424; background:#121212; padding:17px 24px;
   display:flex; justify-content:space-between; align-items:baseline;
   font-family:var(--mono); font-size:.7rem; letter-spacing:.12em;
-  text-transform:uppercase; color:#93A1B0; }
+  text-transform:uppercase; color:#9E9E9E; }
 .screen-f b { font-family:var(--serif); font-size:1.5rem; letter-spacing:-.02em;
               color:#F5A524; font-weight:400; }
 
@@ -554,13 +554,13 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
         <g stroke="rgba(21,24,21,.10)" stroke-width="1">
           <line x1="52" y1="44" x2="600" y2="44"/><line x1="52" y1="108" x2="600" y2="108"/>
           <line x1="52" y1="172" x2="600" y2="172"/><line x1="52" y1="236" x2="600" y2="236"/></g>
-        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#636A63" text-anchor="end">
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#6B6B6B" text-anchor="end">
           <text x="42" y="48">95%</text><text x="42" y="112">87%</text>
           <text x="42" y="176">79%</text><text x="42" y="240">71%</text></g>
-        <line x1="52" y1="108" x2="600" y2="108" stroke="#636A63" stroke-width="1.5"
+        <line x1="52" y1="108" x2="600" y2="108" stroke="#6B6B6B" stroke-width="1.5"
               stroke-dasharray="6 5"/>
         <text x="600" y="100" text-anchor="end" font-family="IBM Plex Mono, monospace"
-              font-size="11" fill="#636A63" class="fade">línea base 87%</text>
+              font-size="11" fill="#6B6B6B" class="fade">línea base 87%</text>
         <g class="fade">
           <line x1="424" y1="28" x2="424" y2="258" stroke="#8E5A00" stroke-width="1.5"
                 stroke-dasharray="3 4"/>
@@ -579,7 +579,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
           <circle cx="600" cy="206" r="5" fill="#C7362F" stroke="#FFFFFF" stroke-width="2.5"/>
           <text x="574" y="244" text-anchor="end" font-family="IBM Plex Mono, monospace"
                 font-size="12" fill="#C7362F">75%</text></g>
-        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#636A63">
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#6B6B6B">
           <text x="52" y="284">10 ago</text>
           <text x="326" y="284" text-anchor="middle">25 ago</text>
           <text x="600" y="284" text-anchor="end">9 sep</text></g>
@@ -652,7 +652,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
         <g><rect x="264" y="52" width="330" height="352" rx="14" fill="url(#maq2)"/>
           <rect x="264" y="52" width="330" height="18" rx="9" fill="#69757E"/>
           <rect x="292" y="94" width="176" height="132" rx="9" fill="#4E5A62"/>
-          <rect x="306" y="108" width="148" height="104" rx="5" fill="#0E1116"/>
+          <rect x="306" y="108" width="148" height="104" rx="5" fill="#070707"/>
           <path d="M316 186 L344 166 L372 190 L400 146 L428 172" stroke="#E0115F"
                 stroke-width="5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
           <rect x="316" y="122" width="56" height="8" rx="4" fill="#3E4A52"/>
@@ -686,7 +686,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
           <rect x="150" y="386" width="26" height="19" rx="9" fill="#B4763F"/>
           <g transform="rotate(-15 170 380)">
             <rect x="152" y="348" width="38" height="58" rx="7" fill="#1B1D22"/>
-            <rect x="158" y="355" width="26" height="44" rx="3" fill="#0E1116"/>
+            <rect x="158" y="355" width="26" height="44" rx="3" fill="#070707"/>
             <path d="M162 386 L170 377 L178 384" stroke="#E0115F" stroke-width="3" fill="none"/>
             <rect x="162" y="364" width="16" height="4" rx="2" fill="#4E5A62"/></g>
           <path d="M92 336 q-26 24 -14 58 l26 -7 q-9 -26 4 -39 z" fill="#DE8B00"/>

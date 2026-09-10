@@ -126,3 +126,16 @@ trozo por separado.
 | 41 | **El canje entra por dos funciones `SECURITY DEFINER`** | Dar a la API permiso para saltarse la RLS en esa ruta | Huevo y gallina: la RLS esconde la invitación hasta fijar el inquilino, y el inquilino no se sabe hasta leerla. La salida no es debilitar el aislamiento, es acotar la entrada — se entra por el hash de un token de 256 bits y no se puede pedir nada más |
 | 42 | **Nadie invita de igual a igual** | Permitir invitar al mismo rango | De igual a igual se construye una cadena por la que un rol se multiplica sin que nadie lo haya autorizado. Solo `company_admin` puede invitar a otro `company_admin`, porque alguien tiene que poder dar continuidad a la cuenta |
 | 43 | **Las columnas de salida de un `RETURNS TABLE` no se llaman como una columna real** | `returns table (ok, rol, tenant_id, motivo)` | En PL/pgSQL cada columna de salida es también una variable: `tenant_id` hacía ambiguo el `on conflict (tenant_id, user_id)` y la función fallaba en ejecución. El error no dice que la causa sea el nombre de la salida |
+
+---
+
+## Decisiones del sistema visual
+
+| # | Decisión | Alternativa descartada | Por qué |
+|---|---|---|---|
+| 44 | **Una referencia visual se lee en su CSS, no en un resumen** | Pedir a un resumidor que describa la página | El resumen dijo tres veces «fondo blanco» y la web es casi negra (`--background: oklch(13% 0 0)`), y se inventó un acento teal a partir del nombre de una variable que era azul. Cuatro pasadas de diseño construidas sobre datos falsos. Se descarga la hoja de estilo y se leen los valores |
+| 45 | **En Tailwind v4, el CSS compilado dice qué se usa de verdad** | Fiarse de las variables que declara el tema | El tema declara toda la escala; el compilador solo emite las utilidades presentes en el código. Que existan `.font-extralight` y `.text-7xl`, y que no exista ningún `.max-w-6xl`, es prueba de uso, no de intención |
+| 46 | **El sistema se invierte manteniendo los saltos, no los colores** | Aclarar cada color uno a uno | Su escala oscura va 13 → 18 → 26 → 70 → 100 de luminosidad. Sobre blanco se recorre al revés: 100 → 97 → 91 → 45 → 20. Lo que hace reconocible un sistema es la distancia entre sus superficies, no el valor absoluto de cada una |
+| 47 | **El acento sigue siendo el rosa de la marca** | Adoptar también su verde | El color de marca es identidad, y el encargo dice extraer el sistema, no la identidad. Además su verde da 2,4:1 sobre blanco: como texto es ilegible |
+| 48 | **Los grises no llevan tono** | Conservar los nuestros, que tiraban a verde | Los suyos tienen croma 0. Un gris sesgado le da temperatura a la página entera, y esa temperatura no la había elegido nadie |
+| 49 | **El panel oscuro usa sus valores dark tal cual** | Inventarle una paleta oscura propia | La referencia es oscura: para el panel no hay que invertir nada. Al bajar el fondo de `#0E1116` a `#070707` hubo que revalidar las series de las gráficas contra la superficie nueva —pasan las cinco comprobaciones— y subir `--texto-3` a `#7D7D7D`, porque a `#7A7A7A` se quedaba en 4,36:1 sobre la tarjeta |

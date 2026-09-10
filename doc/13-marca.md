@@ -60,7 +60,7 @@ interfaz.
 | Rosa de texto | `#A80B47` | Para texto pequeño, donde el de marca no llega a 4,5:1 |
 | **Naranja RACTORY** | `#F59B00` | Secundario. Sobre fondo oscuro y en las ilustraciones |
 | **Negro de marca** | `#1D1D1B` | El del logotipo. No es negro puro: gris muy oscuro y algo cálido |
-| Tinta | `#151815` | Texto principal |
+| Tinta | `#141414` | Texto principal |
 | Papel | `#F5F4EF` | Fondo claro |
 
 > **Pendiente de confirmar.** Estos dos hexadecimales están sacados a ojo del
