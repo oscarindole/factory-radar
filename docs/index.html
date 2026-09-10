@@ -38,8 +38,8 @@
      blancos iguales el ritmo de secciones desaparece y la pagina se lee como
      un unico bloque larguisimo. La diferencia es minima a proposito. */
   --bg-primary:   #FFFFFF;
-  --bg-secondary: #F3F5F2;
-  --bg-white:     #FAFAF9;
+  --bg-secondary: #F5F5F5;
+  --bg-white:     #FAFAFA;
   --bg-dark:      #171A18;
 
   /* --- tinta ------------------------------------------------------------- */
@@ -131,7 +131,7 @@ h3 { font-family:var(--sans); font-weight:600;
 .page { max-width:var(--page); margin-inline:auto; }
 .wrap { max-width:var(--content); margin-inline:auto; padding-inline:var(--pad); }
 .text { max-width:var(--text); }
-section { padding-block:clamp(var(--s-9), 9vw, var(--s-12)); }
+section { padding-block:clamp(var(--s-9), 8vw, var(--s-11)); }
 section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .bg-soft  { background:var(--bg-secondary); }
 .bg-white { background:var(--bg-white); --mark-cut:var(--bg-white); }
@@ -147,14 +147,17 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
   border-color .4s var(--ease), background .4s var(--ease); }
 .header.scrolled { height:60px; border-bottom-color:var(--border-light);
                    background:rgba(255,255,255,.93); }
-.header .wrap { display:flex; align-items:center; justify-content:space-between;
+.header .wrap { display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
                 gap:var(--s-5); height:100%; }
+.header .wrap > .logo { justify-self:start; }
+.header .wrap > .cta-nav { justify-self:end; }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none;
         color:inherit; }
 .logo .mark { width:28px; height:28px; border-radius:7px; }
 .logo b { font-family:var(--sans); font-weight:700; font-size:1.02rem;
           letter-spacing:-.01em; }
-.menu { display:flex; align-items:center; gap:var(--s-6); }
+.menu { display:flex; align-items:center; justify-content:center;
+        gap:var(--s-6); }
 .menu a { font-size:.95rem; color:var(--text-secondary); text-decoration:none;
           position:relative; padding-block:4px; }
 .menu a::after { content:""; position:absolute; inset:auto 0 0 0; height:1px;
@@ -317,6 +320,12 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .screen.on .al { animation:reveal .8s var(--ease) forwards; }
 @keyframes reveal { to { opacity:1; transform:none; } }
 .al .bar { align-self:stretch; border-radius:2px; }
+/* La barra de la critica late. No dice «en vivo» —seria mentira, es una
+   instantanea— pero si lo que es verdad: eso pide atencion hoy. */
+.screen.on .al.c1 .bar { animation:latido 2.6s ease-in-out 1.4s infinite; }
+@keyframes latido {
+  0%,100% { opacity:1; } 50% { opacity:.45; }
+}
 .al.c1 .bar{background:#E5484D} .al.c2 .bar{background:#F5A524} .al.c3 .bar{background:#3E9EFF}
 .al .sev { font-family:var(--mono); font-size:.62rem; letter-spacing:.1em;
            text-transform:uppercase; margin-bottom:7px; }
@@ -370,6 +379,13 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
   margin:0 0 var(--s-4); }
 .footer-cols a, .footer-cols p { display:block; color:var(--text-inverse-2);
   text-decoration:none; font-size:.95rem; margin:0 0 10px; }
+/* Origen declarado. En B2B español es una señal de confianza real: dice a
+   quien llamas si algo va mal y en que huso horario esta. */
+.footer-cols .origen { display:inline-flex; align-items:center; gap:7px;
+  margin-top:var(--s-3); font-family:var(--mono); font-size:.76rem;
+  color:var(--text-inverse); }
+.footer-cols .origen::before { content:""; width:18px; height:12px; border-radius:2px;
+  background:linear-gradient(#C60B1E 0 25%, #FFC400 25% 75%, #C60B1E 75% 100%); }
 .footer-cols a:hover { color:var(--text-inverse); }
 .footer-bottom { border-top:1px solid var(--border-dark); margin-top:clamp(48px,6vw,88px);
   padding-top:var(--s-5); display:flex; justify-content:space-between; gap:var(--s-5);
@@ -396,6 +412,7 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 }
 @media (prefers-reduced-motion:reduce){
   html { scroll-behavior:auto; }
+  .screen.on .al.c1 .bar { animation:none; }
   .trace { stroke-dashoffset:0; } .fade { opacity:1; }
   .al { opacity:1; transform:none; }
   .img svg { transform:none; opacity:1; }
@@ -418,8 +435,8 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
       <a href="#radares">Radares</a>
       <a href="#seguridad">Seguridad</a>
       <a href="#precio">Precio</a>
-      <a class="btn sm" href="#empezar">Solicitar análisis</a>
     </nav>
+    <a class="btn sm cta-nav" href="#empezar">Solicitar análisis</a>
   </div>
 </header>
 
@@ -937,8 +954,12 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
         <div><h4>Empresa</h4>
           <a href="#seguridad">Seguridad</a><a href="#precio">Precio</a>
           <a href="#empezar">Empezar</a></div>
+        <div><h4>Recursos</h4>
+          <a href="dossier.html">Dossier de producto</a>
+          <a href="explorador.html">Cómo está construido</a></div>
         <div><h4>Contacto</h4>
-          <p>Índole Data Technology</p><p>Torrelavega, Cantabria</p></div>
+          <p>Índole Data Technology</p><p>Torrelavega, Cantabria</p>
+          <p class="origen">Hecho en Cantabria</p></div>
       </div>
     </div>
     <div class="footer-bottom">
