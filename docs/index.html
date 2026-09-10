@@ -63,11 +63,14 @@
   --border-dark:  rgba(242,241,236,.14);
 
   /* --- radios: una familia por tipo de pieza ---------------------------- */
-  --radius-btn:   10px;
-  --radius-sm:    14px;
-  --radius-md:    20px;
-  --radius-lg:    26px;
-  --radius-img:   24px;
+  /* Radios contenidos. La curva marcada es lo que hace que una pagina de
+     producto parezca de consumo; con el borde casi recto, la misma pagina lee
+     como seria. La tipografia se queda como estaba. */
+  --radius-btn:   8px;
+  --radius-sm:     8px;
+  --radius-md:    10px;
+  --radius-lg:    12px;
+  --radius-img:    8px;
 
   /* --- escala de espacio ------------------------------------------------- */
   --s-1:4px; --s-2:8px;  --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px;
@@ -138,11 +141,11 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .bg-dark strong { color:var(--text-inverse); }
 
 /* --- cabecera: ligera, translucida, borde casi imperceptible ------------ */
-.header { position:sticky; top:0; z-index:80; height:84px;
+.header { position:sticky; top:0; z-index:80; height:66px;
   background:rgba(255,255,255,.82); backdrop-filter:blur(14px) saturate(1.3);
   border-bottom:1px solid transparent; transition:height .4s var(--ease),
   border-color .4s var(--ease), background .4s var(--ease); }
-.header.scrolled { height:70px; border-bottom-color:var(--border-light);
+.header.scrolled { height:60px; border-bottom-color:var(--border-light);
                    background:rgba(255,255,255,.93); }
 .header .wrap { display:flex; align-items:center; justify-content:space-between;
                 gap:var(--s-5); height:100%; }
@@ -161,9 +164,9 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
 .menu a:hover::after { transform:scaleX(1); }
 
 /* --- botones ------------------------------------------------------------ */
-.btn { display:inline-flex; align-items:center; gap:9px; height:54px;
-  padding-inline:28px; border-radius:var(--radius-btn); font-family:var(--sans);
-  font-size:1rem; font-weight:600; text-decoration:none; border:1px solid transparent;
+.btn { display:inline-flex; align-items:center; gap:9px; height:46px;
+  padding-inline:22px; border-radius:var(--radius-btn); font-family:var(--sans);
+  font-size:.97rem; font-weight:600; text-decoration:none; border:1px solid transparent;
   background:var(--text-primary); color:var(--bg-primary);
   transition:transform .3s var(--ease), background-color .3s var(--ease),
              color .3s var(--ease), border-color .3s var(--ease); }
@@ -175,7 +178,7 @@ section.corta { padding-block:clamp(var(--s-8), 7vw, var(--s-11)); }
              border-color:var(--border-mid); }
 .btn.ghost:hover { background:transparent; color:var(--text-primary);
                    border-color:var(--text-primary); }
-.btn.sm { height:44px; padding-inline:20px; font-size:.93rem; }
+.btn.sm { height:38px; padding-inline:16px; font-size:.9rem; }
 .btn.inv { background:var(--bg-primary); color:var(--text-primary); }
 .btn.inv:hover { background:var(--brand); color:#fff; }
 .acciones { display:flex; gap:var(--s-3); flex-wrap:wrap;
