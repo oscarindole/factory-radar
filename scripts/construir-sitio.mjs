@@ -7,7 +7,7 @@
 // Aqui no se escribe contenido: se copia lo ya generado y se le pone un
 // indice. Si hay que cambiar algo, se cambia en su origen y se vuelve a armar.
 // ---------------------------------------------------------------------------
-import { mkdirSync, copyFileSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, copyFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -88,6 +88,19 @@ ${cuerpo}
   if (existsSync(cn)) {
     copyFileSync(cn, join(salida, 'CNAME'));
     console.log(`  dominio propio: ${readFileSync(cn, 'utf8').trim()}`);
+  }
+}
+
+// El video y su poster: viven en web/media y se copian tal cual. En el
+// artifact no cargan —su visor bloquea el medio externo— pero en Pages si, y
+// por eso el poster va ademas incrustado en la propia pagina.
+{
+  const origen = join(raiz, 'web', 'media');
+  if (existsSync(origen)) {
+    const destino = join(salida, 'media');
+    mkdirSync(destino, { recursive: true });
+    for (const f of readdirSync(origen)) copyFileSync(join(origen, f), join(destino, f));
+    console.log(`  media: ${readdirSync(origen).length} ficheros`);
   }
 }
 
