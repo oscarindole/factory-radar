@@ -119,8 +119,10 @@ h3 { font-family:var(--sans); font-weight:600;
 .text .acciones { justify-content:center; }
 section { padding-block:clamp(var(--s-8), 6.5vw, var(--s-10)); }
 section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
-.bg-soft  { background:var(--bg-secondary); }
-.bg-white { background:var(--bg-white); --mark-cut:var(--bg-white); }
+/* Blanco de arriba abajo, sin bandas alternas. El ritmo lo marcan el espacio
+   y el tamaño del titular, no un cambio de color de fondo. Lo unico oscuro de
+   la pagina es el pie. */
+.bg-soft, .bg-white { background:var(--bg-primary); --mark-cut:var(--bg-primary); }
 .bg-dark  { background:var(--bg-dark); color:var(--text-inverse); }
 .bg-dark .lead, .bg-dark p { color:var(--text-inverse-2); }
 .bg-dark .label { color:var(--text-inverse-2); }
@@ -272,9 +274,8 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .planes { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
           gap:var(--s-5); margin-top:clamp(var(--s-8),5vw,var(--s-9)); }
 .plan { border:1px solid var(--border-light); border-radius:var(--radius-md);
-        padding:var(--s-6) var(--s-6) var(--s-7); background:var(--bg-white);
+        padding:var(--s-6) var(--s-6) var(--s-7); background:var(--bg-primary);
         transition:border-color .3s var(--ease); }
-.bg-white .plan { background:var(--bg-primary); }
 .plan:hover { border-color:var(--border-mid); }
 .plan.destacado { background:var(--bg-dark); border-color:var(--bg-dark);
                   color:var(--text-inverse); }
