@@ -21,6 +21,7 @@ Dos credenciales distintas, a propósito:
 
 - **Sesión de usuario** — `Authorization: Bearer <token>`, HMAC firmado, 12 h.
   Lleva `userId`, `tenantId`, `rol` y las plantas alcanzables.
+  Se obtiene en `POST /v1/auth/login` o al canjear una invitación.
 - **Token de conector** — para `/v1/ingesta`. Al otro lado hay una máquina en
   una nave, no una persona. Se guarda solo como hash: si se filtra la base, no
   se puede suplantar a ningún conector con lo que hay dentro.
@@ -109,6 +110,38 @@ Lo que no encaja en ninguna plantilla se responde con *«no sé contestar a eso
 todavía»* y se registra en `ai_analysis` con `respuesta = null`. **Esa tabla es
 el backlog del Copilot, escrito por los propios usuarios.**
 
+### Acceso
+
+```
+POST /v1/auth/login          → { token, expira_en, usuario }
+```
+
+Ruta abierta: quien entra todavía no tiene sesión.
+
+| Caso | Respuesta |
+|---|---|
+| Credenciales correctas, una empresa | `200` con `token` |
+| Correctas, varias empresas | `300` con la lista; se repite la llamada con `empresa_id` |
+| Email desconocido **o** contraseña incorrecta | `401`, **el mismo cuerpo en ambos casos** |
+| Correctas pero sin ninguna membresía | `403` |
+| Demasiados intentos | `429` con `Retry-After` |
+
+Tres cosas que no son detalles de implementación, son el contrato:
+
+**El email desconocido y la contraseña incorrecta responden lo mismo y tardan lo
+mismo.** Si se distinguieran —por el código, por el mensaje o por el tiempo— se
+podría extraer la lista de quién tiene cuenta sin acertar ni una contraseña. En
+una plataforma industrial eso es el organigrama de la empresa cliente. Por eso,
+ante un email que no existe se verifica igualmente contra un hash señuelo.
+
+**Con varias empresas no se elige por la persona.** Se devuelven las suyas y
+vuelve a llamar diciendo cuál. Entrar en la primera de la lista es como acaba
+alguien mirando los datos de una planta que no era la que buscaba.
+
+**El límite de intentos vive en memoria del proceso.** Con varias instancias
+detrás de un balanceador, el límite efectivo se multiplica por el número de
+procesos. Es suficiente para el piloto y hay que mudarlo antes de escalar.
+
 ### Invitaciones
 
 ```
@@ -145,7 +178,7 @@ criterio que `fr_measurements()` con el dato crudo — ver decisión 41.
 ### Pendientes de FASE D
 
 ```
-POST /v1/auth/login · POST /v1/auth/mfa
+POST /v1/auth/mfa
 GET  /v1/produccion/oee · /paradas · /turnos
 GET  /v1/energia · /calidad · /proveedores
 POST /v1/acciones                             → Operations Agent, con su nivel de autorización

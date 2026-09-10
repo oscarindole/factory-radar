@@ -14,6 +14,7 @@ import activos    from './rutas/activos.ts';
 import ingesta    from './rutas/ingesta.ts';
 import copilot    from './rutas/copilot.ts';
 import invitaciones from './rutas/invitaciones.ts';
+import auth         from './rutas/auth.ts';
 
 declare module 'fastify' {
   interface FastifyRequest { sesion: Sesion }
@@ -68,6 +69,7 @@ export function crearServidor() {
   app.register(ingesta, { prefix: '/v1' });
   app.register(copilot, { prefix: '/v1' });
   app.register(invitaciones, { prefix: '/v1' });
+  app.register(auth,         { prefix: '/v1' });
 
   return app;
 }

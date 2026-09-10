@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "RACTORY · capa de inteligencia industrial sobre los sistemas que la fabrica ya tiene.",
-  "engines": { "node": ">=22.6.0" },
+  "engines": {
+    "node": ">=22.6.0"
+  },
   "scripts": {
     "migrar": "node scripts/migrar.mjs",
     "explorador": "node scripts/construir-explorador.mjs",
@@ -16,8 +18,8 @@
     "publicar": "bash scripts/publicar-sitio.sh",
     "pruebas-fugas": "node scripts/pruebas-fugas.mjs",
     "api": "node src/api/servidor.ts",
-    "test": "node --test tests/dominio.test.ts tests/invitaciones.test.ts",
-    "test-api": "node --test tests/api.test.ts tests/invitaciones-api.test.ts"
+    "test": "node --test tests/dominio.test.ts tests/invitaciones.test.ts tests/credenciales.test.ts",
+    "test-api": "node --test tests/api.test.ts tests/invitaciones-api.test.ts tests/auth-api.test.ts"
   },
   "dependencies": {
     "fastify": "^5.2.0",

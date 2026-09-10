@@ -215,8 +215,11 @@ $$;
 --   ERROR: column reference "tenant_id" is ambiguous
 -- Por eso las salidas llevan nombres que no existen como columna en ninguna de
 -- las tablas que toca la funcion.
-create or replace function fr_canjear_invitacion(p_hash text, p_nombre text)
-returns table (ok boolean, rol_asignado text, empresa_id uuid, motivo text)
+drop function if exists fr_canjear_invitacion(text, text);
+create or replace function fr_canjear_invitacion(
+  p_hash text, p_nombre text, p_clave_hash text)
+returns table (ok boolean, rol_asignado text, empresa_id uuid,
+               usuario_id uuid, motivo text)
 language plpgsql
 security definer
 set search_path = public, pg_temp
@@ -234,12 +237,15 @@ begin
   -- quien prueba tokens no se le dice si acerto con uno que existio.
   if inv.id is null or inv.aceptada_en is not null or inv.revocada_en is not null
      or inv.expira_en <= now() then
-    return query select false, null::text, null::uuid, 'no_valida'::text;
+    return query select false, null::text, null::uuid, null::uuid, 'no_valida'::text;
     return;
   end if;
 
-  insert into app_user (email, nombre) values (inv.email, p_nombre)
-  on conflict (email) do update set nombre = coalesce(app_user.nombre, excluded.nombre)
+  insert into app_user (email, nombre, clave_hash)
+  values (inv.email, p_nombre, p_clave_hash)
+  on conflict (email) do update set
+    nombre     = coalesce(app_user.nombre, excluded.nombre),
+    clave_hash = coalesce(app_user.clave_hash, excluded.clave_hash)
   returning id into v_user;
 
   insert into membership (tenant_id, user_id, rol, sites)
@@ -252,6 +258,73 @@ begin
   values (inv.tenant_id, v_user, 'invitacion.aceptada', 'invitation', inv.id::text,
           jsonb_build_object('email', inv.email, 'rol', inv.rol));
 
-  return query select true, inv.rol, inv.tenant_id, 'ok'::text;
+  return query select true, inv.rol, inv.tenant_id, v_user, 'ok'::text;
 end
 $$;
+
+-- ---------------------------------------------------------------------------
+-- Login.
+--
+-- Mismo huevo y gallina que el canje (decision 41): para leer a que empresa
+-- pertenece alguien hay que fijar el inquilino, y el inquilino no se sabe hasta
+-- haberlo leido. La salida vuelve a ser acotar la entrada, no debilitar la RLS:
+-- se entra por un email y se sale con lo justo para montar la sesion.
+--
+-- Devuelve UNA FILA POR MEMBRESIA, con los datos del usuario repetidos. Con
+-- LEFT JOIN, un usuario sin ninguna membresia sale igual con las columnas de
+-- membresia a null. Esa distincion importa: sin ella, «este email no existe» y
+-- «existe pero se le quitaron todos los accesos» serian el mismo caso, y hay
+-- que poder gastar el mismo tiempo de verificacion en los dos.
+--
+-- Nombres de salida con prefijo, por lo de siempre: en PL/pgSQL una columna de
+-- salida es tambien una variable. Aqui es SQL puro y no haria falta, pero el
+-- dia que esto crezca a plpgsql el fallo aparece lejos de su causa.
+-- ---------------------------------------------------------------------------
+create or replace function fr_login(p_email text)
+returns table (
+  u_id         uuid,
+  u_nombre     text,
+  u_clave_hash text,
+  u_superadmin boolean,
+  m_tenant     uuid,
+  m_empresa    text,
+  m_rol        text,
+  m_sites      uuid[]
+)
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $$
+  select u.id, u.nombre, u.clave_hash, u.superadmin,
+         m.tenant_id, c.nombre, m.rol, m.sites
+    from app_user u
+    left join membership m on m.user_id = u.id
+    left join company c    on c.id = m.tenant_id and c.activo
+   where u.email = lower(trim(p_email));
+$$;
+
+-- Despues de un acceso correcto: sella la fecha y, si el hash se creo con
+-- parametros mas debiles que los de hoy, lo reescribe. Es el unico momento en
+-- que tenemos la contraseña en claro para poder rehacerlo.
+--
+-- Va aparte de fr_login porque esa es `stable` y solo lee. Mezclar la escritura
+-- dentro obligaria a marcarla `volatile` y el planificador dejaria de poder
+-- reutilizarla; ademas una funcion de lectura que escribe es una trampa para
+-- quien la lea dentro de un año.
+create or replace function fr_tras_acceso(p_user uuid, p_hash_nuevo text default null)
+returns void
+language sql
+security definer
+set search_path = public, pg_temp
+as $$
+  update app_user
+     set ultimo_acceso = now(),
+         clave_hash    = coalesce(p_hash_nuevo, clave_hash)
+   where id = p_user;
+$$;
+
+-- fr_app entra por estas puertas y por ninguna otra: sobre las tablas que tocan
+-- sigue sin tener permiso, y la RLS sigue puesta.
+grant execute on function fr_login(text)                to fr_app;
+grant execute on function fr_tras_acceso(uuid, text)    to fr_app;

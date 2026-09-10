@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { conInquilino, getPool } from '../../db.ts';
-import { puede, auditar, type Sesion, type Rol } from '../contexto.ts';
+import { puede, auditar, emitirToken, type Sesion, type Rol } from '../contexto.ts';
+import { politicaClave, hashClave } from '../../dominio/credenciales.ts';
 import {
   puedeInvitar, alcanceValido, nuevoToken, hashToken,
   normalizarEmail, horasRestantes, DIAS_VIGENCIA,
@@ -135,7 +136,21 @@ export default async function (app: FastifyInstance) {
   app.post('/invitaciones/canjear', async (req: any, res) => {
     const token = String(req.body?.token ?? '');
     const nombre = String(req.body?.nombre ?? '').trim();
-    if (!token || !nombre) return res.code(400).send({ error: 'Faltan token y nombre.' });
+    const clave = String(req.body?.clave ?? '');
+    if (!token || !nombre || !clave) {
+      return res.code(400).send({ error: 'Faltan el token, el nombre y la contraseña.' });
+    }
+
+    // La politica se comprueba ANTES de tocar la invitacion. Si se mirara
+    // despues, una contraseña corta consumiria el canje: la invitacion queda
+    // marcada como aceptada y el enlace ya no sirve para reintentarlo.
+    const veredicto = politicaClave(clave);
+    if (!veredicto.ok) return res.code(400).send({ error: veredicto.motivo });
+
+    // El hash se calcula aqui, no en la base: asi la contraseña en claro no
+    // viaja nunca dentro de una sentencia SQL, donde acabaria en el registro
+    // de consultas lentas o en un plan guardado.
+    const claveHash = await hashClave(clave);
 
     // Todo el canje ocurre dentro de la funcion: bloqueo, validacion, alta de
     // usuario, membresia, marcado y auditoria, en una sola transaccion.
@@ -144,9 +159,22 @@ export default async function (app: FastifyInstance) {
     // quien acepta pueda influir en sus permisos, y por eso `rol` o `email` en
     // el cuerpo de la peticion se ignoran sin mas.
     const { rows: [r] } = await getPool().query(
-      `select * from fr_canjear_invitacion($1, $2)`, [hashToken(token), nombre]);
+      `select * from fr_canjear_invitacion($1, $2, $3)`,
+      [hashToken(token), nombre, claveHash]);
 
     if (!r?.ok) return res.code(404).send({ error: 'Esta invitación no es válida o ha caducado.' });
-    return { ok: true, rol: r.rol_asignado, empresa_id: r.empresa_id };
+
+    // Se entra directamente. Quien acaba de canjear ha demostrado dos cosas a
+    // la vez —que tiene el token de la invitacion y que acaba de fijar la
+    // contraseña—, asi que mandarlo a una pantalla de login recien creada no
+    // añade seguridad: solo añade un paso donde se pierde gente.
+    const sesion: Sesion = {
+      userId: r.usuario_id, tenantId: r.empresa_id, rol: r.rol_asignado as Rol,
+      sites: [], superadmin: false,
+    };
+    return {
+      ok: true, rol: r.rol_asignado, empresa_id: r.empresa_id,
+      token: emitirToken(sesion, 12),
+    };
   });
 }

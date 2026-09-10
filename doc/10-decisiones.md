@@ -140,3 +140,32 @@ trozo por separado.
 | 48 | **Los grises no llevan tono** | Conservar los nuestros, que tiraban a verde | Los suyos tienen croma 0. Un gris sesgado le da temperatura a la página entera, y esa temperatura no la había elegido nadie |
 | 49 | **El panel oscuro usa sus valores dark tal cual** | Inventarle una paleta oscura propia | La referencia es oscura: para el panel no hay que invertir nada. Al bajar el fondo de `#0E1116` a `#070707` hubo que revalidar las series de las gráficas contra la superficie nueva —pasan las cinco comprobaciones— y subir `--texto-3` a `#7D7D7D`, porque a `#7A7A7A` se quedaba en 4,36:1 sobre la tarjeta |
 | 50 | **Vuelven las bandas alternas, y el gris lo fija el texto, no el gusto** | Dejar la pagina en blanco de arriba abajo | Sin bandas, sobre fondo blanco los apartados no se separaban. Pero hasta donde puede bajar el gris no lo decide la banda: lo decide el texto mas claro que va encima. Con el terciario en `#6B6B6B` el suelo estaba en `#EEEEEE` (1,16:1 contra el blanco, invisible a franja completa). Bajando el terciario a `#5E5E5E` la banda llega a `#D8D8D8`: 1,43:1 contra el blanco, con el texto en 4,55:1. El suelo duro esta en `#D0D0D0`, donde el rosa de marca cae de 3:1 y deja de valer como acento. Las lineas bajan con el campo: una linea mas clara que el campo que bordea se lee invertida. Dentro de una banda la tarjeta se invierte a blanco: si conserva su gris, deja de ser tarjeta |
+
+---
+
+## Decisiones del acceso
+
+| # | Decisión | Alternativa descartada | Por qué |
+|---|---|---|---|
+| 51 | **El canje fija la contraseña, y el usuario entra al momento** | Canjear ahora y poner contraseña después | El canje daba de alta al usuario **sin credencial** y no había ruta de login: una invitación aceptada no llevaba a ninguna parte. Quien canjea ha demostrado dos cosas a la vez —que tiene el token y que acaba de fijar la contraseña—, así que mandarlo a una pantalla de login recién creada no añade seguridad, solo un paso donde se pierde gente |
+| 52 | **Email desconocido y contraseña incorrecta responden lo mismo Y tardan lo mismo** | Contestar «ese usuario no existe», que es más amable | Si el email desconocido contesta al instante y el conocido tarda los 90 ms de scrypt, la diferencia de tiempo entrega la lista de quién tiene cuenta sin acertar ni una contraseña. En una plataforma industrial eso es el organigrama del cliente. Ante un email que no existe se verifica igualmente contra un hash señuelo calculado al arrancar |
+| 53 | **scrypt de la biblioteca estándar de Node** | bcrypt o argon2 desde npm | Es lo que recomienda el RFC 9106 a quien no puede usar Argon2, y es una dependencia menos que auditar en la cadena de suministro de un producto industrial. Mismo criterio que el HMAC del token de sesión |
+| 54 | **El hash guarda sus propios parámetros** | Guardar solo sal y hash, con el coste en el código | Con el coste en el código, subirlo dentro de dos años invalida todas las contraseñas a la vez. Con los parámetros dentro, los hashes viejos se siguen verificando y se rehacen en el siguiente acceso correcto, que es el único momento en que tenemos la contraseña en claro |
+| 55 | **La política mide el largo, no la composición** | Exigir mayúscula, número y símbolo | Esas reglas producen `Verano2026!` en todas las empresas del mundo, que es lo primero que prueba quien ataca. Mínimo de doce, fuera lo evidente y fuera lo repetitivo, al estilo del NIST SP 800-63B |
+| 56 | **Con varias empresas se devuelve la lista y se vuelve a llamar** | Entrar en la primera de sus membresías | Entrar en la primera de la lista es como acaba alguien mirando los datos de una planta que no era la que buscaba. Y el superadmin sin membresía **no entra por aquí**: su vía es la puerta auditada de soporte, no una sesión normal sin empresa |
+| 57 | **`fr_login` es SECURITY DEFINER, como el canje** | Dar a la API permiso para saltarse la RLS en la ruta de login | El mismo huevo y gallina de la decisión 41: para saber a qué empresa pertenece alguien hay que fijar el inquilino, y el inquilino no se sabe hasta leerlo. La salida vuelve a ser acotar la entrada: se entra por un email y se sale con lo justo para montar la sesión |
+| 58 | **El límite de intentos vive en memoria del proceso, y se dice** | Guardarlo en Postgres | Un intento fallido que escribe en la base convierte la pantalla de login en un amplificador de escrituras, que es justo lo que busca quien la ataca. La contrapartida hay que decirla en voz alta: con varias instancias el límite se multiplica por el número de procesos. Sirve para el piloto y hay que mudarlo antes de escalar |
+
+### Dos lecciones más de método
+
+**`create or replace function` con otra firma no reemplaza: crea una
+sobrecarga.** La versión de dos argumentos de `fr_canjear_invitacion` habría
+seguido viva junto a la nueva, dando de alta usuarios sin credencial, y ninguna
+prueba lo habría notado porque la nueva también funciona. Hace falta un
+`drop function if exists` explícito con la firma vieja, delante del `create`
+para que el fichero siga siendo idempotente.
+
+**La columna se llamaba `activo`, no `activa`.** Escrito de memoria, revisado
+dos veces y mal. Lo cazó aplicar el fichero contra un Postgres de verdad, en el
+primer intento. Ningún repaso del código lo habría encontrado: el SQL dentro de
+una cadena de texto no lo comprueba nadie hasta que corre.
