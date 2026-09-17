@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!--
+  Tarjeta social de RACTORY. La pinta construir-social.mjs con Chromium a
+  __ANCHO__x__ALTO__ y la guarda como JPEG.
+
+  Es el heroe de la web, condensado: mismo fotograma de planta, mismo velo,
+  misma tipografia. Quien ve la tarjeta en WhatsApp y luego abre el enlace
+  tiene que reconocer que es el mismo sitio.
+-->
+<style>
+  @font-face { font-family:'Newsreader'; font-weight:200; font-display:block;
+               src:url('__F_NEWSREADER__') format('woff2'); }
+  @font-face { font-family:'Archivo'; font-weight:500; font-display:block;
+               src:url('__F_ARCHIVO_500__') format('woff2'); }
+  @font-face { font-family:'Archivo'; font-weight:600; font-display:block;
+               src:url('__F_ARCHIVO_600__') format('woff2'); }
+  @font-face { font-family:'IBM Plex Mono'; font-weight:500; font-display:block;
+               src:url('__F_MONO__') format('woff2'); }
+
+  :root {
+    --brand: #E0115F;
+    --accent: #F59B00;
+    --inverse: #F2F1EC;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: __ANCHO__px; height: __ALTO__px; }
+  body {
+    position: relative; overflow: hidden; background: #12140F;
+    display: grid; place-items: center; text-align: center;
+    padding: __PAD__px;
+    font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--inverse);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* El fotograma de la planta, con el mismo velo que el heroe: sin el, el
+     titular es legible en unas fotos y en otras no. */
+  .foto { position: absolute; inset: 0; z-index: -2; }
+  /* Desenfoque muy corto y velo mas cerrado que en el heroe de la web. Alli el
+     titular tiene toda la pantalla; aqui la tarjeta se ve del tamano de un
+     sello en una lista de WhatsApp, y el operario de la foto se cruzaba con
+     las letras. La escala evita que el blur deje el borde transparente. */
+  .foto img { width: 100%; height: 100%; object-fit: cover;
+              transform: scale(1.04); filter: blur(1.4px) saturate(.96); }
+  .foto::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(115% 85% at 50% 48%, rgba(15,17,13,.58) 0%, rgba(15,17,13,.70) 62%, rgba(15,17,13,.80) 100%),
+      linear-gradient(180deg, rgba(15,17,13,.34) 0%, rgba(15,17,13,.48) 52%, rgba(15,17,13,.84) 100%);
+  }
+
+  .marca { position: absolute; top: __PAD__px; left: __PAD__px;
+           display: flex; align-items: center; gap: 12px; }
+  .marca svg { width: __MARCA__px; height: __MARCA__px; color: var(--inverse); }
+  .marca b { font-weight: 600; font-size: __MARCATXT__px; letter-spacing: .015em; }
+
+  .centro { max-width: __TEXTO__px; }
+  .label { font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+           font-size: __LABEL__px; letter-spacing: .11em; text-transform: uppercase;
+           color: rgba(242,241,236,.74);
+           display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .label::before { content: ''; width: 9px; height: 9px; background: var(--brand); }
+  h1 { font-family: 'Newsreader', Georgia, serif; font-weight: 200;
+       font-variation-settings: 'opsz' 72;
+       font-size: __TITULAR__px; line-height: 1; letter-spacing: -.025em;
+       text-wrap: balance; color: #FFFFFF; margin-top: __H1TOP__px; }
+
+  .dato { position: absolute; left: __PAD__px; right: __PAD__px; bottom: __PAD__px;
+          padding-top: 18px; border-top: 1px solid rgba(242,241,236,.16);
+          font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+          font-size: __DATO__px; letter-spacing: .02em; color: rgba(242,241,236,.78);
+          display: flex; justify-content: space-between; gap: 24px; }
+  .dato b { color: var(--accent); font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="foto"><img src="__FOTO__" alt=""></div>
+
+  <div class="marca">
+    <svg viewBox="0 0 100 100" role="img" aria-label="RACTORY">
+      <rect width="100" height="100" fill="currentColor"/>
+      <path fill="#12140F" d="M9 21 H85 V37 H24 V68 H9 Z"/>
+      <path fill="#12140F" d="M35 48 H68 L97 77 H76 L55 64 H35 Z"/>
+    </svg>
+    <b>ractory</b>
+  </div>
+
+  <div class="centro">
+    <p class="label">Inteligencia industrial</p>
+    <h1>Tu fábrica ya genera los datos. Nosotros te decimos qué significan.</h1>
+  </div>
+
+  <div class="dato">
+    <span>Producción · Mantenimiento · Energía · Calidad</span>
+    <span><b>129.218 €</b> al año en una sola estación</span>
+  </div>
+</body>
+</html>

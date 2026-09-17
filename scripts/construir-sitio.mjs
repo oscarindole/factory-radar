@@ -7,7 +7,7 @@
 // Aqui no se escribe contenido: se copia lo ya generado y se le pone un
 // indice. Si hay que cambiar algo, se cambia en su origen y se vuelve a armar.
 // ---------------------------------------------------------------------------
-import { mkdirSync, copyFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { mkdirSync, copyFileSync, writeFileSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,16 +29,30 @@ for (const p of PAGINAS) {
   copyFileSync(origen, join(salida, p.a));
 }
 
+// URL publica del sitio, para las etiquetas que EXIGEN absoluta (Open Graph).
+// Sale del CNAME si ya hay dominio propio; mientras no lo haya, de la direccion
+// de Pages, que es donde esta vivo.
+const cname = join(raiz, 'web', 'CNAME');
+const BASE = existsSync(cname)
+  ? `https://${readFileSync(cname, 'utf8').trim()}`
+  : 'https://oscarindole.github.io/factory-radar';
+
+const escapar = (t) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
 // Pages sirve el fichero tal cual: las paginas se generaron para incrustarse en
 // el visor de artifacts, que aporta el esqueleto html/head/body. Aqui hay que
 // ponerselo, o el navegador las renderiza sin charset ni viewport.
-import { readFileSync } from 'node:fs';
 for (const p of PAGINAS) {
   const f = join(salida, p.a);
   if (!existsSync(f)) continue;
   const cuerpo = readFileSync(f, 'utf8');
   if (cuerpo.trimStart().toLowerCase().startsWith('<!doctype')) continue;
   const titulo = (cuerpo.match(/<title>([^<]*)<\/title>/i) || [, p.t])[1];
+  // La descripcion sale del primer parrafo de entradilla de la propia pagina:
+  // si se reescribe el texto, la tarjeta de WhatsApp se reescribe con el.
+  const lead = (cuerpo.match(/<p class="lead[^"]*"[^>]*>([\s\S]*?)<\/p>/i) || [, ''])[1]
+    .replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const descripcion = lead || p.t;
   writeFileSync(f, `<!doctype html>
 <html lang="es">
 <head>
@@ -46,6 +60,22 @@ for (const p of PAGINAS) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>${titulo}</title>
+<meta name="description" content="${escapar(descripcion)}">
+
+<!-- La tarjeta que se ve al pegar el enlace en WhatsApp, LinkedIn o X. La
+     imagen la pinta scripts/construir-social.mjs. Va con URL ABSOLUTA a
+     proposito: los rastreadores no resuelven rutas relativas, y con una
+     relativa la vista previa sale sin imagen y nadie avisa. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RACTORY">
+<meta property="og:title" content="${escapar(titulo)}">
+<meta property="og:description" content="${escapar(descripcion)}">
+<meta property="og:url" content="${BASE}/${p.a === 'index.html' ? '' : p.a}">
+<meta property="og:image" content="${BASE}/social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RACTORY — Tu fábrica ya genera los datos. Nosotros te decimos qué significan.">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root { color-scheme: light dark; }
   html, body { margin: 0; }
@@ -121,6 +151,19 @@ ${cuerpo}
     mkdirSync(destino, { recursive: true });
     for (const f of readdirSync(origen)) copyFileSync(join(origen, f), join(destino, f));
     console.log(`  media: ${readdirSync(origen).length} ficheros`);
+  }
+}
+
+// La imagen social, al lado de las paginas: las etiquetas og:image la piden en
+// la raiz del sitio. La cuadrada NO se publica — esa es para subirla a mano a
+// un estado de WhatsApp o a Instagram, no para que la lea un rastreador.
+{
+  const social = join(raiz, 'web', 'social.jpg');
+  if (existsSync(social)) {
+    copyFileSync(social, join(salida, 'social.jpg'));
+    console.log(`  social: social.jpg (${(readFileSync(social).length / 1024).toFixed(0)} KB)`);
+  } else {
+    console.log('  social: FALTA web/social.jpg — al compartir el enlace no saldra imagen');
   }
 }
 
