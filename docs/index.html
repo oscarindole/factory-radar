@@ -466,7 +466,9 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 .footer .logo b { color:var(--text-inverse); }
 .footer-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
                gap:var(--s-6); }
-.footer-cols h4 { font-family:var(--mono); font-size:.72rem; font-weight:500;
+/* h3 y no h4: el documento saltaba de h2 a h4. El tamano lo pone esta regla,
+   no la etiqueta — la jerarquia es del documento y el aspecto, del diseno. */
+.footer-cols h3 { font-family:var(--mono); font-size:.72rem; font-weight:500;
   letter-spacing:.11em; text-transform:uppercase; color:var(--text-inverse-2);
   margin:0 0 var(--s-4); }
 .footer-cols a, .footer-cols p { display:block; color:var(--text-inverse-2);
@@ -1045,16 +1047,16 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
           inteligencia sobre lo que tu fábrica ya tiene.</p>
       </div>
       <div class="footer-cols">
-        <div><h4>Producto</h4>
+        <div><h3>Producto</h3>
           <a href="#radares">Radares</a><a href="#como">Cómo funciona</a>
           <a href="#prueba">La prueba</a><a href="demo.html">Demo</a></div>
-        <div><h4>Empresa</h4>
+        <div><h3>Empresa</h3>
           <a href="#seguridad">Seguridad</a><a href="#precio">Precio</a>
           <a href="#empezar">Empezar</a></div>
-        <div><h4>Recursos</h4>
+        <div><h3>Recursos</h3>
           <a href="dossier.html">Dossier de producto</a>
           <a href="explorador.html">Cómo está construido</a></div>
-        <div><h4>Contacto</h4>
+        <div><h3>Contacto</h3>
           <p>Índole Data Technology</p><p>Torrelavega, Cantabria</p>
           <p class="origen">Hecho en Cantabria</p></div>
       </div>
