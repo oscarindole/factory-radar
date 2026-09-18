@@ -2,7 +2,10 @@
 # ---------------------------------------------------------------------------
 # Publica el sitio en el hub de paginas: npages.indoletools.com/<ruta>
 #
-#   bash scripts/publicar-npages.sh [ruta]        (por defecto: radactory)
+#   bash scripts/publicar-npages.sh [ruta] [dominio]
+#
+#   El dominio es opcional y NO tiene valor por defecto: sin el, el hub se sirve
+#   en oscarindole.github.io/<ruta>.
 #
 # POR QUE UN HUB Y NO EL DOMINIO A SECAS
 #
@@ -25,11 +28,22 @@
 set -euo pipefail
 
 RUTA="${1:-radactory}"
-DOMINIO="npages.indoletools.com"
+# El dominio se pasa A MANO y no tiene valor por defecto. Lo tuvo
+# —npages.indoletools.com— hasta que se vio que ese subdominio es el CMS
+# multi-inquilino de Vertary, con sitios de clientes colgando por ruta. Sin
+# segundo argumento esto publica en oscarindole.github.io/<ruta>, que no le
+# quita el sitio a nadie.
+DOMINIO="${2:-}"
 HUB="git@github.com:oscarindole/oscarindole.github.io.git"
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$RAIZ/scripts/_dominio.sh"
 TRABAJO="$(mktemp -d)"
 trap 'rm -rf "$TRABAJO"' EXIT
+
+# --- 0. el dominio, antes de construir ni clonar nada -----------------------
+# Va lo primero a proposito: si el dominio esta ocupado, no hay nada que hablar,
+# y enterarse despues de haber clonado el hub solo hace el fallo mas confuso.
+[[ -n "$DOMINIO" ]] && exigir_dominio_libre "$DOMINIO"
 
 # --- 1. el sitio, construido -----------------------------------------------
 echo "Construyendo el sitio."
@@ -109,6 +123,11 @@ HTML
 fi
 
 # --- 5. el dominio propio, solo si el DNS ya apunta -------------------------
+if [[ -z "$DOMINIO" ]]; then
+  rm -f "$TRABAJO/hub/CNAME"
+  echo "  Sin dominio propio (no se paso ninguno): se publica en Pages."
+  FINAL="https://oscarindole.github.io/$RUTA/"
+else
 CADENA="$(dig +short CNAME "$DOMINIO" | sed 's/\.$//')"
 IPS="$(dig +short A "$DOMINIO" | sort | tr '\n' ' ')"
 IPS_PAGES="185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153"
@@ -125,6 +144,7 @@ else
   echo "  DNS todavia no apunta a Pages: se publica SIN dominio propio."
   echo "  (el registro que falta lo dice scripts/dominio-propio.sh)"
   FINAL="https://oscarindole.github.io/$RUTA/"
+fi
 fi
 
 # --- 6. publicar -------------------------------------------------------------

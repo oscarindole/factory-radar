@@ -14,12 +14,17 @@
 #
 # Asi que aqui se comprueba el DNS PRIMERO y solo despues se escribe el CNAME.
 # Si no resuelve, el guion no toca nada.
+#
+# Y antes que eso se comprueba que el dominio no este YA sirviendo algo: ver
+# scripts/_dominio.sh. Quedarse sin URL se arregla esperando; tirar el dominio
+# de otro, no.
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
 DOMINIO="${1:-}"
 DESTINO="oscarindole.github.io"
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$RAIZ/scripts/_dominio.sh"
 
 if [[ -z "$DOMINIO" ]]; then
   echo "Uso: bash scripts/dominio-propio.sh <subdominio.dominio.com>" >&2
@@ -27,6 +32,9 @@ if [[ -z "$DOMINIO" ]]; then
 fi
 
 echo "Comprobando $DOMINIO antes de tocar nada."
+
+# --- 0. ¿lo esta sirviendo ya alguien? --------------------------------------
+exigir_dominio_libre "$DOMINIO"
 
 # --- 1. ¿existe el registro? -----------------------------------------------
 CADENA="$(dig +short CNAME "$DOMINIO" | sed 's/\.$//')"
