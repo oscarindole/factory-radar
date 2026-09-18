@@ -500,6 +500,10 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
   </div>
 </header>
 
+<!-- El contenido, en su landmark: sin <main> un lector de pantalla no
+     puede saltar el menu y llegar a lo que importa de un golpe. -->
+<main id="contenido">
+
 <!-- HERO ==================================================================== -->
 <section class="hero">
   <div class="video" data-img>
@@ -991,6 +995,7 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
     </div>
   </div>
 </section>
+</main>
 
 <footer class="footer">
   <div class="wrap">
