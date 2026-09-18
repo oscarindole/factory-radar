@@ -4,6 +4,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,200;6..72,300;6..72,400;6..72,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <style>
+/* La cabecera es fija: sin esto, cada enlace del menu deja su titulo escondido
+   debajo de ella. */
+html { scroll-padding-top: 78px; }
+
 /* ===========================================================================
    RACTORY · sistema visual
    ---------------------------------------------------------------------------
@@ -152,7 +156,12 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
 /* --- cabecera: ligera, translucida, borde casi imperceptible ------------ */
 /* Transparente sobre el video y solida en cuanto se baja. Sin esto, una barra
    blanca corta el heroe por arriba y se pierde la imagen a sangre. */
-.header { position:sticky; top:0; z-index:80; height:66px;
+/* FIJA, no pegajosa: `sticky` RESERVA su hueco en el flujo, asi que la pagina
+   empezaba 66px mas abajo y esos 66px eran fondo blanco. Encima, el contenido
+   de la cabecera esta pintado en blanco para ir sobre el video — sobre esa
+   franja blanca desaparecian el menu, la palabra de la marca y el boton. Es el
+   fallo que este mismo comentario decia evitar. */
+.header { position:fixed; top:0; inset-inline:0; z-index:80; height:66px;
   background:transparent; color:#FFFFFF; --mark-cut:#12140F;
   border-bottom:1px solid transparent; transition:height .4s var(--ease),
   border-color .4s var(--ease), background .4s var(--ease), color .4s var(--ease); }

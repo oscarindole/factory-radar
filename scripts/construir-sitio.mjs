@@ -60,6 +60,7 @@ for (const p of PAGINAS) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>${titulo}</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <meta name="description" content="${escapar(descripcion)}">
 
 <!-- La tarjeta que se ve al pegar el enlace en WhatsApp, LinkedIn o X. La
@@ -152,6 +153,13 @@ ${cuerpo}
     for (const f of readdirSync(origen)) copyFileSync(join(origen, f), join(destino, f));
     console.log(`  media: ${readdirSync(origen).length} ficheros`);
   }
+}
+
+// El icono de la pestana. Sin el, el navegador pide /favicon.ico en cada
+// visita y se lleva un 404 — el unico error que quedaba en la consola.
+{
+  const icono = join(raiz, 'web', 'favicon.png');
+  if (existsSync(icono)) copyFileSync(icono, join(salida, 'favicon.png'));
 }
 
 // La imagen social, al lado de las paginas: las etiquetas og:image la piden en
