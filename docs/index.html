@@ -1066,10 +1066,17 @@ section.corta { padding-block:clamp(var(--s-7), 5vw, var(--s-9)); }
   "use strict";
   var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // cabecera: transicion muy suave al hacer scroll
-  var h = document.getElementById('header');
-  var alScroll = function () { h.classList.toggle('scrolled', scrollY > 8); };
-  addEventListener('scroll', alScroll, { passive:true }); alScroll();
+  // cabecera: transicion muy suave al hacer scroll.
+  // Se busca por CLASE y no por id: esta misma pagina se sirve tambien desde un
+  // CMS que reconstruye el marcado, y alli el envoltorio puede no llevar id. Con
+  // getElementById el guion moria en esta linea y se quedaba sin animar TODO lo
+  // demas —la grafica, las cifras, el reveal— sin mas pista que un error en
+  // consola. El `if` evita que la ausencia de cabecera vuelva a costar eso.
+  var h = document.querySelector('.header');
+  if (h) {
+    var alScroll = function () { h.classList.toggle('scrolled', scrollY > 8); };
+    addEventListener('scroll', alScroll, { passive:true }); alScroll();
+  }
 
   function cuenta(el) {
     var fin = parseFloat(el.dataset.count);
